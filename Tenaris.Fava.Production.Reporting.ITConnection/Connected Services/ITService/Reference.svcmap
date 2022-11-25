@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="57c22bc8-db94-4b54-8ee6-86af1e646480" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="net.tcp://localhost:33366/ITService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="875fd6a7-96c2-47f2-a9ef-a4fc77379639" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="6983656b-33ae-4948-86b1-8dc29766b667" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="9c097d75-8ed9-473f-bb4b-db6e2690b621" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Programming.ProductData.xsd" MetadataType="Schema" ID="9e41722b-16c0-4aaa-94d8-7a0f84ddad81" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="ab1c3fef-5819-42cb-adc0-17cb7a478ad2" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Programming.Program.xsd" MetadataType="Schema" ID="aff50aa8-3ab7-4f98-883e-1fdf17aca6c9" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Process.xsd" MetadataType="Schema" ID="fcad76b9-03bc-4feb-8893-2daea4367d01" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.xsd" MetadataType="Schema" ID="36ca29aa-7cc6-4039-bce4-b978a7ab2693" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Stock.xsd" MetadataType="Schema" ID="e705c159-0530-4cbd-96eb-9d5b872c3475" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Measurement.xsd" MetadataType="Schema" ID="923ce4a8-93f4-41e3-81e4-7b43123b1192" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Objects.xsd" MetadataType="Schema" ID="b15163c8-3f32-4f24-8d89-d05f00a9a1a7" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Delays.xsd" MetadataType="Schema" ID="46ea1069-8bb7-41cd-9e78-1bc2324f9a5a" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.SpecData.xsd" MetadataType="Schema" ID="baa96b8a-e0d7-45f0-be58-b348843382f8" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Chemical.xsd" MetadataType="Schema" ID="bf287da8-cf19-4cc6-ad0d-bdd30786d024" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+    <MetadataFile FileName="TenarisCommon.Accesories.xsd" MetadataType="Schema" ID="ecd68b79-78dc-4eed-8238-ef4bf7f4121c" SourceId="1" SourceUrl="net.tcp://localhost:33366/ITService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

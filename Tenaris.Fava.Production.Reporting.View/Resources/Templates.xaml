@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:languages="clr-namespace:Tenaris.Fava.Production.Reporting.Languages;assembly=Tenaris.Fava.Production.Reporting.Languages"
+                    xmlns:viewmodel="clr-namespace:Tenaris.Fava.Production.Reporting.ViewModel.View;assembly=Tenaris.Fava.Production.Reporting.ViewModel">
+    
+    <languages:Language x:Key="LanguageResources" />
+    <viewmodel:WindowSizeConverter x:Key="WindowSizeConverter"></viewmodel:WindowSizeConverter>
+</ResourceDictionary>

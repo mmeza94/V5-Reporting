@@ -1,0 +1,821 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.Program" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Objects" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Chemical" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" />
+  <xs:element name="GetProgramIDs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessIds" nillable="true" type="q1:ArrayOfITMachineId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetProgramIDsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ProgramPublicationDates" nillable="true" type="q2:ArrayOfKeyValueOfstringdateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetProgram">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q3:ITMachineId" />
+        <xs:element minOccurs="0" name="PublicationDate" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetProgramResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.Program" minOccurs="0" name="Program" nillable="true" type="q4:ArrayOfProgramItem" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCurrentProgram">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q5:ITMachineId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCurrentProgramResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.Program" minOccurs="0" name="Program" nillable="true" type="q6:ArrayOfProgramItem" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetOrderData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ClientId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q7:ITMachineId" />
+        <xs:element minOccurs="0" name="Order" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetOrderDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="OrderData" nillable="true" type="q8:OrderData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAvailableItemsForProcess">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q9:ITMachineId" />
+        <xs:element minOccurs="0" name="Order" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Heat" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAvailableItemsForProcessResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="AvailableItems" nillable="true" type="q10:StockItemsCollection" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/TenarisCommon.Objects" minOccurs="0" name="res" nillable="true" type="q11:ErrorReport" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadItemsToProcess">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TransactionId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q12:ITMachineId" />
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" minOccurs="0" name="Operator" nillable="true" type="q13:Operator" />
+        <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="Shift" type="xs:int" />
+        <xs:element minOccurs="0" name="LoadType" nillable="true" type="xs:string" />
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="ItemsToLoad" nillable="true" type="q14:StockItemsCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadItemsToProcessResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="ItemsInGroup" nillable="true" type="q15:StockItemsCollection" />
+        <xs:element xmlns:q16="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q16:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetHeats">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q17:ITMachineId" />
+        <xs:element minOccurs="0" name="Order" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetHeatsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q18="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="AvailableHeats" nillable="true" type="q18:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetItemsIDRange">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q19:ITMachineId" />
+        <xs:element minOccurs="0" name="Order" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Heat" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetItemsIDRangeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="Range" nillable="true" type="q20:ItemsIDRange" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetMaxPipesInCrane">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q21:ITMachineId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetMaxPipesInCraneResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetMaxPipesInCraneResult" type="xs:float" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportStockItemsGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TransactionId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q22:ITMachineId" />
+        <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="ProposedStockGroup" nillable="true" type="q23:StockGroup" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportStockItemsGroupResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q24="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Transactions" nillable="true" type="q24:ArrayOfKeyValueOfstringTransactionReportyf7ull1t" />
+        <xs:element xmlns:q25="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q25:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendDelaysToHost">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TransactionId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q26:ITMachineId" />
+        <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" minOccurs="0" name="DelaysToSend" nillable="true" type="q27:DelayCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendDelaysToHostResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q28="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q28:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CheckControlNumbers">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CheckControlNumbersResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetOrderCompliance">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q29:ITMachineId" />
+        <xs:element minOccurs="0" name="Order" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetOrderComplianceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CompliedQuantity" type="xs:float" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendPacketToIT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="processId" nillable="true" type="q30:ITMachineId" />
+        <xs:element minOccurs="0" name="transaction" nillable="true" type="xs:string" />
+        <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="packet" nillable="true" type="q31:Packet" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendPacketToITResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q32="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q32:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetWMSSpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q33:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetWMSSpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q34="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="container" nillable="true" type="q34:SpecDataWMS" />
+        <xs:element xmlns:q35="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q35:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendProducedItemsGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TransactionId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q36="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q36:ITMachineId" />
+        <xs:element xmlns:q37="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="ProducedItemsGroup" nillable="true" type="q37:StockGroup" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendProducedItemsGroupResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q38="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Transactions" nillable="true" type="q38:ArrayOfKeyValueOfstringTransactionReportyf7ull1t" />
+        <xs:element xmlns:q39="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q39:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendProbeInfoToHost">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TransactionId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q40="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProcessId" nillable="true" type="q40:ITMachineId" />
+        <xs:element xmlns:q41="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="StockProbes" nillable="true" type="q41:StockItemsCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendProbeInfoToHostResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q42="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q42:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetVDISpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q43="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="order" nillable="true" type="q43:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetVDISpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q44="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="specData" nillable="true" type="q44:SpecDataVDI" />
+        <xs:element xmlns:q45="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q45:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetRequirementNDTNotches">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q46="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="order" nillable="true" type="q46:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetRequirementNDTNotchesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q47="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="notches" nillable="true" type="q47:SpecDataNotches" />
+        <xs:element xmlns:q48="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q48:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEMISpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q49="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q49:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEMISpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q50="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="container" nillable="true" type="q50:SpecDataEMI" />
+        <xs:element xmlns:q51="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q51:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetChemicalSpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q52="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q52:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetChemicalSpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q53="http://schemas.datacontract.org/2004/07/TenarisCommon.Chemical" minOccurs="0" name="container" nillable="true" type="q53:ChemicalElementsContainer" />
+        <xs:element xmlns:q54="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q54:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCouplingSpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q55="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q55:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCouplingSpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q56="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="container" nillable="true" type="q56:SpecDataCouplingBuckOn" />
+        <xs:element xmlns:q57="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q57:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendConsumedCouplings">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="transaction" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="pipeLoadType" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="couplingLoadType" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="lot" nillable="true" type="xs:string" />
+        <xs:element xmlns:q58="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="couplingGroup" nillable="true" type="q58:StockGroup" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SendConsumedCouplingsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q59="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q59:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetHydrostaticTestSpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q60="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q60:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetHydrostaticTestSpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q61="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="container" nillable="true" type="q61:SpecDataHydrostaticTest" />
+        <xs:element xmlns:q62="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q62:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetHTRSpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q63="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q63:ProductKey" />
+        <xs:element xmlns:q64="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="machineId" nillable="true" type="q64:ITMachineId" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetHTRSpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q65="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="container" nillable="true" type="q65:SpecDataHTR" />
+        <xs:element xmlns:q66="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q66:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetUpsettingSpecificationData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q67="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="productKey" nillable="true" type="q67:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetUpsettingSpecificationDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q68="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" minOccurs="0" name="container" nillable="true" type="q68:SpecDataUpsetting" />
+        <xs:element xmlns:q69="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="res" nillable="true" type="q69:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q70="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q70:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q71="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="OPSpecContainer" nillable="true" type="q71:OPSpecContainer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSampleNumber">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Colada" type="xs:int" />
+        <xs:element minOccurs="0" name="IdUDT" type="xs:int" />
+        <xs:element minOccurs="0" name="TipoUdt" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Lote" type="xs:int" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Secuencia" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSampleNumberResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="numeroProbeta" nillable="true" type="xs:string" />
+        <xs:element xmlns:q72="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q72:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TestService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="test" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TestServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TestServiceResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSampleNumberUser">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Colada" type="xs:int" />
+        <xs:element minOccurs="0" name="IdUDT" type="xs:int" />
+        <xs:element minOccurs="0" name="TipoUdt" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Lote" type="xs:int" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Secuencia" type="xs:int" />
+        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSampleNumberUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="numeroProbeta" nillable="true" type="xs:string" />
+        <xs:element xmlns:q73="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q73:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportInterruptions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="Turno" type="xs:int" />
+        <xs:element xmlns:q74="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="Interrupciones" nillable="true" type="q74:ArrayOfChargeAsociada" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportInterruptionsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="resul" type="xs:boolean" />
+        <xs:element xmlns:q75="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errors" nillable="true" type="q75:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnLoadMaterial">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TipoUdt" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="IdUdt" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Colada" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Lote" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Cantidad" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Secuencia" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnLoadMaterialResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="result" type="xs:boolean" />
+        <xs:element xmlns:q76="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q76:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadMaterial">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="orderNumber" type="xs:int" />
+        <xs:element minOccurs="0" name="heat" type="xs:int" />
+        <xs:element minOccurs="0" name="tipoUDT" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idUDT" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="almacen" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="cantidad" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="secuencia" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="observaciones" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="opcionConsola" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="lote" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadMaterialResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="result" type="xs:boolean" />
+        <xs:element xmlns:q77="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q77:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesAvailableStock">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Op" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Version" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Producto" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesAvailableStockResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="xml" nillable="true" type="xs:string" />
+        <xs:element xmlns:q78="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q78:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationA">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q79="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q79:ProductKey" />
+        <xs:element minOccurs="0" name="CodeArea" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationAResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q80="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="OPSpecContainer" nillable="true" type="q80:OPSpecContainer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationAU">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q81="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q81:ProductKey" />
+        <xs:element minOccurs="0" name="CodeArea" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="IdUser" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationAUResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q82="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="OPSpecContainer" nillable="true" type="q82:OPSpecContainer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetProductionBoxes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="orderNumber" type="xs:int" />
+        <xs:element minOccurs="0" name="machineId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetProductionBoxesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q83="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="GetProductionBoxesResult" nillable="true" type="q83:ArrayOfProductionBox" />
+        <xs:element xmlns:q84="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errors" nillable="true" type="q84:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadProductionBox">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="boxId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="machineId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="pieces" type="xs:int" />
+        <xs:element minOccurs="0" name="sequenceProcess" type="xs:int" />
+        <xs:element minOccurs="0" name="workUnit" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadProductionBoxResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="LoadProductionBoxResult" type="xs:boolean" />
+        <xs:element xmlns:q85="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errors" nillable="true" type="q85:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnloadProductionBox">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="boxId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="machineId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="pieces" type="xs:int" />
+        <xs:element minOccurs="0" name="sequenceProcess" type="xs:int" />
+        <xs:element minOccurs="0" name="workUnit" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnloadProductionBoxResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UnloadProductionBoxResult" type="xs:boolean" />
+        <xs:element xmlns:q86="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errors" nillable="true" type="q86:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDiscardingMotives">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Operations" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDiscardingMotivesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q87="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="DiscardingReasons" nillable="true" type="q87:DiscardContainer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProduction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TipoUDT" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="IdUDT" type="xs:int" />
+        <xs:element minOccurs="0" name="Colada" type="xs:int" />
+        <xs:element minOccurs="0" name="Lote" type="xs:int" />
+        <xs:element minOccurs="0" name="Aprietes" type="xs:int" />
+        <xs:element minOccurs="0" name="Secuencia" type="xs:int" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="CantidadBuenas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadProcesadas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadReprocesadas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadTotal" type="xs:decimal" />
+        <xs:element minOccurs="0" name="ColadaSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="IdUDTSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="LoteSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="Observaciones" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TipoUDTSalida" nillable="true" type="xs:string" />
+        <xs:element xmlns:q88="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="Descartes" nillable="true" type="q88:ArrayOfDescarte" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="result" type="xs:boolean" />
+        <xs:element xmlns:q89="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q89:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionBox">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="workUnitSource" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="workUnitSourceId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="heat" type="xs:int" />
+        <xs:element minOccurs="0" name="idLot" type="xs:int" />
+        <xs:element minOccurs="0" name="sequenceProcess" type="xs:int" />
+        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="machineId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="goodPieces" type="xs:decimal" />
+        <xs:element minOccurs="0" name="workedPieces" type="xs:decimal" />
+        <xs:element minOccurs="0" name="reworkedPieces" type="xs:decimal" />
+        <xs:element minOccurs="0" name="totalPieces" type="xs:decimal" />
+        <xs:element minOccurs="0" name="endHeat" type="xs:int" />
+        <xs:element minOccurs="0" name="boxId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="endIdLot" type="xs:int" />
+        <xs:element minOccurs="0" name="comments" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="boxType" nillable="true" type="xs:string" />
+        <xs:element xmlns:q90="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="discards" nillable="true" type="q90:ArrayOfDescarte" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionBoxResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ReportProductionBoxResult" type="xs:boolean" />
+        <xs:element xmlns:q91="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errors" nillable="true" type="q91:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionReturnProbes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TipoUDT" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="IdUDT" type="xs:int" />
+        <xs:element minOccurs="0" name="Colada" type="xs:int" />
+        <xs:element minOccurs="0" name="Lote" type="xs:int" />
+        <xs:element minOccurs="0" name="Aprietes" type="xs:int" />
+        <xs:element minOccurs="0" name="Secuencia" type="xs:int" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="CantidadBuenas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadProcesadas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadReprocesadas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadTotal" type="xs:decimal" />
+        <xs:element minOccurs="0" name="ColadaSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="IdUDTSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="LoteSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="Observaciones" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TipoUDTSalida" nillable="true" type="xs:string" />
+        <xs:element xmlns:q92="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="Descartes" nillable="true" type="q92:ArrayOfDescarte" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionReturnProbesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q93="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="Probetas" nillable="true" type="q93:ArrayOfProbeta" />
+        <xs:element minOccurs="0" name="result" type="xs:boolean" />
+        <xs:element xmlns:q94="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q94:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionWProbes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TipoUDT" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="IdUDT" type="xs:int" />
+        <xs:element minOccurs="0" name="Colada" type="xs:int" />
+        <xs:element minOccurs="0" name="Lote" type="xs:int" />
+        <xs:element minOccurs="0" name="Aprietes" type="xs:int" />
+        <xs:element minOccurs="0" name="Secuencia" type="xs:int" />
+        <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="CantidadBuenas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadProcesadas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadReprocesadas" type="xs:decimal" />
+        <xs:element minOccurs="0" name="CantidadTotal" type="xs:decimal" />
+        <xs:element minOccurs="0" name="ColadaSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="IdUDTSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="LoteSalida" type="xs:int" />
+        <xs:element minOccurs="0" name="Observaciones" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TipoUDTSalida" nillable="true" type="xs:string" />
+        <xs:element xmlns:q95="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="Descartes" nillable="true" type="q95:ArrayOfDescarte" />
+        <xs:element xmlns:q96="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="Probetas" nillable="true" type="q96:ArrayOfProbetaAsociada" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportProductionWProbesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="result" type="xs:boolean" />
+        <xs:element xmlns:q97="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" minOccurs="0" name="errores" nillable="true" type="q97:ErrorCollection" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationForRuta">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q98="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q98:ProductKey" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccesoriesSpecificationForRutaResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="OPSpecContainer" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

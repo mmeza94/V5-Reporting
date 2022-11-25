@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon" />
+  <xs:complexType name="Operator">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="LicenseNumber" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Operator" nillable="true" type="tns:Operator" />
+  <xs:complexType name="ProcessRuns">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q1:ArrayOfKeyValueOfstringProcessRunDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProcessRuns" nillable="true" type="tns:ProcessRuns" />
+  <xs:complexType name="ProcessRun">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Curves" nillable="true" type="tns:Curves" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" minOccurs="0" name="OutputStockItems" nillable="true" type="q2:StockItemsCollection" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q3:Parameters" />
+      <xs:element minOccurs="0" name="ParentLine" nillable="true" type="tns:Line" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProcessRun" nillable="true" type="tns:ProcessRun" />
+  <xs:complexType name="Curves">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q4:ArrayOfKeyValueOfstringCurveDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Curves" nillable="true" type="tns:Curves" />
+  <xs:complexType name="Curve">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Average" type="xs:float" />
+      <xs:element minOccurs="0" name="CurveType" type="xs:int" />
+      <xs:element minOccurs="0" name="HasChildren" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Maximum" type="xs:float" />
+      <xs:element minOccurs="0" name="Minimum" type="xs:float" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q5:Parameters" />
+      <xs:element minOccurs="0" name="ParentProcessRun" nillable="true" type="tns:ProcessRun" />
+      <xs:element minOccurs="0" name="Series" nillable="true" type="tns:SeriesCollection" />
+      <xs:element minOccurs="0" name="Size" type="xs:int" />
+      <xs:element minOccurs="0" name="StdDev" type="xs:float" />
+      <xs:element minOccurs="0" name="StoredInTenarisDevice" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SubCurves" nillable="true" type="tns:Curves" />
+      <xs:element minOccurs="0" name="ThresholdMax" type="xs:float" />
+      <xs:element minOccurs="0" name="ThresholdMin" type="xs:float" />
+      <xs:element minOccurs="0" name="Timestamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Curve" nillable="true" type="tns:Curve" />
+  <xs:complexType name="SeriesCollection">
+    <xs:sequence>
+      <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q6:ArrayOfKeyValueOfstringSeriesDPv91znk" />
+      <xs:element minOccurs="0" name="ParentCurve" nillable="true" type="tns:Curve" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SeriesCollection" nillable="true" type="tns:SeriesCollection" />
+  <xs:complexType name="Series">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="ParentCurve" nillable="true" type="tns:Curve" />
+      <xs:element minOccurs="0" name="Points" nillable="true" type="tns:Points" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Series" nillable="true" type="tns:Series" />
+  <xs:complexType name="Points">
+    <xs:sequence>
+      <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q7:ArrayOfKeyValueOfstringPointDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Points" nillable="true" type="tns:Points" />
+  <xs:complexType name="Point">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Xval" type="xs:double" />
+      <xs:element minOccurs="0" name="Yval" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Point" nillable="true" type="tns:Point" />
+  <xs:complexType name="Line">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Configuration" nillable="true" type="xs:anyType" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Enabled" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EquipmentColl" nillable="true" type="tns:EquipmentCollection" />
+      <xs:element minOccurs="0" name="HasChildLines" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="IsActive" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentLine" nillable="true" type="tns:Line" />
+      <xs:element minOccurs="0" name="Status" type="xs:int" />
+      <xs:element minOccurs="0" name="SubLines" nillable="true" type="tns:Lines" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Line" nillable="true" type="tns:Line" />
+  <xs:complexType name="EquipmentCollection">
+    <xs:sequence>
+      <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q8:ArrayOfKeyValueOfstringEquipmentDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EquipmentCollection" nillable="true" type="tns:EquipmentCollection" />
+  <xs:complexType name="Equipment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Enabled" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EquipmentStatus" type="xs:int" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="IsActive" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Manufacter" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Systems" nillable="true" type="tns:SystemsCollection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Equipment" nillable="true" type="tns:Equipment" />
+  <xs:complexType name="SystemsCollection">
+    <xs:sequence>
+      <xs:element xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="m_list" nillable="true" type="q9:ArrayOfKeyValueOfstringMSystemDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SystemsCollection" nillable="true" type="tns:SystemsCollection" />
+  <xs:complexType name="MSystem">
+    <xs:sequence>
+      <xs:element name="m_Elements" nillable="true" type="tns:SystemElements" />
+      <xs:element name="m_Name" nillable="true" type="xs:string" />
+      <xs:element name="m_SubSystems" nillable="true" type="tns:SystemsCollection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MSystem" nillable="true" type="tns:MSystem" />
+  <xs:complexType name="SystemElements">
+    <xs:sequence>
+      <xs:element xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q10:ArrayOfKeyValueOfstringSystemElementDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SystemElements" nillable="true" type="tns:SystemElements" />
+  <xs:complexType name="SystemElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SubElements" nillable="true" type="tns:SystemElements" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SystemElement" nillable="true" type="tns:SystemElement" />
+  <xs:complexType name="Lines">
+    <xs:sequence>
+      <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q11:ArrayOfKeyValueOfstringLineDPv91znk" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Lines" nillable="true" type="tns:Lines" />
+</xs:schema>

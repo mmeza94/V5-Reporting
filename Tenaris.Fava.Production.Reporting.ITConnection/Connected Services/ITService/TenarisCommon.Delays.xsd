@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+  <xs:complexType name="DelayCollection">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q1:ArrayOfKeyValueOfstringDelayXB7Nc7EW" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DelayCollection" nillable="true" type="tns:DelayCollection" />
+  <xs:complexType name="Delay">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Cargo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodeINDU" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Comments" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CreationDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="CreationShift" type="xs:int" />
+      <xs:element minOccurs="0" name="CreationTamsaDate" type="xs:dateTime" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" minOccurs="0" name="Creator" nillable="true" type="q2:Operator" />
+      <xs:element minOccurs="0" name="Duration" type="ser:duration" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" minOccurs="0" name="Editor" nillable="true" type="q3:Operator" />
+      <xs:element minOccurs="0" name="End" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FolioID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsGrouped" type="xs:boolean" />
+      <xs:element minOccurs="0" name="LastUpdate" type="xs:dateTime" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" minOccurs="0" name="MaintenanceElements" nillable="true" type="q4:SystemElements" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q5:ProductKey" />
+      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" minOccurs="0" name="Reporter" nillable="true" type="q6:Operator" />
+      <xs:element minOccurs="0" name="Shift" type="xs:int" />
+      <xs:element minOccurs="0" name="Start" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="TamsaDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Type" type="tns:EnumDelayType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Delay" nillable="true" type="tns:Delay" />
+  <xs:simpleType name="EnumDelayType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="I" />
+      <xs:enumeration value="D" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EnumDelayType" nillable="true" type="tns:EnumDelayType" />
+</xs:schema>

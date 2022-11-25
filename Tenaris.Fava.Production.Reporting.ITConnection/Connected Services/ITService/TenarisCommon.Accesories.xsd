@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="OPSpecContainer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Amount" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyInsp" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Customer" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerInsp" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DopeTypeCopled" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DopeTypeExposed" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EnabledMark" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndPipeSpecContainers" nillable="true" type="tns:EndPipeSpecContainers" />
+      <xs:element minOccurs="0" name="Errors" nillable="true" type="tns:ErrorCollection" />
+      <xs:element minOccurs="0" name="FreeText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Inspector" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Items" nillable="true" type="tns:OPSpecCollection" />
+      <xs:element minOccurs="0" name="OP" type="xs:int" />
+      <xs:element minOccurs="0" name="OPsHijas" nillable="true" type="tns:ChildWorkOrderCollection" />
+      <xs:element minOccurs="0" name="Packing" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q1:ProductKey" />
+      <xs:element minOccurs="0" name="ProductVersion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RouteSpecContainers" nillable="true" type="tns:RouteSpecContainers" />
+      <xs:element minOccurs="0" name="SellType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShipDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Surface" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TiemposDeCiclo" nillable="true" type="tns:StandardCycleTimeCollection" />
+      <xs:element minOccurs="0" name="Traceability" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OPSpecContainer" nillable="true" type="tns:OPSpecContainer" />
+  <xs:complexType name="EndPipeSpecContainers">
+    <xs:sequence>
+      <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q2:ArrayOfKeyValueOfstringEndPipeSpecContainer70P34wZL" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EndPipeSpecContainers" nillable="true" type="tns:EndPipeSpecContainers" />
+  <xs:complexType name="EndPipeSpecContainer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EndPipe" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndPipeSpecCollection" nillable="true" type="tns:EndPipeSpecCollection" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q3:ProductKey" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EndPipeSpecContainer" nillable="true" type="tns:EndPipeSpecContainer" />
+  <xs:complexType name="EndPipeSpecCollection">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q4:ArrayOfKeyValueOfstringOPElement70P34wZL" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EndPipeSpecCollection" nillable="true" type="tns:EndPipeSpecCollection" />
+  <xs:complexType name="OPElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdGroup" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdValue" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdVariable" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Lapso" type="xs:int" />
+      <xs:element minOccurs="0" name="Mediciones" type="xs:int" />
+      <xs:element minOccurs="0" name="Medida" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Muestras" type="xs:int" />
+      <xs:element minOccurs="0" name="UnitMeasurement" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OPElement" nillable="true" type="tns:OPElement" />
+  <xs:complexType name="ErrorCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q5:ArrayOfKeyValueOfstringErrorElement70P34wZL" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ErrorCollection" nillable="true" type="tns:ErrorCollection" />
+  <xs:complexType name="ErrorElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Source" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ErrorElement" nillable="true" type="tns:ErrorElement" />
+  <xs:complexType name="OPSpecCollection">
+    <xs:sequence>
+      <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q6:ArrayOfKeyValueOfstringOPElement70P34wZL" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OPSpecCollection" nillable="true" type="tns:OPSpecCollection" />
+  <xs:complexType name="ChildWorkOrderCollection">
+    <xs:sequence>
+      <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q7:ArrayOfKeyValueOfstringChildWorkOrder70P34wZL" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ChildWorkOrderCollection" nillable="true" type="tns:ChildWorkOrderCollection" />
+  <xs:complexType name="ChildWorkOrder">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AssignedQtyPcs" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OP" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Priority" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProductId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QtyBox" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QtyPcs" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ChildWorkOrder" nillable="true" type="tns:ChildWorkOrder" />
+  <xs:complexType name="RouteSpecContainers">
+    <xs:sequence>
+      <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q8:ArrayOfKeyValueOfstringRouteSpecContainer70P34wZL" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RouteSpecContainers" nillable="true" type="tns:RouteSpecContainers" />
+  <xs:complexType name="RouteSpecContainer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q9:ProductKey" />
+      <xs:element minOccurs="0" name="RouteSpecCollection" nillable="true" type="tns:RouteSpecCollection" />
+      <xs:element minOccurs="0" name="Sequence" type="xs:int" />
+      <xs:element minOccurs="0" name="SpecSources" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RouteSpecContainer" nillable="true" type="tns:RouteSpecContainer" />
+  <xs:complexType name="RouteSpecCollection">
+    <xs:sequence>
+      <xs:element xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q10:ArrayOfKeyValueOfstringOPElement70P34wZL" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Sequence" type="xs:int" />
+      <xs:element minOccurs="0" name="SpecSources" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RouteSpecCollection" nillable="true" type="tns:RouteSpecCollection" />
+  <xs:complexType name="StandardCycleTimeCollection">
+    <xs:sequence>
+      <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q11:ArrayOfKeyValueOfstringStandardCycleTime70P34wZL" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StandardCycleTimeCollection" nillable="true" type="tns:StandardCycleTimeCollection" />
+  <xs:complexType name="StandardCycleTime">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CTE" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Opcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Operacion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnidadMedida" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Vigencia" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StandardCycleTime" nillable="true" type="tns:StandardCycleTime" />
+  <xs:complexType name="ArrayOfChargeAsociada">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ChargeAsociada" nillable="true" type="tns:ChargeAsociada" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfChargeAsociada" nillable="true" type="tns:ArrayOfChargeAsociada" />
+  <xs:complexType name="ChargeAsociada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BeginDateTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="BeginDateTimeHHMMSS" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="BeginInterruption" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndDateTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="EndDateTimeHHMMSS" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndInterruption" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="OperatorComment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Order" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ChargeAsociada" nillable="true" type="tns:ChargeAsociada" />
+  <xs:complexType name="ArrayOfProductionBox">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductionBox" nillable="true" type="tns:ProductionBox" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProductionBox" nillable="true" type="tns:ArrayOfProductionBox" />
+  <xs:complexType name="ProductionBox">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LoadedPieces" type="xs:int" />
+      <xs:element minOccurs="0" name="MachineId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MaxPieces" type="xs:int" />
+      <xs:element minOccurs="0" name="MissingPieces" type="xs:int" />
+      <xs:element minOccurs="0" name="OperationId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OrderNumber" type="xs:int" />
+      <xs:element minOccurs="0" name="ParentOrderNumber" type="xs:int" />
+      <xs:element minOccurs="0" name="ProcessSequence" type="xs:int" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProductionBox" nillable="true" type="tns:ProductionBox" />
+  <xs:complexType name="DiscardContainer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DiscardingReason" nillable="true" type="tns:DiscardCollection" />
+      <xs:element minOccurs="0" name="Errors" nillable="true" type="tns:ErrorCollection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DiscardContainer" nillable="true" type="tns:DiscardContainer" />
+  <xs:complexType name="DiscardCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q12:ArrayOfKeyValueOfstringDiscardElement70P34wZL" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DiscardCollection" nillable="true" type="tns:DiscardCollection" />
+  <xs:complexType name="DiscardElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Operation" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DiscardElement" nillable="true" type="tns:DiscardElement" />
+  <xs:complexType name="ArrayOfDescarte">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Descarte" nillable="true" type="tns:Descarte" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDescarte" nillable="true" type="tns:ArrayOfDescarte" />
+  <xs:complexType name="Descarte">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Cantidad" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Destino" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Motivo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Tipo" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Descarte" nillable="true" type="tns:Descarte" />
+  <xs:complexType name="ArrayOfProbeta">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Probeta" nillable="true" type="tns:Probeta" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProbeta" nillable="true" type="tns:ArrayOfProbeta" />
+  <xs:complexType name="Probeta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Tipo" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Probeta" nillable="true" type="tns:Probeta" />
+  <xs:complexType name="ArrayOfProbetaAsociada">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProbetaAsociada" nillable="true" type="tns:ProbetaAsociada" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProbetaAsociada" nillable="true" type="tns:ArrayOfProbetaAsociada" />
+  <xs:complexType name="ProbetaAsociada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProbetaAsociada" nillable="true" type="tns:ProbetaAsociada" />
+</xs:schema>

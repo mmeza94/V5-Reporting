@@ -1,0 +1,910 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ITServiceImpl" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="RoleEndPoint_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="60000">
+          </wsrm:InactivityTimeout>
+          <wsrm:AcknowledgementInterval Milliseconds="200">
+          </wsrm:AcknowledgementInterval>
+        </wsrm:RMAssertion>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1">
+        </msb:BinaryEncoding>
+        <wsaw:UsingAddressing>
+        </wsaw:UsingAddressing>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.Program" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Measurement" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Objects" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Chemical" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ITService_GetProgramIDs_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetProgramIDs" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetProgramIDs_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetProgramIDsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetProgram_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetProgram" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetProgram_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetProgramResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetCurrentProgram_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentProgram" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetCurrentProgram_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentProgramResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetOrderData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrderData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetOrderData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrderDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAvailableItemsForProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAvailableItemsForProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAvailableItemsForProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAvailableItemsForProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_LoadItemsToProcess_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoadItemsToProcess" />
+  </wsdl:message>
+  <wsdl:message name="ITService_LoadItemsToProcess_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoadItemsToProcessResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetHeats_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetHeats" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetHeats_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetHeatsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetItemsIDRange_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetItemsIDRange" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetItemsIDRange_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetItemsIDRangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetMaxPipesInCrane_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMaxPipesInCrane" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetMaxPipesInCrane_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMaxPipesInCraneResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportStockItemsGroup_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportStockItemsGroup" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportStockItemsGroup_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportStockItemsGroupResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendDelaysToHost_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendDelaysToHost" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendDelaysToHost_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendDelaysToHostResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_CheckControlNumbers_InputMessage">
+    <wsdl:part name="parameters" element="tns:CheckControlNumbers" />
+  </wsdl:message>
+  <wsdl:message name="ITService_CheckControlNumbers_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CheckControlNumbersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetOrderCompliance_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrderCompliance" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetOrderCompliance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrderComplianceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendPacketToIT_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendPacketToIT" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendPacketToIT_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendPacketToITResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetWMSSpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetWMSSpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetWMSSpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetWMSSpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendProducedItemsGroup_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendProducedItemsGroup" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendProducedItemsGroup_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendProducedItemsGroupResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendProbeInfoToHost_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendProbeInfoToHost" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendProbeInfoToHost_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendProbeInfoToHostResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetVDISpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetVDISpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetVDISpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetVDISpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetRequirementNDTNotches_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequirementNDTNotches" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetRequirementNDTNotches_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequirementNDTNotchesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetEMISpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEMISpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetEMISpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEMISpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetChemicalSpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetChemicalSpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetChemicalSpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetChemicalSpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetCouplingSpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCouplingSpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetCouplingSpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCouplingSpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendConsumedCouplings_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendConsumedCouplings" />
+  </wsdl:message>
+  <wsdl:message name="ITService_SendConsumedCouplings_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendConsumedCouplingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetHydrostaticTestSpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetHydrostaticTestSpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetHydrostaticTestSpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetHydrostaticTestSpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetHTRSpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetHTRSpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetHTRSpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetHTRSpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetUpsettingSpecificationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUpsettingSpecificationData" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetUpsettingSpecificationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUpsettingSpecificationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecification_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecification" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecification_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetSampleNumber_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSampleNumber" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetSampleNumber_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSampleNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_TestService_InputMessage">
+    <wsdl:part name="parameters" element="tns:TestService" />
+  </wsdl:message>
+  <wsdl:message name="ITService_TestService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TestServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetSampleNumberUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSampleNumberUser" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetSampleNumberUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSampleNumberUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportInterruptions_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportInterruptions" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportInterruptions_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportInterruptionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_UnLoadMaterial_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnLoadMaterial" />
+  </wsdl:message>
+  <wsdl:message name="ITService_UnLoadMaterial_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnLoadMaterialResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_LoadMaterial_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoadMaterial" />
+  </wsdl:message>
+  <wsdl:message name="ITService_LoadMaterial_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoadMaterialResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesAvailableStock_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesAvailableStock" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesAvailableStock_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesAvailableStockResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecificationA_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationA" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecificationA_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationAResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecificationAU_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationAU" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecificationAU_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationAUResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetProductionBoxes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetProductionBoxes" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetProductionBoxes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetProductionBoxesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_LoadProductionBox_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoadProductionBox" />
+  </wsdl:message>
+  <wsdl:message name="ITService_LoadProductionBox_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoadProductionBoxResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_UnloadProductionBox_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnloadProductionBox" />
+  </wsdl:message>
+  <wsdl:message name="ITService_UnloadProductionBox_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnloadProductionBoxResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetDiscardingMotives_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDiscardingMotives" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetDiscardingMotives_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDiscardingMotivesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProduction_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProduction" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProduction_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProductionBox_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionBox" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProductionBox_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionBoxResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProductionReturnProbes_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionReturnProbes" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProductionReturnProbes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionReturnProbesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProductionWProbes_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionWProbes" />
+  </wsdl:message>
+  <wsdl:message name="ITService_ReportProductionWProbes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReportProductionWProbesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecificationForRuta_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationForRuta" />
+  </wsdl:message>
+  <wsdl:message name="ITService_GetAccesoriesSpecificationForRuta_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccesoriesSpecificationForRutaResponse" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="ITService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetProgramIDs">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetProgramIDs" message="tns:ITService_GetProgramIDs_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetProgramIDsResponse" message="tns:ITService_GetProgramIDs_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetProgram">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetProgram" message="tns:ITService_GetProgram_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetProgramResponse" message="tns:ITService_GetProgram_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetCurrentProgram">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetCurrentProgram" message="tns:ITService_GetCurrentProgram_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetCurrentProgramResponse" message="tns:ITService_GetCurrentProgram_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetOrderData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetOrderData" message="tns:ITService_GetOrderData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISManufacturingScheduleable/GetOrderDataResponse" message="tns:ITService_GetOrderData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetAvailableItemsForProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEntranceable/GetAvailableItemsForProcess" message="tns:ITService_GetAvailableItemsForProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEntranceable/GetAvailableItemsForProcessResponse" message="tns:ITService_GetAvailableItemsForProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="LoadItemsToProcess">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEntranceable/LoadItemsToProcess" message="tns:ITService_LoadItemsToProcess_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEntranceable/LoadItemsToProcessResponse" message="tns:ITService_LoadItemsToProcess_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetHeats">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEntranceable/GetHeats" message="tns:ITService_GetHeats_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEntranceable/GetHeatsResponse" message="tns:ITService_GetHeats_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetItemsIDRange">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEntranceable/GetItemsIDRange" message="tns:ITService_GetItemsIDRange_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEntranceable/GetItemsIDRangeResponse" message="tns:ITService_GetItemsIDRange_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetMaxPipesInCrane">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISExitable/GetMaxPipesInCrane" message="tns:ITService_GetMaxPipesInCrane_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISExitable/GetMaxPipesInCraneResponse" message="tns:ITService_GetMaxPipesInCrane_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ReportStockItemsGroup">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISExitable/ReportStockItemsGroup" message="tns:ITService_ReportStockItemsGroup_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISExitable/ReportStockItemsGroupResponse" message="tns:ITService_ReportStockItemsGroup_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendDelaysToHost">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISDelayable/SendDelaysToHost" message="tns:ITService_SendDelaysToHost_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISDelayable/SendDelaysToHostResponse" message="tns:ITService_SendDelaysToHost_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CheckControlNumbers">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISBalanceable/CheckControlNumbers" message="tns:ITService_CheckControlNumbers_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISBalanceable/CheckControlNumbersResponse" message="tns:ITService_CheckControlNumbers_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetOrderCompliance">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISWMSable/GetOrderCompliance" message="tns:ITService_GetOrderCompliance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISWMSable/GetOrderComplianceResponse" message="tns:ITService_GetOrderCompliance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendPacketToIT">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISWMSable/SendPacketToIT" message="tns:ITService_SendPacketToIT_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISWMSable/SendPacketToITResponse" message="tns:ITService_SendPacketToIT_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetWMSSpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISWMSable/GetWMSSpecificationData" message="tns:ITService_GetWMSSpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISWMSable/GetWMSSpecificationDataResponse" message="tns:ITService_GetWMSSpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendProducedItemsGroup">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISComplianceAccesible/SendProducedItemsGroup" message="tns:ITService_SendProducedItemsGroup_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISComplianceAccesible/SendProducedItemsGroupResponse" message="tns:ITService_SendProducedItemsGroup_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendProbeInfoToHost">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISSampleMgmtable/SendProbeInfoToHost" message="tns:ITService_SendProbeInfoToHost_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISSampleMgmtable/SendProbeInfoToHostResponse" message="tns:ITService_SendProbeInfoToHost_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetVDISpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISVDIable/GetVDISpecificationData" message="tns:ITService_GetVDISpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISVDIable/GetVDISpecificationDataResponse" message="tns:ITService_GetVDISpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetRequirementNDTNotches">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEMIable/GetRequirementNDTNotches" message="tns:ITService_GetRequirementNDTNotches_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEMIable/GetRequirementNDTNotchesResponse" message="tns:ITService_GetRequirementNDTNotches_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetEMISpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEMIable/GetEMISpecificationData" message="tns:ITService_GetEMISpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEMIable/GetEMISpecificationDataResponse" message="tns:ITService_GetEMISpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetChemicalSpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISChemicalable/GetChemicalSpecificationData" message="tns:ITService_GetChemicalSpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISChemicalable/GetChemicalSpecificationDataResponse" message="tns:ITService_GetChemicalSpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetCouplingSpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISCouplingnable/GetCouplingSpecificationData" message="tns:ITService_GetCouplingSpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISCouplingnable/GetCouplingSpecificationDataResponse" message="tns:ITService_GetCouplingSpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendConsumedCouplings">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISCouplingnable/SendConsumedCouplings" message="tns:ITService_SendConsumedCouplings_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISCouplingnable/SendConsumedCouplingsResponse" message="tns:ITService_SendConsumedCouplings_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetHydrostaticTestSpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISHydrostaticTestable/GetHydrostaticTestSpecificationData" message="tns:ITService_GetHydrostaticTestSpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISHydrostaticTestable/GetHydrostaticTestSpecificationDataResponse" message="tns:ITService_GetHydrostaticTestSpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetHTRSpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISHTRable/GetHTRSpecificationData" message="tns:ITService_GetHTRSpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISHTRable/GetHTRSpecificationDataResponse" message="tns:ITService_GetHTRSpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetUpsettingSpecificationData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISUpsettingnable/GetUpsettingSpecificationData" message="tns:ITService_GetUpsettingSpecificationData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISUpsettingnable/GetUpsettingSpecificationDataResponse" message="tns:ITService_GetUpsettingSpecificationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetAccesoriesSpecification">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecification" message="tns:ITService_GetAccesoriesSpecification_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationResponse" message="tns:ITService_GetAccesoriesSpecification_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetSampleNumber">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetSampleNumber" message="tns:ITService_GetSampleNumber_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetSampleNumberResponse" message="tns:ITService_GetSampleNumber_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="TestService">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/TestService" message="tns:ITService_TestService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/TestServiceResponse" message="tns:ITService_TestService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetSampleNumberUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetSampleNumberUser" message="tns:ITService_GetSampleNumberUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetSampleNumberUserResponse" message="tns:ITService_GetSampleNumberUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ReportInterruptions">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportInterruptions" message="tns:ITService_ReportInterruptions_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportInterruptionsResponse" message="tns:ITService_ReportInterruptions_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UnLoadMaterial">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/UnLoadMaterial" message="tns:ITService_UnLoadMaterial_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/UnLoadMaterialResponse" message="tns:ITService_UnLoadMaterial_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="LoadMaterial">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/LoadMaterial" message="tns:ITService_LoadMaterial_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/LoadMaterialResponse" message="tns:ITService_LoadMaterial_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetAccesoriesAvailableStock">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesAvailableStock" message="tns:ITService_GetAccesoriesAvailableStock_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesAvailableStockResponse" message="tns:ITService_GetAccesoriesAvailableStock_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetAccesoriesSpecificationA">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationA" message="tns:ITService_GetAccesoriesSpecificationA_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationAResponse" message="tns:ITService_GetAccesoriesSpecificationA_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetAccesoriesSpecificationAU">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationAU" message="tns:ITService_GetAccesoriesSpecificationAU_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationAUResponse" message="tns:ITService_GetAccesoriesSpecificationAU_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetProductionBoxes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetProductionBoxes" message="tns:ITService_GetProductionBoxes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetProductionBoxesResponse" message="tns:ITService_GetProductionBoxes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="LoadProductionBox">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/LoadProductionBox" message="tns:ITService_LoadProductionBox_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/LoadProductionBoxResponse" message="tns:ITService_LoadProductionBox_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UnloadProductionBox">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/UnloadProductionBox" message="tns:ITService_UnloadProductionBox_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/UnloadProductionBoxResponse" message="tns:ITService_UnloadProductionBox_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetDiscardingMotives">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetDiscardingMotives" message="tns:ITService_GetDiscardingMotives_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetDiscardingMotivesResponse" message="tns:ITService_GetDiscardingMotives_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ReportProduction">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProduction" message="tns:ITService_ReportProduction_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionResponse" message="tns:ITService_ReportProduction_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ReportProductionBox">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionBox" message="tns:ITService_ReportProductionBox_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionBoxResponse" message="tns:ITService_ReportProductionBox_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ReportProductionReturnProbes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionReturnProbes" message="tns:ITService_ReportProductionReturnProbes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionReturnProbesResponse" message="tns:ITService_ReportProductionReturnProbes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ReportProductionWProbes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionWProbes" message="tns:ITService_ReportProductionWProbes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/ReportProductionWProbesResponse" message="tns:ITService_ReportProductionWProbes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetAccesoriesSpecificationForRuta">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationForRuta" message="tns:ITService_GetAccesoriesSpecificationForRuta_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationForRutaResponse" message="tns:ITService_GetAccesoriesSpecificationForRuta_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RoleEndPoint" type="tns:ITService">
+    <wsp:PolicyReference URI="#RoleEndPoint_policy">
+    </wsp:PolicyReference>
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="GetProgramIDs">
+      <soap12:operation soapAction="http://tempuri.org/ISManufacturingScheduleable/GetProgramIDs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProgram">
+      <soap12:operation soapAction="http://tempuri.org/ISManufacturingScheduleable/GetProgram" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentProgram">
+      <soap12:operation soapAction="http://tempuri.org/ISManufacturingScheduleable/GetCurrentProgram" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderData">
+      <soap12:operation soapAction="http://tempuri.org/ISManufacturingScheduleable/GetOrderData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAvailableItemsForProcess">
+      <soap12:operation soapAction="http://tempuri.org/ISEntranceable/GetAvailableItemsForProcess" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoadItemsToProcess">
+      <soap12:operation soapAction="http://tempuri.org/ISEntranceable/LoadItemsToProcess" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHeats">
+      <soap12:operation soapAction="http://tempuri.org/ISEntranceable/GetHeats" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetItemsIDRange">
+      <soap12:operation soapAction="http://tempuri.org/ISEntranceable/GetItemsIDRange" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMaxPipesInCrane">
+      <soap12:operation soapAction="http://tempuri.org/ISExitable/GetMaxPipesInCrane" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportStockItemsGroup">
+      <soap12:operation soapAction="http://tempuri.org/ISExitable/ReportStockItemsGroup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendDelaysToHost">
+      <soap12:operation soapAction="http://tempuri.org/ISDelayable/SendDelaysToHost" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckControlNumbers">
+      <soap12:operation soapAction="http://tempuri.org/ISBalanceable/CheckControlNumbers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderCompliance">
+      <soap12:operation soapAction="http://tempuri.org/ISWMSable/GetOrderCompliance" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendPacketToIT">
+      <soap12:operation soapAction="http://tempuri.org/ISWMSable/SendPacketToIT" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWMSSpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISWMSable/GetWMSSpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendProducedItemsGroup">
+      <soap12:operation soapAction="http://tempuri.org/ISComplianceAccesible/SendProducedItemsGroup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendProbeInfoToHost">
+      <soap12:operation soapAction="http://tempuri.org/ISSampleMgmtable/SendProbeInfoToHost" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVDISpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISVDIable/GetVDISpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequirementNDTNotches">
+      <soap12:operation soapAction="http://tempuri.org/ISEMIable/GetRequirementNDTNotches" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEMISpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISEMIable/GetEMISpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChemicalSpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISChemicalable/GetChemicalSpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCouplingSpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISCouplingnable/GetCouplingSpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendConsumedCouplings">
+      <soap12:operation soapAction="http://tempuri.org/ISCouplingnable/SendConsumedCouplings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHydrostaticTestSpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISHydrostaticTestable/GetHydrostaticTestSpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHTRSpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISHTRable/GetHTRSpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUpsettingSpecificationData">
+      <soap12:operation soapAction="http://tempuri.org/ISUpsettingnable/GetUpsettingSpecificationData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccesoriesSpecification">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecification" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSampleNumber">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetSampleNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestService">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/TestService" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSampleNumberUser">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetSampleNumberUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportInterruptions">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/ReportInterruptions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnLoadMaterial">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/UnLoadMaterial" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoadMaterial">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/LoadMaterial" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccesoriesAvailableStock">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetAccesoriesAvailableStock" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccesoriesSpecificationA">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationA" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccesoriesSpecificationAU">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationAU" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProductionBoxes">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetProductionBoxes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoadProductionBox">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/LoadProductionBox" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnloadProductionBox">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/UnloadProductionBox" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDiscardingMotives">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetDiscardingMotives" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportProduction">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/ReportProduction" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportProductionBox">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/ReportProductionBox" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportProductionReturnProbes">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/ReportProductionReturnProbes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportProductionWProbes">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/ReportProductionWProbes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccesoriesSpecificationForRuta">
+      <soap12:operation soapAction="http://tempuri.org/ISAccesoriesable/GetAccesoriesSpecificationForRuta" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ITServiceImpl">
+    <wsdl:port name="RoleEndPoint" binding="tns:RoleEndPoint">
+      <soap12:address location="net.tcp://localhost:33366/ITService" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:33366/ITService</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

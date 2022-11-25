@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Configurations>
+
+
+
+
+
+
+
+
+	<!--GRANALLADORA MATERIA PRIMA-->
+
+	<configsection name="GRANALLADORA" >
+
+		<Machine>Granalladora</Machine>
+		<Secuencia>1</Secuencia>
+		<Operacion>Granallado Materia Prima</Operacion>
+		<Opcion>Granallado Materia Prima</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V1</VersionApplication>
+		<Workstation>MV-GRANALLA1</Workstation>
+
+
+	</configsection>
+
+	<!--ENDERAZADO-->
+	<configsection name="ENDEREZADORA">
+
+
+		<Machine>Enderezadora</Machine>
+		<Secuencia>2</Secuencia>
+		<Operacion>Enderezado</Operacion>
+		<Opcion>Enderezado</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V1</VersionApplication>
+		<Workstation>MV-ENDEREZADO</Workstation>
+
+	</configsection>
+
+	<!--CND-->
+	<configsection name="CND">
+
+		<Machine>Cnd</Machine>
+		<Secuencia>3</Secuencia>
+		<Operacion>Control No Destructivo</Operacion>
+		<Opcion>Control No Destructivo</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V1</VersionApplication>
+		<Workstation>VM-CND</Workstation>
+
+
+	</configsection>
+
+	<!--FORJADORA EXTREMO 1-->
+
+	<configsection name="FORJADORA 0">
+
+		<Machine>Forjadora 0</Machine>
+		<Secuencia>4</Secuencia>
+		<Operacion>Forjado Extremo 1</Operacion>
+		<Opcion>Forja 0</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<Extremo>Extremo 1</Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.101;Initial Catalog=L2_Forja;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<FlagITNOReportBox>N</FlagITNOReportBox>
+		<VersionApplication>V1</VersionApplication>
+		<Workstation>VM-CARGA-FORJA</Workstation>
+		<ExtrempFiltre>Extremo 1</ExtrempFiltre>
+
+
+
+	</configsection>
+
+	<!--FORJADORA EXTREMO 2-->
+
+	<configsection name="FORJADORA 1">
+
+		<Machine>Forjadora 0</Machine>
+		<Secuencia>4</Secuencia>
+		<Operacion>Forjado Extremo 2</Operacion>
+		<Opcion>Forja 1</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo>Extremo 2</Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.101;Initial Catalog=L2_Forja;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<FlagITNOReportBox>N</FlagITNOReportBox>
+		<VersionApplication>V1</VersionApplication>
+		<Workstation>VM-FORJA-0</Workstation>
+	</configsection>
+
+
+	<configsection name="FORJADORA 2">
+
+		<Machine>Forjadora</Machine>
+		<Secuencia>5</Secuencia>
+		<Operacion>Forjado Extremo 2</Operacion>
+		<Opcion>Forja 1</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo>Extremo 2</Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.101;Initial Catalog=L2_Forja;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<FlagITNOReportBox></FlagITNOReportBox>
+		<VersionApplication>V1</VersionApplication>
+		<Workstation>VM-FORJA</Workstation>
+	</configsection>
+	
+	<!--HORNO NORMALIZADO-->
+
+	<configsection name="HNORMALIZADO">
+
+
+		<Machine>Horno de Normalizado</Machine>
+		<Secuencia>6</Secuencia>
+		<Operacion>Normalizado</Operacion>
+		<Opcion>Normalizado 1</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.101;Initial Catalog=L2_Forja;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V1</VersionApplication>
+		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<MachineFiltre>Horno de Normalizado</MachineFiltre>
+		<Workstation>VM-NORMALIZADO</Workstation>
+
+
+
+	</configsection>
+
+	<!--HORNO REVENIDO-->
+
+	<configsection name="HREVENIDO">
+
+		<Machine>Horno de Revenido</Machine>
+		<Secuencia>7</Secuencia>
+		<Operacion>Revenido</Operacion>
+		<Opcion>Revenido 1</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.101;Initial Catalog=L2_Forja;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V1</VersionApplication>
+		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<MachineFiltre>Horno de Revenido</MachineFiltre>
+		<Workstation>VM-REVENIDO</Workstation>
+
+
+
+	</configsection>
+
+	<!--GRANALLADORA 2-->
+
+	<configsection name="GRANALLADORA2">
+
+		<Machine>Granalladora</Machine>
+		<Secuencia>8</Secuencia>
+		<Operacion>Granallado</Operacion>
+		<Opcion>Granallado 1</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<MachineFiltre>Granalladora</MachineFiltre>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.101;Initial Catalog=L2_Forja;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V1</VersionApplication>
+		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<Workstation>VM-GRA-02</Workstation>
+		
+
+
+	</configsection>
+
+
+	<!--MECANIZADO 1 -->
+
+	<configsection name="ROSCADORA">
+		<Machine>Roscadora</Machine>
+		<Secuencia>9</Secuencia>
+		<Operacion>Mecanizado Extremo 1</Operacion>
+		<Opcion>Mecanizado 1</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<Extremo>Extremo 1</Extremo>
+		<MachineFiltre></MachineFiltre>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.102;Initial Catalog=L2_MECA;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<VersionApplication>V4</VersionApplication>
+		<N1CounterTag>CND_COUNT_N1.VALUE</N1CounterTag>
+		<N2CounterTag>CND_COUNT_N2.VALUE</N2CounterTag>
+		<Workstation>VM-MECANIZADO1</Workstation>
+	</configsection>
+
+	<!--MECANIZADO 2 -->
+
+	<configsection name="ROSCADORA2">
+
+		<Machine>Roscadora</Machine>
+		<Secuencia>9</Secuencia>
+		<Operacion>Mecanizado Extremo 1</Operacion>
+		<Opcion>Mecanizado 2</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo>Extremo 2</Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.102;Initial Catalog=L2_MECA;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>VM-MECANIZADO2</Workstation>
+		<VersionApplication>V1</VersionApplication>
+
+	</configsection>
+	<!--MECANIZADO 3-->
+
+	<configsection name="ROSCADORA3">
+
+		<Machine>Roscadora</Machine>
+		<Secuencia>9</Secuencia>
+		<Operacion>Mecanizado Extremo 1</Operacion>
+		<Opcion>Mecanizado 3</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<Extremo>Extremo 1</Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_MECA2;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>VM-MECANIZADO03</Workstation>
+		<VersionApplication>V3</VersionApplication>
+
+	</configsection>
+
+
+  <!--MECANIZADO 4-->
+
+  <configsection name="ROSCADORA4">
+
+    <Machine>Roscadora</Machine>
+    <Secuencia>9</Secuencia>
+    <Operacion>Mecanizado Extremo 1</Operacion>
+    <Opcion>Mecanizado 4</Opcion>
+    <MaquinaInicialZona>0</MaquinaInicialZona>
+    <Extremo>Extremo 2</Extremo>
+    <isPintando>False</isPintando>
+	  <MachineFiltre>Roscadora 4</MachineFiltre>
+	  <MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
+	  <ExtremoFiltre>Extremo 1</ExtremoFiltre>
+    <ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_MECA2;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+    <Workstation>VM-MECANIZADO4</Workstation>
+    <VersionApplication>V3</VersionApplication>
+
+  </configsection>
+
+
+
+	<!--PINTADO-->
+
+	<configsection name="PINTADO">
+
+		<Machine>Pintado</Machine>
+		<Secuencia>11</Secuencia>
+		<Operacion>Pintado</Operacion>
+		<Opcion>Pintado 1</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>True</isPintando>
+		<ConnectionString>Data Source=10.92.35.102;Initial Catalog=L2_MECA;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<FlagITNOReportBox></FlagITNOReportBox>
+		<VersionApplication>V3</VersionApplication>
+		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<Workstation>MV-EMBALADOBAT0</Workstation>
+
+
+	</configsection>
+
+	<!--INYECTORA-->
+
+	<configsection name="INYECTORA">
+
+		<Machine>Inyectora</Machine>
+		<Secuencia>11</Secuencia>
+		<Operacion>Inyectado</Operacion>
+		<Opcion>Inyectado</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.102;Initial Catalog=L2_INYEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>VM-INYECTORA</Workstation>
+		<VersionApplication>V3</VersionApplication>
+
+	</configsection>
+
+	
+	
+	
+	
+	
+
+	<!--///////////////////   COPLES   /////////////////////////-->
+	
+	
+
+
+	<!--ROSCADORA SALIDA-->
+
+	<configsection name="ROSCADORASALIDA">
+
+		<Machine>Salida Buenos</Machine>
+		<Secuencia>2</Secuencia>
+		<Operacion>Mecanizado</Operacion>
+		<Opcion>Isla 1</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<Extremo></Extremo>
+		<MachineFiltre>Salida Buenos</MachineFiltre>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_ROSCADO; User ID=sa; Password=Tamsa01; Persist Security Info=True; MultipleActiveResultSets=True; Asynchronous Processing=true; </ConnectionString>
+		<VersionApplication>V4</VersionApplication>
+		<N1CounterTag>CMDBAT1ROS01.N2</N1CounterTag>
+		<MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<Workstation>MV-ROS-COPLES02</Workstation>
+
+	</configsection>
+
+
+
+
+	<!--FOSFATIZADO ENTRADA-->
+
+	<configsection name="ENTRADAFOSFATIZADO">
+
+		<Machine>SalidaFosfatizado</Machine>
+		<MachineFiltre>SalidaFosfatizado</MachineFiltre>
+		<MachineToReport>SalidaFosfatizado</MachineToReport>
+		<Secuencia>3</Secuencia>
+		<Operacion>Fosfatizado</Operacion>
+		<Opcion>Fosfatizado 1</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_FOSFATIZADO;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>MV-FOSFATO-ENTR</Workstation>
+		<VersionApplication>V4</VersionApplication>
+
+
+
+	</configsection>
+
+
+	<!--FOSFATIZADO SALIDA-->
+
+	<configsection name="SALIDAFOSFATIZADO">
+
+		<Machine>SalidaFosfatizado</Machine>
+		<MachineFiltre>SalidaFosfatizado</MachineFiltre>
+		<MachineToReport>SalidaFosfatizado</MachineToReport>
+		<Secuencia>3</Secuencia>
+		<Operacion>Fosfatizado</Operacion>
+		<Opcion>Fosfatizado 1</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_FOSFATIZADO;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>MV-FOSFATO-SALI</Workstation>
+		<VersionApplication>V4</VersionApplication>
+
+
+
+	</configsection>
+
+
+
+
+	<!--MARCADORA-->
+
+	<configsection name="MARCADORA">
+
+		<Machine>DescargaCoples</Machine>
+		<MachineFiltre>DescargaCoples</MachineFiltre>
+		<MachineToReport>DescargaCoples</MachineToReport>
+		<Secuencia>4</Secuencia>
+		<Operacion>Marcado</Operacion>
+		<Opcion>Marcado 1</Opcion>
+		<MaquinaInicialZona>1</MaquinaInicialZona>
+		<MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre></ExtremoFiltre>
+		<Extremo></Extremo>
+		<isPintando>False</isPintando>
+		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_MARCADO;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>MV-MARCADO</Workstation>
+		<VersionApplication>V4</VersionApplication>
+
+
+
+	</configsection>
+
+
+</Configurations>
+

@@ -1,0 +1,613 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Measurement" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Objects" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Chemical" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" />
+  <xs:complexType name="ArrayOfKeyValueOfstringdateTime">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringdateTime">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element name="Value" type="xs:dateTime" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringdateTime" nillable="true" type="tns:ArrayOfKeyValueOfstringdateTime" />
+  <xs:complexType name="ArrayOfKeyValueOfstringParameterd1Eucu_SM">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringParameterd1Eucu_SM">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TenarisCommon" name="Value" nillable="true" type="q1:Parameter" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringParameterd1Eucu_SM" nillable="true" type="tns:ArrayOfKeyValueOfstringParameterd1Eucu_SM" />
+  <xs:complexType name="ArrayOfKeyValueOfstringSpecDataContainer0v_Pa5xBf">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringSpecDataContainer0v_Pa5xBf">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" name="Value" nillable="true" type="q2:SpecDataContainer" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringSpecDataContainer0v_Pa5xBf" nillable="true" type="tns:ArrayOfKeyValueOfstringSpecDataContainer0v_Pa5xBf" />
+  <xs:complexType name="ArrayOfKeyValueOfstringStockItemimCLpCbW">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringStockItemimCLpCbW">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" name="Value" nillable="true" type="q3:StockItem" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringStockItemimCLpCbW" nillable="true" type="tns:ArrayOfKeyValueOfstringStockItemimCLpCbW" />
+  <xs:complexType name="ArrayOfKeyValueOfstringPhysicalAttrib2YjCsp6Y">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringPhysicalAttrib2YjCsp6Y">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/TenarisCommon.Measurement" name="Value" nillable="true" type="q4:PhysicalAttrib" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringPhysicalAttrib2YjCsp6Y" nillable="true" type="tns:ArrayOfKeyValueOfstringPhysicalAttrib2YjCsp6Y" />
+  <xs:complexType name="ArrayOfKeyValueOfstringProcessRunDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringProcessRunDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q5:ProcessRun" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringProcessRunDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringProcessRunDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringCurveDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringCurveDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q6:Curve" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringCurveDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringCurveDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringSeriesDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringSeriesDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q7:Series" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringSeriesDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringSeriesDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringPointDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringPointDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q8:Point" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringPointDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringPointDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringEquipmentDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringEquipmentDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q9:Equipment" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringEquipmentDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringEquipmentDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringMSystemDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringMSystemDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q10:MSystem" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringMSystemDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringMSystemDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringSystemElementDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringSystemElementDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q11:SystemElement" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringSystemElementDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringSystemElementDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringLineDPv91znk">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringLineDPv91znk">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" name="Value" nillable="true" type="q12:Line" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringLineDPv91znk" nillable="true" type="tns:ArrayOfKeyValueOfstringLineDPv91znk" />
+  <xs:complexType name="ArrayOfKeyValueOfstringLotimCLpCbW">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringLotimCLpCbW">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" name="Value" nillable="true" type="q13:Lot" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringLotimCLpCbW" nillable="true" type="tns:ArrayOfKeyValueOfstringLotimCLpCbW" />
+  <xs:complexType name="ArrayOfKeyValueOfstringErrorReportyf7ull1t">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringErrorReportyf7ull1t">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/TenarisCommon.Objects" name="Value" nillable="true" type="q14:ErrorReport" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringErrorReportyf7ull1t" nillable="true" type="tns:ArrayOfKeyValueOfstringErrorReportyf7ull1t" />
+  <xs:complexType name="ArrayOfstring">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring" />
+  <xs:complexType name="ArrayOfKeyValueOfstringTransactionReportyf7ull1t">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringTransactionReportyf7ull1t">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/TenarisCommon.Objects" name="Value" nillable="true" type="q15:TransactionReport" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringTransactionReportyf7ull1t" nillable="true" type="tns:ArrayOfKeyValueOfstringTransactionReportyf7ull1t" />
+  <xs:complexType name="ArrayOfKeyValueOfstringDelayXB7Nc7EW">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringDelayXB7Nc7EW">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/TenarisCommon.Delays" name="Value" nillable="true" type="q16:Delay" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringDelayXB7Nc7EW" nillable="true" type="tns:ArrayOfKeyValueOfstringDelayXB7Nc7EW" />
+  <xs:complexType name="ArrayOfKeyValueOfintITMachineId0v_Pa5xBf">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfintITMachineId0v_Pa5xBf">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" type="xs:int" />
+            <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" name="Value" nillable="true" type="q17:ITMachineId" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfintITMachineId0v_Pa5xBf" nillable="true" type="tns:ArrayOfKeyValueOfintITMachineId0v_Pa5xBf" />
+  <xs:complexType name="ArrayOfKeyValueOfintRingColorDatauab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfintRingColorDatauab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" type="xs:int" />
+            <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q18:RingColorData" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfintRingColorDatauab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfintRingColorDatauab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfstringVDIDatauab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringVDIDatauab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q19:VDIData" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringVDIDatauab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfstringVDIDatauab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfstringVariableuab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringVariableuab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q20:Variable" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringVariableuab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfstringVariableuab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfstringFormulauab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringFormulauab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q21:Formula" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringFormulauab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfstringFormulauab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfstringEquipmentuab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringEquipmentuab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q22:Equipment" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringEquipmentuab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfstringEquipmentuab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfintInspectionTypeuab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfintInspectionTypeuab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" type="xs:int" />
+            <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q23:InspectionType" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfintInspectionTypeuab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfintInspectionTypeuab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfstringChemicalElementQsf4vJkr">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringChemicalElementQsf4vJkr">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/TenarisCommon.Chemical" name="Value" nillable="true" type="q24:ChemicalElement" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringChemicalElementQsf4vJkr" nillable="true" type="tns:ArrayOfKeyValueOfstringChemicalElementQsf4vJkr" />
+  <xs:complexType name="ArrayOfKeyValueOfintSamplesDatauab81zxt">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfintSamplesDatauab81zxt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" type="xs:int" />
+            <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" name="Value" nillable="true" type="q25:SamplesData" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfintSamplesDatauab81zxt" nillable="true" type="tns:ArrayOfKeyValueOfintSamplesDatauab81zxt" />
+  <xs:complexType name="ArrayOfKeyValueOfstringEndPipeSpecContainer70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringEndPipeSpecContainer70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q26:EndPipeSpecContainer" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringEndPipeSpecContainer70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringEndPipeSpecContainer70P34wZL" />
+  <xs:complexType name="ArrayOfKeyValueOfstringOPElement70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringOPElement70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q27:OPElement" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringOPElement70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringOPElement70P34wZL" />
+  <xs:complexType name="ArrayOfKeyValueOfstringErrorElement70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringErrorElement70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q28:ErrorElement" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringErrorElement70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringErrorElement70P34wZL" />
+  <xs:complexType name="ArrayOfKeyValueOfstringChildWorkOrder70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringChildWorkOrder70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q29:ChildWorkOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringChildWorkOrder70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringChildWorkOrder70P34wZL" />
+  <xs:complexType name="ArrayOfKeyValueOfstringRouteSpecContainer70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringRouteSpecContainer70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q30:RouteSpecContainer" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringRouteSpecContainer70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringRouteSpecContainer70P34wZL" />
+  <xs:complexType name="ArrayOfKeyValueOfstringStandardCycleTime70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringStandardCycleTime70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q31:StandardCycleTime" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringStandardCycleTime70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringStandardCycleTime70P34wZL" />
+  <xs:complexType name="ArrayOfKeyValueOfstringDiscardElement70P34wZL">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringDiscardElement70P34wZL">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/TenarisCommon.Accesories" name="Value" nillable="true" type="q32:DiscardElement" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringDiscardElement70P34wZL" nillable="true" type="tns:ArrayOfKeyValueOfstringDiscardElement70P34wZL" />
+</xs:schema>

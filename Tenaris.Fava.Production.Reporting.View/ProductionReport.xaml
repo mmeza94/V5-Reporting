@@ -1,0 +1,480 @@
+﻿<Window x:Class="Tenaris.Fava.Production.Reporting.View.ProductionReport"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:Interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+        xmlns:Action="clr-namespace:Tenaris.Library.UI.Framework.Interactivity;assembly=Tenaris.Library.UI.Framework"
+        xmlns:IntReq="clr-namespace:Infrastructure.InteractionRequests;assembly=Infrastructure"
+        xmlns:controls="clr-namespace:Tenaris.Fava.Production.Reporting.View"
+        xmlns:controlsd="clr-namespace:Tenaris.Fava.Production.Reporting.View.Dialog"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:framework="http://schemas.tenaris.ot/xaml"       
+        xmlns:local="clr-namespace:Tenaris.Fava.Production.Reporting.View"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Title="ProductionReport" WindowState="Normal"
+        Top="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Top}"
+        Left="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Left}"
+        Width="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width, Converter={StaticResource WindowSizeConverter}, ConverterParameter='0'}"
+        Height="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height,Converter={StaticResource WindowSizeConverter}, ConverterParameter='100'}"
+        Margin="0,0,300,0"
+        xmlns:viewmodel="clr-namespace:Tenaris.Fava.Production.Reporting.ViewModel.View;assembly=Tenaris.Fava.Production.Reporting.ViewModel"
+        >
+    <Window.DataContext>
+        <viewmodel:ProductionReportViewModel />
+    </Window.DataContext>
+    
+    <Window.Resources>
+        <viewmodel:ProductionReportViewModel x:Key="ProductionReportViewModel"></viewmodel:ProductionReportViewModel>
+        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="DataGridColumnHeader">
+            <Setter Property="FontSize" Value="11"/>
+            
+        </Style>
+        <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
+    </Window.Resources>
+    <Interactivity:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowPaintingWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:PaintingReportConfirmation/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ReportConfirmationWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controls:ReportConfirmationView />
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding IndBoxReportConfirmationWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:IndBoxReportConfirmation/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowQuestionWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:ShowQuestion />
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowMessageWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:ShowMessage/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowErrorWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:ShowError/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </Interactivity:Interaction.Triggers>
+
+
+    <DockPanel >
+        <ContentControl Content="{StaticResource ProxyElement}" Visibility="Collapsed"/>
+
+
+
+        <ContentControl DockPanel.Dock="Top" Template="{StaticResource WindowHeader}" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="0" Content="Orden" Style="{StaticResource TableItemCell}" />
+            <TextBox x:Name="txtOrden"    Text="{Binding Orden, UpdateSourceTrigger=PropertyChanged}"  MaxLength="8" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource TableValueInputCell}" IsEnabled="{Binding ForjadoraTextboxes}">
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Label Content="Colada" Grid.Column="3" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding Colada, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="4" Grid.ColumnSpan="2" Style="{StaticResource TableValueInputCell}" IsEnabled="{Binding ForjadoraTextboxes}">
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Label Content="Atado"  Grid.Column="6" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding Atado, UpdateSourceTrigger=PropertyChanged}" Grid.Column="7" Grid.ColumnSpan="2" Style="{StaticResource TableValueInputCell}">
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Label  Margin="0,0,0,0" Grid.Row="0" Grid.Column="9" Grid.ColumnSpan="3" Style="{StaticResource TableItemCell}">
+                <CheckBox Visibility="Hidden" IsChecked="{Binding IsMaquinaInicial}" Content="Máquina inicial de la zona"/>
+            </Label>
+            <Label  Margin="0,0,0,0" Grid.Row="0" Grid.Column="12" Grid.ColumnSpan="3" Style="{StaticResource TableItemCell}">
+                <CheckBox Visibility="Hidden" IsEnabled="False" IsChecked="{Binding IsCargarTPS}" Content="Cargar en TPS"  Command="{ Binding CheckedChangedCommand}"/>
+            </Label>
+
+            <Label Grid.Row="1" Grid.ColumnSpan="16" Style="{StaticResource ButtonsArea}">
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding SearchCommand}" Content="Buscar" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_search.png"/>
+                    <Button Command="{Binding ToggleLockCommand}" Visibility="Hidden" Content="Bloquear" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_block.png" Width="150"/>
+                    <Button Command="{Binding ToggleLockCommand}" Visibility="Hidden" Content="Desbloquear" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_unblock.png" Width="150"/>
+                </StackPanel>
+            </Label>
+
+            <Label Grid.Row="2" Grid.ColumnSpan="16" Style="{StaticResource Header}" Content="Atados por Reportar"/>
+
+            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource TableValueCellHighRelevance}" x:Name="Maquina" Content="{Binding LabelMachine}" Visibility="{Binding MachineVisibilidad}" HorizontalAlignment="Left"/>
+            <Label Grid.Row="3" Grid.Column="5"  Grid.ColumnSpan="9" Style="{StaticResource TableValueCellHighRelevance}" x:Name="NumeroDeResultados" Content="No. de resultados:"/>
+            <Label Grid.Row="3" Grid.Column="14" Style="{StaticResource TableValueCellHighRelevance}" x:Name="NumeroDeResultados2" Content="{Binding Resultados.Count}"/>
+            <!--<Label Grid.Row="3" Grid.ColumnSpan="16" Style="{StaticResource SubHeader}" x:Name="NumeroDeResultados" Content="{Binding Resultados.Count}"/>-->
+
+            <DataGrid Name="dgAtadosPorReportar" Grid.Row="4" Grid.ColumnSpan="16" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="False"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsEnabled="{Binding IsReportButtonEnabled}" IsReadOnly="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" 
+                                  HeadersVisibility="Column" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding Resultados}" SelectedItem="{Binding Selected_Bundle}"
+                                  AreRowDetailsFrozen="False" AllowDrop="False" GridLinesVisibility="All" HorizontalGridLinesBrush="#666666"                                  
+                                  VerticalGridLinesBrush="#666666" BorderThickness="0" FontSize="11">
+
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
+                            CommandParameter="{Binding Path=SelectedItems,ElementName=dtgAvailablePipes}">
+                        </i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="No." Binding="{Binding Path=IdHistory}" Width="70" Visibility="{Binding CommonVisibility}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Máquina" Binding="{Binding Path=Description}"  Width="150"  Visibility="Visible">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Orden" Binding="{Binding Path=OrderNumber}" Width="60" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Colada" Binding="{Binding Path=HeatNumber}" Width="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Atado" Binding="{Binding Path=GroupItemNumber}" Width="95">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Lote" Binding="{Binding Path=LotNumberHTR}" Width="50" Visibility="{Binding CommonVisibility}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Cantidad total" Binding="{Binding Path=LoadedCount}" Width="90" Visibility="{Binding DataContext.IsVisibilityCantTot, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Cargados" Binding="{Binding Path=Cargados}" Width="90" Visibility="{Binding DataContext.IsVisibility, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Total Reportado" Binding="{Binding Path=TotalReportado}"  Width="100" Visibility="{Binding DataContext.IsVisibility, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Buenas Reportadas" Binding="{Binding Path=BuenasReportadas}"  Width="110" Visibility="{Binding DataContext.IsVisibility, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Descartes Reportados" Binding="{Binding Path=MalasReportadas}"  Width="110" Visibility="{Binding DataContext.IsVisibility, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Pendientes de reportar" Binding="{Binding Path=PendientesPorReportar}"  Width="130" Visibility="{Binding DataContext.IsVisibility, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Conteo sin reporte" Binding="{Binding Path=LoadedCount}" Width="90" Visibility="{Binding DataContext.IsVisibility, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Piezas buenas" Binding="{Binding Path=GoodCount}" Width="90">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Piezas malas" Binding="{Binding Path=ScrapCount}" Width="90" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Piezas alertadas" Binding="{Binding Path=WarnedCount}" Width="95" Visibility="{Binding DataContext.IsVisibilityCantTot, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Piezas reprocesadas" Binding="{Binding Path=ReworkedCount}" Width="115" Visibility="{Binding DataContext.IsVisibilityCantTot, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Piezas pendientes" Binding="{Binding Path=PendingCount}" Width="105" Visibility="{Binding DataContext.IsVisibilityCantTot, Source={StaticResource ProxyElement}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Almacen" Binding="{Binding Path=Location}" Width="160" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Tipo envío" Binding="{Binding Path=SendStatus}" Width="90" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!--<DataGridTextColumn Header="Enviado" Binding="{Binding Path=SendedString }" Width="*"  />-->
+                    <DataGridTemplateColumn Header="Enviado" Width="70" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Image x:Name="Img" Stretch="Fill" Height="16" Width="16">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+
+                                                <Style.Triggers>
+
+                                                    <DataTrigger Binding="{Binding Path=SendedString}" Value="No">
+                                                        <Setter Property="Source" Value="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_cancel.png"/>
+                                                        <Setter Property="ToolTip" Value="Pendiente de enviar"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=SendedString}" Value="Si">
+                                                        <Setter Property="Source" Value="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_ok.png"/>
+                                                        <Setter Property="ToolTip" Value="Enviado"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Secuencia" Binding="{Binding Path=ReportSequence}" Width="75">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Extremo" Binding="{Binding Path=Extremo}" Width="80" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Fecha Planta" Binding="{Binding Path=ShiftDate}" Width="100" Visibility="{Binding DataContext.IsVisibility2, Source={StaticResource ProxyElement}}" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Turno" Binding="{Binding Path=ShiftNumber}" Width="50" Visibility="{Binding DataContext.IsVisibility2, Source={StaticResource ProxyElement}}" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Label Grid.Row="5" Grid.ColumnSpan="16" Style="{StaticResource ButtonsArea}">
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding ReportCommand}" IsEnabled="{Binding IsReportButtonEnabled}" Content="Reportar" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_send_info.png" Cursor="Hand"/>
+                </StackPanel>
+            </Label>
+
+            <Label Grid.Row="6" Grid.ColumnSpan="16" Style="{StaticResource Header}" Content="Histórico de Reportes de Producción"/>
+
+            <DataGrid Grid.Row="7" Grid.ColumnSpan="16" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="True" CanUserSortColumns="False"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Visible" 
+                                  HeadersVisibility="Column" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding Historico}"
+                                  AreRowDetailsFrozen="False" AllowDrop="False" GridLinesVisibility="All" HorizontalGridLinesBrush="#666666"                                  
+                                  VerticalGridLinesBrush="#666666" BorderThickness="0" FontSize="12">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Operación" Width="3*" Binding="{Binding Path=MachineOperation}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Orden" Width="*" Binding="{Binding Path=IdOrder}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Colada" Width="*" Binding="{Binding Path=HeatNumber}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Atado" Width="2*" Binding="{Binding Path=GroupItemNumber}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Tipo envío" Width="2*" Binding="{Binding Path=SendStatus}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding Path=TotalQuantity}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Buenas" Width="*" Binding="{Binding Path=GoodCount}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Descartes" Width="1.5*" Binding="{Binding Path=ScrapCount}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Pendientes" Width="*" Binding="{Binding Path=PendingCount}" Visibility="{Binding DataContext.IsVisibility2, Source={StaticResource ProxyElement}}" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Fecha envío" Width="3*" Binding="{Binding Path=InsDateTime}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StatusBar Grid.Row="8" Grid.ColumnSpan="16" Style="{StaticResource ButtonsArea}">
+                <!--<Label Content="skjdbvksdvkjd"/>-->
+            </StatusBar>
+
+        </Grid>
+
+    </DockPanel>
+</Window>

@@ -1,0 +1,211 @@
+﻿<UserControl x:Class="Tenaris.Fava.Production.Reporting.View.ReportConfirmationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:Interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+             xmlns:IntReq="clr-namespace:Infrastructure.InteractionRequests;assembly=Infrastructure"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:framework="http://schemas.tenaris.ot/xaml"
+             xmlns:Language="clr-namespace:Tenaris.Fava.Production.Reporting.Languages;assembly=Tenaris.Fava.Production.Reporting.Languages"
+             xmlns:common="http://schemas.tenaris.ot/xaml/images"
+             Background="#F3F3F3"
+             mc:Ignorable="d"
+             xmlns:controlsd="clr-namespace:Tenaris.Fava.Production.Reporting.View.Dialog"
+             xmlns:viewmodel="clr-namespace:Tenaris.Fava.Production.Reporting.ViewModel;assembly=Tenaris.Fava.Production.Reporting.ViewModel"
+             >
+    <Interactivity:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding LoginWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:LoginView />
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </Interactivity:Interaction.Triggers>
+
+    <Grid>
+    <!--<Grid>-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Style="{StaticResource Header}" Grid.ColumnSpan="2" Content="Confirmación de Reporte de Producción"/>
+        <Label Style="{StaticResource SubHeader}" Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding User}" Padding="0,0,10,0"/>
+
+        <!--Seccion izquierda-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="3"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="6">
+                <Button Command="{Binding UnlockCommand}" Visibility="{Binding UnlockVisibility}" Content="Desbloquear" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_unblock.png" Width="150"/>
+                <Button Command="{Binding LockCommand}" Visibility="{Binding LockVisibility}" Content="Bloquear"  framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_block.png" Width="150" />
+            </StackPanel>
+            <Label Content="Orden" x:Name="lblOrden" Grid.Row="1" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding Orden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}"  IsEnabled="{Binding IsEditionEnabled}"/>
+            <Label Content="Colada" Grid.Row="2" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding Colada}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}"  IsEnabled="{Binding IsEditionEnabled}"/>
+            <Label Content="Atado" Grid.Row="3" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding Atado}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}"  IsEnabled="{Binding IsEditionEnabled}"/>
+            
+            <Label Content="Contador N1" Grid.Row="4" Style="{StaticResource TableItemCell}" Visibility="{Binding ContadorVisibility}"/>
+            <TextBox Text="{Binding ITLoadHelper}" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}" Visibility="{Binding ContadorVisibility}"/>
+
+            
+
+            <Label Content="Anterior" Grid.Row="5" Grid.Column="1" Style="{StaticResource TableItemCell}"/>
+            <Label Content="+" Grid.Row="5" Grid.Column="2" Style="{StaticResource TableItemCell}"/>
+            <Label Content="Actual" Grid.Row="5" Grid.Column="3" Style="{StaticResource TableItemCell}"/>
+            <Label Content="=" Grid.Row="5" Grid.Column="4" Style="{StaticResource TableItemCell}"/>
+            <Label Content="Total" Grid.Row="5" Grid.Column="5" Style="{StaticResource TableItemCell}"/>
+
+            <Label Content="Buenas" Grid.Row="6" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding BuenasAnterior}" Grid.Row="6" Grid.Column="1" Style="{StaticResource TableValueInputCell}" IsEnabled="False" />
+            <TextBox Text="{Binding BuenasActual, UpdateSourceTrigger=PropertyChanged}" Grid.Row="6" Grid.Column="3" Style="{StaticResource TableValueInputCell}" IsEnabled="True"/>
+            <TextBox Text="{Binding BuenasTotal}" Grid.Row="6" Grid.Column="5" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+            <Label Content="Malas" Grid.Row="7" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding MalasAnterior}" Grid.Row="7" Grid.Column="1" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+            <TextBox Text="{Binding MalasActual, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Grid.Column="3" Style="{StaticResource TableValueInputCell}" IsEnabled="True"/>
+            <TextBox Text="{Binding MalasTotal}" Grid.Row="7" Grid.Column="5" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+            <Label Content="Reprocesos" Grid.Row="8" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding ReprocesosAnterior}" Grid.Row="8" Grid.Column="1" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+            <TextBox Text="{Binding ReprocesosActual, UpdateSourceTrigger=PropertyChanged}" Grid.Row="8" Grid.Column="3" Style="{StaticResource TableValueInputCell}" IsEnabled="True"/>
+            <TextBox Text="{Binding ReprocesosTotal}" Grid.Row="8" Grid.Column="5" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+            <Label Content="Cargadas" Grid.Row="9" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding CargadasAnterior}" Grid.Row="9" Grid.Column="1" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+            <TextBox Text="{Binding CargadasActual, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9" Grid.Column="3" Style="{StaticResource TableValueInputCell}" IsEnabled="True"/>
+            <TextBox Text="{Binding CargadasTotal}" Grid.Row="9" Grid.Column="5" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+            <Label Content="Extremo" Grid.Row="10" Style="{StaticResource TableItemCell}" Visibility="{Binding ExtremoEditable}"/>
+
+            <RadioButton Command="{Binding ExtremoChangedCommand}" Content="Extremo 1" Grid.Row="10" IsChecked="{Binding Extremo1, Mode=TwoWay}" Visibility="{Binding ExtremoEditable}" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}" HorizontalContentAlignment="Left" HorizontalAlignment="Left" />
+            <RadioButton Command="{Binding ExtremoChangedCommand}" Content="Extremo 2" Grid.Row="10" IsChecked="{Binding Extremo2, Mode=TwoWay}" Visibility="{Binding ExtremoEditable}" Grid.Column="3" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}" HorizontalContentAlignment="Left" HorizontalAlignment="Center"/>
+
+
+            <Label Content="Tipo de envio" Grid.Row="11" Style="{StaticResource TableItemCell}"/>
+            <ComboBox ItemsSource="{Binding TipoEnvio}" SelectedItem="{Binding SelectedSendType}" Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="5"/>
+        </Grid>
+
+
+
+        <!--Seccion Derecha-->
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="95"/>
+                <ColumnDefinition Width="125"/>
+                <ColumnDefinition Width="9"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Detalles de Descartes" Grid.ColumnSpan="5" Style="{StaticResource Header}"/>
+            <Label Content="Cantidad" Grid.Row="1" Style="{StaticResource TableItemCell}"/>
+            <TextBox Text="{Binding Cantidad, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Style="{StaticResource TableValueInputCell}"/>
+            <Label Content="Destino" Grid.Row="1" Grid.Column="2" Style="{StaticResource TableItemCell}"/>
+            <ComboBox ItemsSource="{Binding Destino, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding DestinoSelected}" Grid.Row="1" Grid.Column="3" Style="{StaticResource TableValueInputCell}" SelectedIndex="0"/>
+            <Label Content="Descartado Por:" Grid.Row="2" Style="{StaticResource TableItemCell}"/>
+            <ComboBox ItemsSource="{Binding RazonDescarte}" DisplayMemberPath="Description" SelectedItem="{Binding RazonDescarteSelected}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource TableValueInputCell}" SelectedIndex="0"/>
+            <RadioButton Content="Extremo 1" Grid.Row="3" IsChecked="{Binding Extremo1, Mode=TwoWay}" Visibility="{Binding ExtremosVisibility}" Style="{StaticResource TableValueInputCell}" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+            <RadioButton Content="Extremo 2" Grid.Row="3" IsChecked="{Binding Extremo2, Mode=TwoWay}" Visibility="{Binding ExtremosVisibility}" Grid.Column="1" Style="{StaticResource TableValueInputCell}" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+            <CheckBox Content="Trabajado" IsChecked="{Binding Trabajado, Mode=TwoWay}" Visibility="{Binding TrabajadoVisibility}" Grid.Row="3" Grid.Column="3" Style="{StaticResource TableValueInputCell}" HorizontalAlignment="Right"/>
+            <Label Style="{StaticResource TableItemCell}" Content="Comentario:" Grid.Row="4" VerticalAlignment="Top"></Label>
+            <TextBox Text="{Binding Motivo, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Height="60" Grid.Column="1" Grid.ColumnSpan="3" TextWrapping="Wrap"></TextBox>
+            <Label Style="{StaticResource ButtonsArea}" Grid.Row="5" Grid.ColumnSpan="4">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Añadir" Command="{Binding AddRejectionCommand}" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_insert.png"/>
+                    <Button Content="Quitar" Command="{Binding RemoveRejectionCommand}" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_delete.png"/>
+                </StackPanel>
+            </Label>
+            <Label Content="No. Detalles:" Grid.Row="6" Grid.Column="3" Style="{StaticResource TableItemCell}"/>
+            <DataGrid Grid.Row="7" Grid.ColumnSpan="4"  Height="100" ItemsSource="{Binding RejectionReportDetails}" SelectedItem="{Binding RejectionReportDetailSelected}" CanUserResizeColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding ScrapCount}" Header="Cantidad" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Binding="{Binding Destino}" Header="Destino" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding RejectionCodeDescription}" Header="Descripcion" MinWidth="170" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Trabajado}" Header="Trabajado" Width="110" >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Binding="{Binding Extremo}" Header="Extremo" Width="100" Visibility="Collapsed">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBox Text="{Binding Cantidad, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Style="{StaticResource TableValueInputCell}"/>
+
+        </Grid>
+        <Label Style="{StaticResource ButtonsArea}" Grid.Row="4" Grid.ColumnSpan="2" HorizontalContentAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Style="{StaticResource AcceptStyle}" Command="{Binding AcceptCommand2}" Margin="8" Cursor="Hand">Aceptar</Button>
+                <Button Style="{StaticResource CloseStyle}" Command="{Binding CancelCommand2}" Margin="8">Cancelar</Button>
+            </StackPanel>
+        </Label>
+    </Grid>
+</UserControl>

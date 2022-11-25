@@ -1,0 +1,397 @@
+﻿<Window x:Class="Tenaris.Fava.Production.Reporting.View.PaintingReportView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:Interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+        xmlns:Action="clr-namespace:Tenaris.Library.UI.Framework.Interactivity;assembly=Tenaris.Library.UI.Framework"
+        xmlns:IntReq="clr-namespace:Infrastructure.InteractionRequests;assembly=Infrastructure"        
+        xmlns:controls="clr-namespace:Tenaris.Fava.Production.Reporting.View"
+        xmlns:controlsd="clr-namespace:Tenaris.Fava.Production.Reporting.View.Dialog"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:framework="http://schemas.tenaris.ot/xaml"
+        xmlns:local="clr-namespace:Tenaris.Fava.Production.Reporting.View"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Title="ProductionReport" WindowState="Normal"
+        
+        
+        Top="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Top}"
+        Left="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Left}"
+        Width="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width, Converter={StaticResource WindowSizeConverter}, ConverterParameter='0'}"
+        Height="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height,Converter={StaticResource WindowSizeConverter}, ConverterParameter='100'}"
+        xmlns:viewmodel="clr-namespace:Tenaris.Fava.Production.Reporting.ViewModel.View;assembly=Tenaris.Fava.Production.Reporting.ViewModel">
+
+
+    <Window.DataContext>
+        <viewmodel:PaintingReportViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <viewmodel:PaintingReportViewModel x:Key="PaintingReportViewModel"></viewmodel:PaintingReportViewModel>
+        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="DataGridColumnHeader">
+            <Setter Property="FontSize" Value="11"/>
+
+        </Style>
+        <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
+    </Window.Resources>
+    <Interactivity:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding PaintReportConfirmationWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:PaintingReportConfirmation/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowQuestionWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:ShowQuestion />
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowMessageWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:ShowMessage/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding ShowErrorWindowRequest, Mode=OneWay}">
+            <IntReq:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"
+                                      WinStartUpLocation="CenterOwner" WindowsStyle="None">
+                <IntReq:PopupWindowAction.WindowContent>
+                    <controlsd:ShowError/>
+                </IntReq:PopupWindowAction.WindowContent>
+            </IntReq:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </Interactivity:Interaction.Triggers>
+    <DockPanel>
+
+        <ContentControl DockPanel.Dock="Top" Template="{StaticResource WindowHeader}" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Label  Content="Cajon:" Style="{StaticResource TableItemCell}" Width="100" HorizontalAlignment="Left"/>
+                <TextBox Style="{StaticResource TableValueInputCell}" Text="{Binding Cajon}" Width="200" HorizontalAlignment="Left" Margin="10,0"/>
+                <Button  Content="Buscar" Grid.ColumnSpan="3" Command="{Binding SearchCommand}"
+                    ToolTip="Busqueda de cajones que fueron reportados en el extremo 2 de la linea actual"/>
+            </StackPanel>
+
+            
+
+
+
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Style="{StaticResource Header}" Content="Stock para pintados TPS"/>
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="False"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" 
+                                   RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding StockParaTPS}"
+                                  AreRowDetailsFrozen="False" AllowDrop="False" GridLinesVisibility="All" HorizontalGridLinesBrush="#666666"                                  
+                                  VerticalGridLinesBrush="#666666" BorderThickness="0" FontSize="11" SelectedItem="{Binding SelectedTPS}" Height="150"
+                      ToolTip="Muestra los cajones que ya fueron reportados en el extremo 2 de la linea y estan en stock para pintado">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Order" Binding="{Binding  Order}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Colada" Binding="{Binding  Colada}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Codigo Colada" Binding="{Binding  CodigoColada}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="TipoUdt" Binding="{Binding  TipoUdt}" MinWidth="200"  Width="*"/>
+                        <DataGridTextColumn Header="IdUdt" Binding="{Binding  IdUdt}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="TipoUdc" Binding="{Binding  TipoUdc}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Lote" Binding="{Binding  Lote}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Cantidad" Binding="{Binding  Cantidad}"  MinWidth="150"  Width="*"/>
+                        <DataGridTextColumn Header="Almacen" Binding="{Binding  Almacen}"  MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Extremo" Binding="{Binding  Extremo}"  MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Secuencia Siguiente" Binding="{Binding  SecuenciaSiguiente}"  MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Operacion Siguiente" Binding="{Binding  OperacionSiguiente}"  MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Opcion Siguiente" Binding="{Binding  OpcionSiguiente}"  MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="Lot4" Binding="{Binding  Lot4}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="LotiD" Binding="{Binding  LotId}" MinWidth="150" Width="*" />
+                        <DataGridTextColumn Header="ProductReportBox" Binding="{Binding  ProductReportBox}"  MinWidth="150" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Label Grid.Row="2" Style="{StaticResource ButtonsArea}">
+                    <Button Content="Cargar a pintado" Command="{Binding LoadCommand}" ToolTip="Carga de cajón a Pintado (TPS -> Nivel 2)"/>
+                </Label>
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.ColumnSpan="16" Style="{StaticResource Header}" Content="Cajas Cargadas a nivel 2"/>
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" 
+                                  HeadersVisibility="Column" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding CajasCargadas}"
+                                  AreRowDetailsFrozen="False" AllowDrop="False" GridLinesVisibility="All" HorizontalGridLinesBrush="#666666"                                  
+                                  VerticalGridLinesBrush="#666666" BorderThickness="0" FontSize="11" SelectedItem="{Binding SelectedLoaded, Mode=TwoWay}" Height="150"
+                      ToolTip="Muestra los cajones ya cargados en Nivel 2 ya sea a través del Entrance (OffLine) o cargados por esta aplicación (onLine)">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding  IdLoadPainting}" Header="No" MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Order}" Header="Orden" Width="*"   MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Colada}" Header="Colada" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  CodigoColada}" Header="Codigo Colada" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  TipoUdt}" Header="Tipo UDT" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  IdUdt}" Header="Id UDT" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  TipoUdc}" Header="Tipo UDC" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Lote}" Header="Lote" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Cantidad}" Header="Cantidad" Width="*"   MinWidth="100">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Almacen}" Header="Almacen" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Extremo}" Header="Extremo" Width="*"   MinWidth="100">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  SecuenciaSiguiente}" Header="Secuencia Siguiente" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  OperacionSiguiente}" Header="Operación Siguiente" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  OpcionSiguiente}" Header="Opción Siguiente" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Lot4}" Header="LOT4" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  LotId}" Header="Lot ID" Width="*"   MinWidth="100">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  ProductReportBox}" Header="Product Report Box" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Active}" Header="Active" Width="*"  MinWidth="100" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Label Grid.Row="2" Grid.ColumnSpan="16" Style="{StaticResource ButtonsArea}">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Reportes de caja" Command="{Binding ReportCommand}"
+                            ToolTip="Reporte de cajones de Pintado (Nivel 2 -> TPS)"/>
+                    </StackPanel>
+                </Label>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Style="{StaticResource Header}" Content="Reportes de caja"/>
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" 
+                                  HeadersVisibility="Column" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding ReportesDeCaja}" Height="150"
+                                  AreRowDetailsFrozen="False" AllowDrop="False" GridLinesVisibility="All" HorizontalGridLinesBrush="#666666"                                  
+                                  VerticalGridLinesBrush="#666666" BorderThickness="0" FontSize="11"
+                      ToolTip="Resumen de reportes de caja">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding  Caja}" Header="Caja" MinWidth="100" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  Colada}" Header="Colada" MinWidth="150" Width="*" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  OrdenHija}" Header="OrdenHija" MinWidth="150"  Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  OrdenOrigen}" Header="OrdenOrigen" MinWidth="200" Width="*" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  TipoUdt}" Header="TipoUdt" MinWidth="150"  Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  MaquinaAnterior}" Header="MaquinaAnterior" MinWidth="150" Width="*" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  MachineOperation}" Header="MachineOperation" MinWidth="150"  Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  CantidadTotal}" Header="CantidadTotal" MinWidth="150"  Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  PiezasBuenas}" Header="PiezasBuenas" MinWidth="150"  Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  PiezasMalas}" Header="PiezasMalas" MinWidth="150" Width="*" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding  IdMachine}" Header="IdMachine" MinWidth="150" Width="*" >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </Grid>
+
+
+
+
+
+
+
+        </Grid>
+
+    </DockPanel>
+</Window>

@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="SpecDataWMS">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AverageLength" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="Comments" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ControlTracking" type="xs:int" />
+      <xs:element minOccurs="0" name="Coupling" nillable="true" type="tns:CouplingData" />
+      <xs:element minOccurs="0" name="Dispatch" nillable="true" type="tns:DispatchData" />
+      <xs:element minOccurs="0" name="FlagProtector" type="xs:boolean" />
+      <xs:element minOccurs="0" name="FlagThread" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ItemConfirmation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MarkingCoating" type="xs:boolean" />
+      <xs:element minOccurs="0" name="NominalThickness" type="xs:float" />
+      <xs:element minOccurs="0" name="OrderAmount" type="xs:float" />
+      <xs:element minOccurs="0" name="OrderSoldUnity" type="xs:float" />
+      <xs:element minOccurs="0" name="OrderTolerance" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="OrderUnity" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q1:Parameters" />
+      <xs:element minOccurs="0" name="PhisycalStatus" type="xs:int" />
+      <xs:element minOccurs="0" name="Pipe" nillable="true" type="tns:PipeData" />
+      <xs:element minOccurs="0" name="PipeDiameterInch" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeDiameterMm" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeType" nillable="true" type="xs:string" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q2:ProductKey" />
+      <xs:element minOccurs="0" name="ProtectorBOX" nillable="true" type="tns:ProtectorData" />
+      <xs:element minOccurs="0" name="ProtectorPIN" nillable="true" type="tns:ProtectorData" />
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Route" nillable="true" type="q3:ArrayOfKeyValueOfintITMachineId0v_Pa5xBf" />
+      <xs:element minOccurs="0" name="ScheduledCampaignLength" type="xs:float" />
+      <xs:element minOccurs="0" name="ScheduledCampaignQuantity" type="xs:int" />
+      <xs:element minOccurs="0" name="ScheduledCampaignWeight" type="xs:float" />
+      <xs:element minOccurs="0" name="SellConfirmation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Stencil" nillable="true" type="tns:StencillingMarkingData" />
+      <xs:element minOccurs="0" name="SurfaceCoating" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="isPEA" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataWMS" nillable="true" type="tns:SpecDataWMS" />
+  <xs:complexType name="RangeItemOffloat">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="RangeItemOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.SpecData" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="float" Namespace="http://www.w3.org/2001/XMLSchema">
+          </GenericParameter>
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Max" type="xs:float" />
+      <xs:element minOccurs="0" name="Min" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RangeItemOffloat" nillable="true" type="tns:RangeItemOffloat" />
+  <xs:complexType name="CouplingData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Length" type="xs:float" />
+      <xs:element minOccurs="0" name="PointingMarkLength" type="xs:float" />
+      <xs:element minOccurs="0" name="PointingMaskText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Weight" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CouplingData" nillable="true" type="tns:CouplingData" />
+  <xs:complexType name="DispatchData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="APROLocation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Labeltype" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PacketDiameter" type="xs:float" />
+      <xs:element minOccurs="0" name="PipesByPacket" type="xs:int" />
+      <xs:element minOccurs="0" name="PrintCount" type="xs:int" />
+      <xs:element minOccurs="0" name="Printer" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProcessDestination" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShippingDestination" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="idLabel" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DispatchData" nillable="true" type="tns:DispatchData" />
+  <xs:complexType name="PipeData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EmConstant" type="xs:float" />
+      <xs:element minOccurs="0" name="NominalLengthNormalPipes" type="xs:float" />
+      <xs:element minOccurs="0" name="NormalPipeLength" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="PipeMetricWeightNominal" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeWeightTolerance" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="ShortPipeLength" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="ShortPipeLengthAcceptedTolerance" type="xs:float" />
+      <xs:element minOccurs="0" name="ShortPipePiecesAcceptedTolerance" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PipeData" nillable="true" type="tns:PipeData" />
+  <xs:complexType name="ProtectorData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ExcessLength" type="xs:float" />
+      <xs:element minOccurs="0" name="Weight" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProtectorData" nillable="true" type="tns:ProtectorData" />
+  <xs:complexType name="StencillingMarkingData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CompleteCycleLength" type="xs:float" />
+      <xs:element minOccurs="0" name="DistanceFromPipeTail" type="xs:float" />
+      <xs:element minOccurs="0" name="DistanceFromPipeTop" type="xs:float" />
+      <xs:element minOccurs="0" name="InitialDistance" type="xs:float" />
+      <xs:element minOccurs="0" name="Multiple" type="xs:boolean" />
+      <xs:element minOccurs="0" name="MultipleStencillingMarkingDistance" type="xs:float" />
+      <xs:element minOccurs="0" name="PointingMarksActive" type="xs:boolean" />
+      <xs:element minOccurs="0" name="PointingMarksInitialDistance" type="xs:float" />
+      <xs:element minOccurs="0" name="PointingMarksText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RingColorActive" type="xs:boolean" />
+      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="RingColors" nillable="true" type="q4:ArrayOfKeyValueOfintRingColorDatauab81zxt" />
+      <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StencillingMarkingData" nillable="true" type="tns:StencillingMarkingData" />
+  <xs:complexType name="RingColorData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="End" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RALCode" type="xs:int" />
+      <xs:element minOccurs="0" name="StartPosition" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RingColorData" nillable="true" type="tns:RingColorData" />
+  <xs:complexType name="SpecDataVDI">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GreaseType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="InspectionVariables" nillable="true" type="tns:VDIDataCollection" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q5:Parameters" />
+      <xs:element minOccurs="0" name="PipeDiameter" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeThickness" type="xs:float" />
+      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q6:ProductKey" />
+      <xs:element minOccurs="0" name="ProtectorType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ThreadClassification" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ThreadDescription" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ThreadType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataVDI" nillable="true" type="tns:SpecDataVDI" />
+  <xs:complexType name="VDIDataCollection">
+    <xs:sequence>
+      <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q7:ArrayOfKeyValueOfstringVDIDatauab81zxt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="VDIDataCollection" nillable="true" type="tns:VDIDataCollection" />
+  <xs:complexType name="VDIData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Area" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Group" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Item" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Variables" nillable="true" type="tns:Variables" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="VDIData" nillable="true" type="tns:VDIData" />
+  <xs:complexType name="Variables">
+    <xs:sequence>
+      <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q8:ArrayOfKeyValueOfstringVariableuab81zxt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Variables" nillable="true" type="tns:Variables" />
+  <xs:complexType name="Variable">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CheckFrecuence" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CheckObservations" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Formulas" nillable="true" type="tns:Formulas" />
+      <xs:element minOccurs="0" name="MeasureEquipments" nillable="true" type="tns:EquipmentCollection" />
+      <xs:element minOccurs="0" name="MeasureFrecuence" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MeasureQuantity" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MeasureUnit" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NominalValueTolerance" type="xs:float" />
+      <xs:element minOccurs="0" name="Observations" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Scale" type="xs:float" />
+      <xs:element minOccurs="0" name="Target" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="Tolerance" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="Type" type="tns:VariableType" />
+      <xs:element minOccurs="0" name="VisualOrder" type="xs:int" />
+      <xs:element minOccurs="0" name="idVariable" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Variable" nillable="true" type="tns:Variable" />
+  <xs:complexType name="Formulas">
+    <xs:sequence>
+      <xs:element xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q9:ArrayOfKeyValueOfstringFormulauab81zxt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Formulas" nillable="true" type="tns:Formulas" />
+  <xs:complexType name="Formula">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Element" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Formula" nillable="true" type="tns:Formula" />
+  <xs:complexType name="EquipmentCollection">
+    <xs:sequence>
+      <xs:element xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q10:ArrayOfKeyValueOfstringEquipmentuab81zxt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EquipmentCollection" nillable="true" type="tns:EquipmentCollection" />
+  <xs:complexType name="Equipment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FrecuenceUnit" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Equipment" nillable="true" type="tns:Equipment" />
+  <xs:simpleType name="VariableType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Visual" />
+      <xs:enumeration value="Dimensional" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="VariableType" nillable="true" type="tns:VariableType" />
+  <xs:complexType name="SpecDataNotches">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="HeatTreatment" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Notches" nillable="true" type="tns:VDIDataCollection" />
+      <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q11:Parameters" />
+      <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q12:ProductKey" />
+      <xs:element minOccurs="0" name="ReplicateRequired" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataNotches" nillable="true" type="tns:SpecDataNotches" />
+  <xs:complexType name="SpecDataEMI">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AppliesSpecification" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CycleTime" type="xs:float" />
+      <xs:element minOccurs="0" name="Diameter" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="DiameterExternalBody" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="DiameterExternalEndPipe" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="DiameterExternalEndPipeTol" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="ExternalDiameterUpset" type="xs:float" />
+      <xs:element minOccurs="0" name="ExternalLengthUpset" type="xs:float" />
+      <xs:element xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="InspectionType" nillable="true" type="q13:ArrayOfKeyValueOfintInspectionTypeuab81zxt" />
+      <xs:element minOccurs="0" name="InspectionVariables" nillable="true" type="tns:VDIDataCollection" />
+      <xs:element minOccurs="0" name="Inspector" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="InternalDiameterUpset" type="xs:float" />
+      <xs:element minOccurs="0" name="InternalLengthUpset" type="xs:float" />
+      <xs:element minOccurs="0" name="Length" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="MaxLengthShortPipes" type="xs:float" />
+      <xs:element minOccurs="0" name="MinLengthShortPipes" type="xs:float" />
+      <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q14:Parameters" />
+      <xs:element minOccurs="0" name="PercentShortPipes" type="xs:float" />
+      <xs:element minOccurs="0" name="PermissibleDepth" type="xs:float" />
+      <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q15:ProductKey" />
+      <xs:element minOccurs="0" name="Rastreability" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RemnantWallThickness" type="xs:float" />
+      <xs:element minOccurs="0" name="UpsetType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WallThickness" nillable="true" type="tns:RangeItemOffloat" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataEMI" nillable="true" type="tns:SpecDataEMI" />
+  <xs:complexType name="InspectionType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Mnemonic" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InspectionType" nillable="true" type="tns:InspectionType" />
+  <xs:complexType name="SpecDataCouplingBuckOn">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="InspectionVariables" nillable="true" type="tns:VDIDataCollection" />
+      <xs:element minOccurs="0" name="Jvalue" type="xs:float" />
+      <xs:element minOccurs="0" name="JvalueInches" type="xs:float" />
+      <xs:element minOccurs="0" name="NominalTorquePosition" type="xs:float" />
+      <xs:element minOccurs="0" name="NominalTorquePositionInches" type="xs:float" />
+      <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q16:Parameters" />
+      <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q17:ProductKey" />
+      <xs:element minOccurs="0" name="RequiredGraph" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ShoulderTorque" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="TorquePosition" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="TorquePositionInches" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="TorqueThreshold" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="TriangleBaseLengthA1" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataCouplingBuckOn" nillable="true" type="tns:SpecDataCouplingBuckOn" />
+  <xs:complexType name="SpecDataHydrostaticTest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CouplingLength" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q18:Parameters" />
+      <xs:element minOccurs="0" name="PipeLength" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeThickness" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeWeight" type="xs:float" />
+      <xs:element minOccurs="0" name="PipeWidth" type="xs:float" />
+      <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q19:ProductKey" />
+      <xs:element minOccurs="0" name="TestPressure" type="xs:float" />
+      <xs:element minOccurs="0" name="TestTime" type="xs:int" />
+      <xs:element minOccurs="0" name="ThreadLength" type="xs:float" />
+      <xs:element minOccurs="0" name="ThreadTotalLength" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="UpsetExternalLength" type="xs:float" />
+      <xs:element minOccurs="0" name="UpsetInternalLength" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataHydrostaticTest" nillable="true" type="tns:SpecDataHydrostaticTest" />
+  <xs:complexType name="SpecDataHTR">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AdditionalInspection" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Austenizing" nillable="true" type="tns:FurnaceData" />
+      <xs:element minOccurs="0" name="Client" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Comments" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Diameter" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="DiameterInInches" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Elongation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndPipe" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Fluence" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="HTRNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Inspector" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Length" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="LengthLam" type="xs:float" />
+      <xs:element minOccurs="0" name="MaxLength" type="xs:float" />
+      <xs:element minOccurs="0" name="MetricWeight" type="xs:float" />
+      <xs:element minOccurs="0" name="MinElongation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NominalDiameter" type="xs:float" />
+      <xs:element minOccurs="0" name="NominalThickness" type="xs:float" />
+      <xs:element minOccurs="0" name="Norm" nillable="true" type="xs:string" />
+      <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q20:Parameters" />
+      <xs:element minOccurs="0" name="PipeType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Product" nillable="true" type="xs:string" />
+      <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q21:ProductKey" />
+      <xs:element xmlns:q22="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Samples" nillable="true" type="q22:ArrayOfKeyValueOfintSamplesDatauab81zxt" />
+      <xs:element minOccurs="0" name="SteelCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SteelGrade" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Strength" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="Tempering" nillable="true" type="tns:FurnaceData" />
+      <xs:element minOccurs="0" name="Thickness" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="TreatmentType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UtilizationPercentage" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataHTR" nillable="true" type="tns:SpecDataHTR" />
+  <xs:complexType name="FurnaceData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CycleTime" type="xs:float" />
+      <xs:element minOccurs="0" name="SpaceNumber" type="xs:int" />
+      <xs:element minOccurs="0" name="Temperature" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FurnaceData" nillable="true" type="tns:FurnaceData" />
+  <xs:complexType name="SamplesData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Denominator" type="xs:int" />
+      <xs:element minOccurs="0" name="Egu" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Numerator" type="xs:int" />
+      <xs:element minOccurs="0" name="Observation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Restriction" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="idSample" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SamplesData" nillable="true" type="tns:SamplesData" />
+  <xs:complexType name="SpecDataUpsetting">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Client" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Diameter" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="DiameterInInches" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndPipe" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Inspector" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MaxLength" type="xs:float" />
+      <xs:element minOccurs="0" name="MetricWeight" type="xs:float" />
+      <xs:element minOccurs="0" name="NominalDiameter" type="xs:float" />
+      <xs:element minOccurs="0" name="NominalThickness" type="xs:float" />
+      <xs:element minOccurs="0" name="Norm" nillable="true" type="xs:string" />
+      <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q23:Parameters" />
+      <xs:element minOccurs="0" name="PipeType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Product" nillable="true" type="xs:string" />
+      <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q24:ProductKey" />
+      <xs:element minOccurs="0" name="SteelCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SteelGrade" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Thickness" nillable="true" type="tns:RangeItemOffloat" />
+      <xs:element minOccurs="0" name="TreatmentType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Variables" nillable="true" type="tns:VDIDataCollection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SpecDataUpsetting" nillable="true" type="tns:SpecDataUpsetting" />
+</xs:schema>

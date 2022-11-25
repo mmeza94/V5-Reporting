@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Tenaris.Fava.Production.Reporting.View.Dialog.ShowQuestion"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:framework="http://schemas.tenaris.ot/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Tenaris.Fava.Production.Reporting.View.Dialog"             
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="600"
+             xmlns:Language="clr-namespace:Tenaris.Fava.Production.Reporting.Languages;assembly=Tenaris.Fava.Production.Reporting.Languages"
+             xmlns:common="http://schemas.tenaris.ot/xaml/images"                          
+             xmlns:viewmodel="clr-namespace:Tenaris.Fava.Production.Reporting.ViewModel;assembly=Tenaris.Fava.Production.Reporting.ViewModel">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Style="{StaticResource ResourceKey=Header}" Content="{Binding Title}" Grid.ColumnSpan="3"/>
+        <DockPanel Grid.Row="1" Height="Auto">
+        <Image Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_64/icon_msgbox_help.png" Height="50" Width="50" Margin="10"/>
+        </DockPanel>
+        <DockPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Height="Auto" MaxWidth="200" Margin="10">
+            <TextBox BorderThickness="0" Text="{Binding Message}" FontFamily="Verdana" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+        </DockPanel>
+        <Label Style="{StaticResource ResourceKey=ButtonsArea}" Grid.Row="2" Grid.ColumnSpan="3" HorizontalContentAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Si" Style="{StaticResource AcceptStyle}" Command="{Binding AcceptCommand2}" Margin="5"/>
+                    <Button Content="No" Style="{StaticResource CancelStyle}" Command="{Binding CancelCommand2}" Margin="5"/>
+                </StackPanel>
+            
+        </Label>
+    </Grid>
+</UserControl>

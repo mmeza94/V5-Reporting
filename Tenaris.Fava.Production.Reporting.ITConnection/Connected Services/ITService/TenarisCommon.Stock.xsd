@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Stock" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/TenarisCommon" />
+  <xs:complexType name="StockItemsCollection">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q1:ArrayOfKeyValueOfstringStockItemimCLpCbW" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StockItemsCollection" nillable="true" type="tns:StockItemsCollection" />
+  <xs:complexType name="StockItem">
+    <xs:sequence>
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ElabStatus" nillable="true" type="q2:ElabStatus" />
+      <xs:element minOccurs="0" name="ITStatus" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Location" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Parent" nillable="true" type="tns:StockItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StockItem" nillable="true" type="tns:StockItem" />
+  <xs:complexType name="StockGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StockItem">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="GroupNumber" nillable="true" type="xs:string" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ITMachineId" nillable="true" type="q3:ITMachineId" />
+          <xs:element minOccurs="0" name="Items" nillable="true" type="tns:StockItemsCollection" />
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/TenarisCommon.Process" minOccurs="0" name="Operator" nillable="true" type="q4:Operator" />
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/TenarisCommon" minOccurs="0" name="Parameters" nillable="true" type="q5:Parameters" />
+          <xs:element minOccurs="0" name="PiecesCount" type="xs:int" />
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="ProductKey" nillable="true" type="q6:ProductKey" />
+          <xs:element minOccurs="0" name="Shift" type="xs:int" />
+          <xs:element minOccurs="0" name="TamsaDate" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StockGroup" nillable="true" type="tns:StockGroup" />
+  <xs:complexType name="Bundle">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StockGroup">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="LotID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Bundle" nillable="true" type="tns:Bundle" />
+  <xs:complexType name="Dispatch">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StockGroup">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Dispatch" nillable="true" type="tns:Dispatch" />
+  <xs:complexType name="Packet">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StockGroup">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="LotID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Packet" nillable="true" type="tns:Packet" />
+  <xs:complexType name="Lot">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StockGroup">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="LotCreationReason" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="LotID" nillable="true" type="xs:string" />
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/TenarisCommon.Programming.ProductData" minOccurs="0" name="Range" nillable="true" type="q7:ItemsIDRange" />
+          <xs:element minOccurs="0" name="SubLots" nillable="true" type="tns:LotCollection" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Lot" nillable="true" type="tns:Lot" />
+  <xs:complexType name="LotCollection">
+    <xs:sequence>
+      <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="List" nillable="true" type="q8:ArrayOfKeyValueOfstringLotimCLpCbW" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LotCollection" nillable="true" type="tns:LotCollection" />
+</xs:schema>

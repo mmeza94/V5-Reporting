@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="Tenaris.Fava.Production.Reporting.View.Dialog.PaintingReportConfirmation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Tenaris.Fava.Production.Reporting.View"
+             xmlns:framework="http://schemas.tenaris.ot/xaml"
+             mc:Ignorable="d" 
+             xmlns:viewmodel="clr-namespace:Tenaris.Fava.Production.Reporting.ViewModel;assembly=Tenaris.Fava.Production.Reporting.ViewModel"
+             d:DesignHeight="300" d:DesignWidth="800">
+    
+        <DockPanel Background="#F3F3F3">
+        <Label DockPanel.Dock="Top" Style="{StaticResource Header}" Content="Confirmación de reporte de pintado"/>
+        <StackPanel>
+            <Label Style="{StaticResource SubHeader}" Content="{Binding UserReport}"/>
+
+            <Grid Width="724" Height="170"> 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="127*"/>
+                    <ColumnDefinition Width="127*"/>
+                    <ColumnDefinition Width="126*"/>
+                    <ColumnDefinition Width="126*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="126*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="105*"/>
+                    <ColumnDefinition Width="21*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="6" >
+                    <Button Command="{Binding UnlockCommand}" Visibility="{Binding UnlockVisibility}" Content="Desbloquear" framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_unblock.png" Width="150" Margin="0,4,0,0" />
+                    <Button Command="{Binding LockCommand}" Visibility="{Binding LockVisibility}" Content="Bloquear"  framework:Image.Source="/Tenaris.Library.UI.Framework;Component/Images/Common/Size_16/icon_block.png" Width="150" Margin="0,4,0,0"/>
+                </StackPanel>
+
+
+                <Label Grid.Column="3" Grid.Row="0" Content="Anterior" Style="{StaticResource TableItemCell}"/>
+                <Label Grid.Column="4" Grid.Row="0" Content="+" Style="{StaticResource TableItemCell}" Margin="1,1,0.5,1"/>
+                <Label Grid.Column="5" Grid.Row="0" Content="Actual" Style="{StaticResource TableItemCell}" Margin="1.5,1,0.5,1"/>
+                <Label Grid.Column="6" Grid.Row="0" Content="=" Style="{StaticResource TableItemCell}" Margin="1.5,1,1,1"/>
+                <Label Grid.Column="7" Grid.Row="0" Content="Total" Style="{StaticResource TableItemCell}" Grid.ColumnSpan="2"/>
+
+
+                <Label Grid.Column="0" Grid.Row="1" Content="Orden" Style="{StaticResource TableItemCell}" Margin="1,1,0.5,1"/>
+                <TextBox Text="{Binding Orden}" Grid.Column="1" Grid.Row="1" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,1,1" IsEnabled="False" />
+
+                <Label Grid.Column="0" Grid.Row="2" Content="Colada" Style="{StaticResource TableItemCell}" Margin="1,1,0.5,1"/>
+                <TextBox Text="{Binding Colada}" Grid.Column="1" Grid.Row="2" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,1,1" IsEnabled="False"/>
+
+                <Label Grid.Column="0" Grid.Row="3" Content="Atados" Style="{StaticResource TableItemCell}" Margin="1,1,0.5,1"/>
+                <TextBox Text="{Binding Atados}" Grid.Column="1" Grid.Row="3" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,1,1" IsEnabled="False"/>
+
+                <Label Grid.Column="0" Grid.Row="4" Content="Disponibles TPS" Style="{StaticResource TableItemCell}" Margin="1,1,0.5,1"/>
+                <TextBox Text="{Binding DisponiblesTPS}" Grid.Column="1" Grid.Row="4" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,1,1" IsEnabled="{Binding IsEnabled}"/>
+
+                <Label Grid.Column="2" Grid.Row="1" Content="Buenas" Style="{StaticResource TableItemCell}"/>
+                <TextBox Text="{Binding BuenasAnterior}"  Grid.Column="3" Grid.Row="1" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+                <Label Grid.Column="2" Grid.Row="2" Content="Malas" Style="{StaticResource TableItemCell}"/>
+                <TextBox Text="{Binding MalasAnterior}" Grid.Column="3" Grid.Row="2" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+                <Label Grid.Column="2" Grid.Row="3" Content="Reprocesos" Style="{StaticResource TableItemCell}"/>
+                <TextBox Text="{Binding ReprocesosAnterior}" Grid.Column="3" Grid.Row="3" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+                <Label Grid.Column="2" Grid.Row="4" Content="Cargadas" Style="{StaticResource TableItemCell}"/>
+                <TextBox Text="{Binding CargadasAnterior}" Grid.Column="3" Grid.Row="4" Style="{StaticResource TableValueInputCell}" IsEnabled="False"/>
+
+                <TextBox Text="{Binding BuenasActual}" Grid.Column="5" Grid.Row="1" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,0.5,1"/>
+                <TextBox Text="{Binding MalasActual}" Grid.Column="5" Grid.Row="2" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,0.5,1" IsEnabled="{Binding IsEnabled}" />
+                <TextBox Text="{Binding ReprocesosActual}" Grid.Column="5" Grid.Row="3" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,0.5,1" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox Text="{Binding CargadasActual}" Grid.Column="5" Grid.Row="4" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,0.5,1"/>
+
+                <TextBox Text="{Binding BuenasTotal}" Grid.Column="7" Grid.Row="1" Style="{StaticResource TableValueInputCell}" Grid.ColumnSpan="2" IsEnabled="False"/>
+                <TextBox Text="{Binding MalasTotal}" Grid.Column="7" Grid.Row="2" Style="{StaticResource TableValueInputCell}" Grid.ColumnSpan="2" IsEnabled="False"/>
+                <TextBox Text="{Binding ReprocesosTotal}" Grid.Column="7" Grid.Row="3" Style="{StaticResource TableValueInputCell}" Grid.ColumnSpan="2" IsEnabled="False"/>
+                <TextBox Text="{Binding CargadasTotal}" Grid.Column="7" Grid.Row="4" Style="{StaticResource TableValueInputCell}" Grid.ColumnSpan="2" IsEnabled="False"/>
+
+                <Label Grid.Column="0" Grid.Row="5" Content="Tipo de envío" Style="{StaticResource TableItemCell}" Margin="1,1,0.5,1"/>
+                <ComboBox  ItemsSource="{Binding TipoEnvio}" SelectedItem="{Binding TipoEnvioSelected}" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Style="{StaticResource TableValueInputCell}" Margin="1.5,1,1,1"/>
+
+                <Label Grid.Column="3" Grid.Row="5" Content="Motivo" Style="{StaticResource TableItemCell}"/>
+                <TextBox Text="{Binding Motivo}" Grid.Column="5" Grid.Row="5" Grid.ColumnSpan="5" Style="{StaticResource TableValueInputCell}" IsEnabled="{Binding IsEnabled}"/>
+
+            </Grid>
+
+
+            <Label Style="{StaticResource ButtonsArea}" HorizontalContentAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource AcceptStyle}" Command="{Binding AcceptCommand}" Margin="8" Cursor="Hand">Aceptar</Button>
+                    <Button Style="{StaticResource CloseStyle}" Command="{Binding CancelCommand}" Margin="8">Cancelar</Button>
+                </StackPanel>
+            </Label>
+
+        </StackPanel>
+        
+    </DockPanel>
+    
+</UserControl>

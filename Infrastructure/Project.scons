@@ -1,0 +1,4 @@
+  # Importo las variables que necesito para el build.
+Import('env')
+
+env.StdMSBuildTool('Infrastructure.csproj')  

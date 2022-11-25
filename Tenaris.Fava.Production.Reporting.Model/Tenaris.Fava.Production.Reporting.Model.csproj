@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\ILMerge.3.0.41\build\ILMerge.props" Condition="Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{30E8A3D4-452B-4496-858C-5424A2EA0718}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tenaris.Fava.Production.Reporting.Model</RootNamespace>
+    <AssemblyName>Tenaris.Fava.Production.Reporting.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\SimpleTagBlocker\bin\Debug\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\SharedLib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.LinFu">
+      <HintPath>..\SharedLib\NHibernate.ByteCode.LinFu.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Mapping.Attributes">
+      <HintPath>..\SharedLib\NHibernate.Mapping.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="OplScada.PointProcessor.Library">
+      <HintPath>..\SharedLib\OplScada.PointProcessor.Library.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.021\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tamsa.OplScada.AcquisitionClient">
+      <HintPath>..\SharedLib\Tamsa.OplScada.AcquisitionClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.Acquisition.Common">
+      <HintPath>C:\Users\Gio\Documents\Tesis\FAVA\ReporteProduccion\Tenaris.Production.Reporting v1\SharedLib\Tenaris.Library.Acquisition.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.Common">
+      <HintPath>..\SharedLib\Tenaris.Library.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.Configuration">
+      <HintPath>..\SharedLib\Tenaris.Library.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.DbClient">
+      <HintPath>..\..\..\..\version-actualizada-V5\Version-Actualizada21-Sept-2022\Reporting.V5\packages\Lib\Tenaris.Library.DbClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.Framework">
+      <HintPath>..\..\..\..\ULTIMAACUALIZACIONFAVA\Reporting.V5\packages\Lib\Tenaris.Library.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.Log, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\version-actualizada-V5\Version-Actualizada21-Sept-2022\Reporting.V5\SharedLib\Tenaris.Library.Log.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.System">
+      <HintPath>C:\Users\Gio\Documents\Tesis\FAVA\ReporteProduccion\Tenaris.Production.Reporting v1\SharedLib\Tenaris.Library.System.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.UI.Framework">
+      <HintPath>..\packages\Tenaris.Library.UI.Framework.4.2.1\lib\net40\Tenaris.Library.UI.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adapter\ITServiceAdapter.cs" />
+    <Compile Include="Business\IndBoxReportConfirmation.cs" />
+    <Compile Include="Business\Login.cs" />
+    <Compile Include="Business\PaintingReportBusiness.cs" />
+    <Compile Include="Business\PaintingReportConfirmation.cs" />
+    <Compile Include="Business\ProductionReportingBusiness.cs" />
+    <Compile Include="Business\ReportConfirmationBusiness.cs" />
+    <Compile Include="Configurations\Configurations.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ReportProductionHistoryV1Repository.cs" />
+    <Compile Include="DataBase\Sql\DataAccessSQL.cs" />
+    <Compile Include="DataBase\Oracle\DataAccessOracle.cs" />
+    <Compile Include="DataBase\Sql\StoredProcedures.cs" />
+    <Compile Include="Model\BaseLevel2Object.cs" />
+    <Compile Include="Model\BoxLoad.cs" />
+    <Compile Include="Model\BoxProductionIT.cs" />
+    <Compile Include="Model\BoxReport.cs" />
+    <Compile Include="Model\GeneralPiece.cs" />
+    <Compile Include="Model\GeneralPieceFacade.cs" />
+    <Compile Include="Model\GroupItemProgram.cs" />
+    <Compile Include="Model\GroupItemProgramFacade.cs" />
+    <Compile Include="Model\GroupItemProgramV1.cs" />
+    <Compile Include="Model\ITConnFacade.cs" />
+    <Compile Include="Model\Machine.cs" />
+    <Compile Include="Model\MassiveLoad.cs" />
+    <Compile Include="Model\MassiveLoadFacade.cs" />
+    <Compile Include="Model\MassiveReportHistoryFacade.cs" />
+    <Compile Include="Model\NormalizedLoadHistoryDto.cs" />
+    <Compile Include="Model\NormalizedLoadHistoryFacade.cs" />
+    <Compile Include="Model\NormalizedReportHistoryDto.cs" />
+    <Compile Include="Model\OPChildrens.cs" />
+    <Compile Include="Model\OPChildrensPresentacion.cs" />
+    <Compile Include="Model\OplSubscription.cs" />
+    <Compile Include="Model\PaintingReport.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\ProductionBox.cs" />
+    <Compile Include="Model\ProductionBoxReport.cs" />
+    <Compile Include="Model\ProductionReport.cs" />
+    <Compile Include="Model\ProductionReportFacade.cs" />
+    <Compile Include="Model\RejectionCodeFacade.cs" />
+    <Compile Include="Model\RejectionReportDetailFacade.cs" />
+    <Compile Include="Model\RejectionReportDetailV1.cs" />
+    <Compile Include="Model\ReportProductionDto.cs" />
+    <Compile Include="Model\RejectionCode.cs" />
+    <Compile Include="Model\RejectionReportDetail.cs" />
+    <Compile Include="Model\ReportProductionHistory.cs" />
+    <Compile Include="Model\ReportProductionHistoryFacade.cs" />
+    <Compile Include="Model\ReportProductionHistoryV1.cs" />
+    <Compile Include="Model\SampleCuttingFacade.cs" />
+    <Compile Include="Model\StockTPS.cs" />
+    <Compile Include="Model\TpsMassiveReportHistory.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserFacade.cs" />
+    <Compile Include="Model\WorkShiftProductionDto.cs" />
+    <Compile Include="Enums\Enums.cs" />
+    <Compile Include="DataBase\HIBernate\BaseDataAccess.cs" />
+    <Compile Include="DataBase\HIBernate\NhibernateHttpModule.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\CommonMachineRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\CommonUserRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ManufacturingGroupItemProgramRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\NormalizedLoadHistoryRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ProductionMassiveLoadRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ProductionMassiveReportHistoryRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ProductionRejectionCodeRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ProductionReportRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\RejectionReportDetailRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\ReportProductionHistoryRepository.cs" />
+    <Compile Include="DataBase\HIBernate\Reporitories\SampleCuttingRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Configurations\Configurations.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tenaris.Fava.Production.Reporting.ITConnection\Tenaris.Fava.Production.Reporting.ITConnection.csproj">
+      <Project>{be38bc47-1345-4aab-8a7d-fb55b146d63b}</Project>
+      <Name>Tenaris.Fava.Production.Reporting.ITConnection</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.41\build\ILMerge.props'))" />
+  </Target>
+</Project>
