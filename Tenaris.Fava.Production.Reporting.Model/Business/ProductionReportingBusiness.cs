@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Library.DbClient;
 
 namespace Tenaris.Fava.Production.Reporting.Model.Business
 {
@@ -14,20 +15,37 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
     {
 
 
-        #region METHODS
+        #region Granalladora, Enderezadora y CND
 
-        public static ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<String, object> listParams, string ConnectionString)
+        public static ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<String, object> listParams)
         {
-          
-            return DataAccessSQL.Instance.GetProductionGeneral(listParams, ConnectionString);
+
+            return DataAccessSQL.Instance.GetProductionGeneral(listParams);
         }
+
+
         public static ObservableCollection<ReportProductionHistory> GetReportProductionHistory(Dictionary<String, object> listParams, string ConnectionString)
         {
           
             return DataAccessSQL.Instance.GetReportProductionHistory(listParams, ConnectionString);
         }
 
-        public static int GetPreviousSequenceByOperation(string operation)
+
+
+        public static ObservableCollection<int> GetPreviousCountersByMachineTest(Dictionary<string, object> listParams)
+        {
+            return DataAccessSQL.Instance.GetPreviousCountersByMachineTest(listParams);
+        }
+
+
+
+
+
+
+
+
+
+            public static int GetPreviousSequenceByOperation(string operation)
         {
           
             return DataAccessSQL.Instance.GetPreviousSequenceByOperation(operation);

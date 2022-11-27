@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Configuration;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
-using Tenaris.Library.DbClient;
-using System.Collections.ObjectModel;
-using Tenaris.Library.Framework.Utility.Conversion;
+using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Library.DbClient;
+using Tenaris.Library.Framework.Utility.Conversion;
 using Tenaris.Library.Log;
-
 
 namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 {
@@ -68,97 +67,65 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             return this.dbClient.GetCommand(store);
         }
 
-        public ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<String, object> listParams, string ConnectionString)
+        public ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<String, object> listParams)
         {
             Library.DbClient.IDbCommand cm;
-
             try
             {
-                if (Configurations.Instance.Machine.Equals("Forjadora 0"))
-                {
-                    cm = SelectedCommand(StoredProcedures.GetProductionGeneralV2, ConnectionString);
-                }                       //*TO-DO*// Verificar validacion secuencia
-                else if (Configurations.Instance.Opcion == "Mecanizado 2")
-                {
-                    cm = SelectedCommand(StoredProcedures.GetProductionGeneralProgrammedTorno2, ConnectionString);
-                }
-                else if (Configurations.Instance.Opcion == "Mecanizado 4")
-                {
-                    cm = SelectedCommand(StoredProcedures.GetProductionGeneralProgrammedTorno4, ConnectionString);
-                }
-                else if((Convert.ToInt16(Configurations.Instance.Secuencia) > 7 || Configurations.Instance.VersionApplication.Equals("V3")) && Convert.ToInt16(Configurations.Instance.Secuencia) < 11)
-                {
-                    
-                    cm = SelectedCommand(StoredProcedures.GetProductionGeneralProgrammed, ConnectionString);
-                }
-                else
-                {
-                    cm = SelectedCommand(StoredProcedures.GetProductionGeneral, ConnectionString);
-                }
-
-
+                //Greana1, enderezado, CND,   
+                cm = SelectedCommand(StoredProcedures.GetProductionGeneralTest, Configurations.Instance.ConnectionString);
                 ObservableCollection<GeneralPiece> result = new ObservableCollection<GeneralPiece>();
-
-
-                //cm.Timeout = 50000;
-
-
-                    using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+                {
+                    Trace.Message("listParams: {0},{1},{2}", listParams["@Orden"], listParams["@Colada"], listParams["@Atado"]);
+                    GeneralPiece row;
+                    while (dr.Read())
                     {
-                        Trace.Message("listParams: {0},{1},{2}", listParams["@Orden"], listParams["@Colada"], listParams["@Atado"]);
-                        GeneralPiece row;
-
-                        while (dr.Read())
+                        row = new GeneralPiece()
                         {
+                            IdHistory = Convert.ToInt32(dr["IdHistory"]),
+                            OrderNumber = Convert.ToInt32(dr["OrderNumber"]),
+                            HeatNumber = dr.GetSchemaTable().Select("ColumnName='HeatNumber'").Count() == 1 ? Convert.ToInt32(dr["HeatNumber"]) : 0,
+                            Customer = dr["Customer"].ToString(),
+                            GroupItemNumber = dr.GetSchemaTable().Select("ColumnName='GroupItemNumber'").Count() == 1 ? Convert.ToInt32(dr["GroupItemNumber"]) : 0,
+                            LotNumberHTR = dr.GetSchemaTable().Select("ColumnName='LotNumberHTR'").Count() == 1 ? Convert.ToInt32(dr["LotNumberHTR"]) : 0,
 
 
+                            LoadedCount = dr.GetSchemaTable().Select("ColumnName='LoadedCount'").Count() == 1 ? Convert.ToInt32(dr["LoadedCount"]) : 0,
+                            GoodCount = dr.GetSchemaTable().Select("ColumnName='GoodCount'").Count() == 1 ? Convert.ToInt32(dr["GoodCount"]) : 0,
+                            ScrapCount = dr.GetSchemaTable().Select("ColumnName='ScrapCount'").Count() == 1 ? Convert.ToInt32(dr["ScrapCount"]) : 0,
+                            WarnedCount = dr.GetSchemaTable().Select("ColumnName='WarnedCount'").Count() == 1 ? Convert.ToInt32(dr["WarnedCount"]) : 0,
+                            ReworkedCount = dr.GetSchemaTable().Select("ColumnName='ReworkedCount'").Count() == 1 ? Convert.ToInt32(dr["ReworkedCount"]) : 0,
+                            PendingCount = dr.GetSchemaTable().Select("ColumnName='PendingCount'").Count() == 1 ? Convert.ToInt32(dr["PendingCount"]) : 0,
 
 
-                            row = new GeneralPiece()
-                            {
-                                IdHistory = Convert.ToInt32(dr["IdHistory"]),
-                                OrderNumber = Convert.ToInt32(dr["OrderNumber"]),
-                                HeatNumber = dr.GetSchemaTable().Select("ColumnName='HeatNumber'").Count() == 1 ? Convert.ToInt32(dr["HeatNumber"]) : 0,
-                                Customer = dr["Customer"].ToString(),
-                                GroupItemNumber = dr.GetSchemaTable().Select("ColumnName='GroupItemNumber'").Count() == 1 ? Convert.ToInt32(dr["GroupItemNumber"]) : 0,
-                                LotNumberHTR = dr.GetSchemaTable().Select("ColumnName='LotNumberHTR'").Count() == 1 ? Convert.ToInt32(dr["LotNumberHTR"]) : 0,
-                                LoadedCount = dr.GetSchemaTable().Select("ColumnName='LoadedCount'").Count() == 1 ? Convert.ToInt32(dr["LoadedCount"]) : 0,
-                                GoodCount = dr.GetSchemaTable().Select("ColumnName='GoodCount'").Count() == 1 ? Convert.ToInt32(dr["GoodCount"]) : 0,
-                                ScrapCount = dr.GetSchemaTable().Select("ColumnName='ScrapCount'").Count() == 1 ? Convert.ToInt32(dr["ScrapCount"]) : 0,
-                                WarnedCount = dr.GetSchemaTable().Select("ColumnName='WarnedCount'").Count() == 1 ? Convert.ToInt32(dr["WarnedCount"]) : 0,
-                                ReworkedCount = dr.GetSchemaTable().Select("ColumnName='ReworkedCount'").Count() == 1 ? Convert.ToInt32(dr["ReworkedCount"]) : 0,
-                                PendingCount = dr.GetSchemaTable().Select("ColumnName='PendingCount'").Count() == 1 ? Convert.ToInt32(dr["PendingCount"]) : 0,
-                                Description = dr["Description"].ToString(),
-                                Location = dr["Location"].ToString(),
-                                IdBatch = dr.GetSchemaTable().Select("ColumnName='IdBatch'").Count() == 1 ? Convert.ToInt32(dr["IdBatch"]) : 0,
-                                InsDateTime = DateTime.Parse(dr["InsDateTime"].ToString()),
-                                Extremo = dr["Extremo"].ToString(),
-                                ReportBox = dr.GetSchemaTable().Select("ColumnName='ReportBox'").Count() == 1 ? dr["ReportBox"].ToString() : null,
-                                GroupItemType = dr.GetSchemaTable().Select("ColumnName='GroupItemType'").Count() == 1 ? dr["GroupItemType"].ToString() : null,
+                            Description = dr["Description"].ToString(),
+                            Location = dr["Location"].ToString(),
+                            IdBatch = dr.GetSchemaTable().Select("ColumnName='IdBatch'").Count() == 1 ? Convert.ToInt32(dr["IdBatch"]) : 0,
+                            InsDateTime = DateTime.Parse(dr["InsDateTime"].ToString()),
+                            Extremo = dr["Extremo"].ToString(),
+                            ReportBox = dr.GetSchemaTable().Select("ColumnName='ReportBox'").Count() == 1 ? dr["ReportBox"].ToString() : null,
+                            GroupItemType = dr.GetSchemaTable().Select("ColumnName='GroupItemType'").Count() == 1 ? dr["GroupItemType"].ToString() : null,
 
-                                ShiftDate = dr.GetSchemaTable().Select("ColumnName='ShiftDate'").Count() == 1 ? dr["ShiftDate"].ToString() : null,
-                                ShiftNumber = dr.GetSchemaTable().Select("ColumnName='ShiftNumber'").Count() == 1 ? dr["ShiftNumber"].ToString() : null
-
-                                //No existen en version 1
-
-                                //ReportSequence = dr.GetSchemaTable().Select("ColumnName='ReportSequence'").Count() == 1 ? Convert.ToInt16(dr["ReportSequence"]) : 0 // NO SE ENCUENTRA EN NINGUNA VERSION
-                                //SendStatus = (Enums.Enumerations.ProductionReportSendStatus)Convert.ToInt32(dr["SendStatus"]),
-                                //Sended = (Enums.Enumerations.AxlrBit)Convert.ToInt32(dr["Sended"]),
-                                //
+                            ShiftDate = dr.GetSchemaTable().Select("ColumnName='ShiftDate'").Count() == 1 ? dr["ShiftDate"].ToString() : null,
+                            ShiftNumber = dr.GetSchemaTable().Select("ColumnName='ShiftNumber'").Count() == 1 ? dr["ShiftNumber"].ToString() : null,
 
 
-                            };
+                            Sended = Convert.ToInt32(dr["Sended"]) == 1 ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No,
+                            SendedString = Convert.ToInt32(dr["Sended"]) == 1 ? "Si" : "No",
 
-                            result.Add(row);
-                        
-                    
-                
-              
-                        }
+
+                            SendStatus =
+                            Convert.ToInt32(dr["GoodCount"]) + Convert.ToInt32(dr["ScrapCount"]) >= Convert.ToInt32(dr["LoadedCount"])
+                            ? Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial,
+                            //ReportSequence = Convert.ToInt32(dr["ReportSequence"])
+
+
+                        };
+                        result.Add(row);
+
                     }
-               
-               
-
+                }
                 return result;
                 Trace.Message("StoredProcedure GetProductionGeneral terminado...");
             }
@@ -166,13 +133,183 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             {
                 Trace.Exception(ex);
                 return null;
-                
+
             }
             finally
             {
                 this.dbClient.Dispose();
             }
         }
+
+        public ObservableCollection<int> GetPreviousCountersByMachineTest(Dictionary<string, object> listParams)
+        {
+            var cm = SelectedCommand(StoredProcedures.GetPreviousCountersByMachineTest, Configurations.Instance.ConnectionString);
+            ObservableCollection<int> items = new ObservableCollection<int>();
+            using (var reader = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+            {
+                while (reader.Read())
+                {
+                    items.Add(Convert.ToInt32(reader["GoodCount"]));
+                    items.Add(Convert.ToInt32(reader["ScrapCount"]));
+                    items.Add(Convert.ToInt32(reader["ReworkedCount"]));
+                }
+            }
+            return items;
+        }
+
+
+        public ObservableCollection<ReportProductionHistoryV1> GetReportProductionHistoryByParamsTest(Dictionary<string, object> listParams)
+        {
+            var cm = SelectedCommand(StoredProcedures.GetReportProductionHistoryByParamsTest, Configurations.Instance.ConnectionString);
+            ReportProductionHistoryV1 historyReport;
+            ObservableCollection<ReportProductionHistoryV1> items = new ObservableCollection<ReportProductionHistoryV1>();
+            using (var reader = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+            {
+                while (reader.Read())
+                {
+                    historyReport = new ReportProductionHistoryV1()
+                    {
+                        Id = Convert.ToInt32(reader["idReportProductionHistory"]),
+                        IdHistory = Convert.ToInt32(reader["IdHistory"]),
+                        IdOrder = Convert.ToInt32(reader["OrderNumber"]),
+                        HeatNumber = Convert.ToInt32(reader["HeatNumber"]),
+                        GroupItemNumber = Convert.ToInt32(reader["GroupItemNumber"]),
+                        SendStatus = (Enumerations.ProductionReportSendStatus)reader["SendStatus"],
+                        TotalQuantity = Convert.ToInt32(reader["TotalQuantity"]),
+                        GoodCount = Convert.ToInt32(reader["GoodCount"]),
+                        ScrapCount = Convert.ToInt32(reader["ScrapCount"]),
+                        ReworkedCount = Convert.ToInt32(reader["ReworkedCount"]),
+                        IdMachine = Convert.ToInt32(reader["IdMachine"]),
+                        LotNumberHtr = Convert.ToInt32(reader["LotNumberHtr"]),
+                        InsDateTime = DateTime.Parse((reader["InsDateTime"].ToString())),
+                        InsertedBy = reader["InsertedBy"].ToString(),
+                        UpdDateTime = (reader["UpdDateTime"].ToString()),
+                        UpdatedBy = reader["UpdatedBy"].ToString(),
+                        MachineSequence = Convert.ToInt32(reader["MachineSequence"]),
+                        MachineOption = reader["MachineOption"].ToString(),
+                        MachineOperation = reader["MachineOperation"].ToString(),
+                        Observation = reader["Observation"].ToString()
+
+                    };
+                    items.Add(historyReport);
+                }
+            }
+            return items;
+        }
+
+
+        public ObservableCollection<RejectionCode> GetRejectionCodeByMachineDescriptionTestV5(Dictionary<string, object> listParams)
+        {
+            var cm = SelectedCommand(StoredProcedures.GetRejectionCodeByMachineDescriptionTestV5, Configurations.Instance.ConnectionString);
+            RejectionCode rejectionCode;
+            ObservableCollection<RejectionCode> items = new ObservableCollection<RejectionCode>();
+            using (var reader = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+            {
+                while (reader.Read())
+                {
+                    rejectionCode = new RejectionCode()
+                    {
+                        Id = Convert.ToInt32(reader["idRejectionCode"]),
+                        Machine = new Machine
+                        {
+                            Id = Convert.ToInt32(reader["Machine_idMachine"]),
+                            Code = reader["Machine_Code"].ToString(),
+                            Name = reader["Machine_Name"].ToString(),
+                            Description = reader["Machine_Description"].ToString(),
+                            Active = (bool)reader["Machine_Active"]
+                        },
+                        Code = reader["Code"].ToString(),
+                        Name = reader["Name"].ToString(),
+                        Description = reader["Description"].ToString(),
+                        Active = (Enumerations.AxlrBit)reader["Active"]
+
+                    };
+                    items.Add(rejectionCode);
+                }
+            }
+            return items;
+        }
+
+
+
+        public int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
+        {
+            try
+            {
+
+                Dictionary<string, object> listParams = new Dictionary<string, object>
+                {
+                    { "@GoodCount", reportProductionDto.CantidadBuenas },
+                    {"@GroupItemNumber" , reportProductionDto.IdUDT },
+                    {"@HeatNumber",reportProductionDto.Colada },
+                    {"@idHistory" ,reportProductionDto.IdHistory },
+                    {"@IdMachine" , DataAccessSQL.Instance.GetRejectionCodeByMachineDescriptionTestV5(
+                            new Dictionary<string, object> { { "@MachineDescription", "Granalladora" } }
+                            ).FirstOrDefault().Machine.Id },
+                    {"@OrderNumber" , reportProductionDto.Orden },
+                    {"@InsDateTime" , DateTime.Now },
+                    {"@InsertedBy" , reportProductionDto.IdUser },
+                    {"@TotalQuantity" , reportProductionDto.CantidadTotal },
+                    {"@LotNumberHtr" , reportProductionDto.Lote },
+                    {"@ReworkedCount" , reportProductionDto.CantidadReprocesadas },
+                    {"@ScrapCount" , reportProductionDto.CantidadMalas },
+                    {"@SendStatus" ,  sendStatus },
+                    {"@MachineSequence" , reportProductionDto.Secuencia },
+                    {"@MachineOperation" , reportProductionDto.Operacion },
+                    {"@MachineOption" , reportProductionDto.Opcion },
+                    {"@Observation" , reportProductionDto.Observaciones }
+                };
+
+                var cm = SelectedCommand(StoredProcedures.InsReportProductionHistoryTestV5, Configurations.Instance.ConnectionString);
+                var idReportProductionHistory = cm.ExecuteScalar(listParams.ToReadOnlyDictionary());
+
+                return (int)idReportProductionHistory;
+
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                throw ex;
+
+            }
+
+        }
+
+
+        public void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionDetail, int idRportProductionHistoryInserted)
+        {
+            try
+            {
+
+                Dictionary<string, object> listParams = new Dictionary<string, object>
+                {
+                    { "@ScrapCount", rejectionDetail.ScrapCount },
+                    {"@Observation" , rejectionDetail.Observation },
+                    {"@InsDateTime",rejectionDetail.InsDateTime },
+                    {"@Active" ,(int)rejectionDetail.Active },
+                    {"@idReportProductionHistory" , idRportProductionHistoryInserted },
+                    {"@idRejectionCode" , rejectionDetail.RejectionCode.Id },
+                    {"@Destino" , rejectionDetail.Destino },
+                    {"@Trabajado" , rejectionDetail.Trabajado },
+                    {"@Extremo" , rejectionDetail.Extremo }
+
+                };
+
+                var cm = SelectedCommand(StoredProcedures.InsRejectionReportDetailTestV5, Configurations.Instance.ConnectionString);
+                var a = cm.ExecuteNonQuery(listParams.ToReadOnlyDictionary());
+                Console.WriteLine(a);
+
+
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                throw ex;
+
+            }
+
+        }
+
 
 
 
@@ -187,15 +324,15 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             string result = "";
             try
             {
-            using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
-            {
-                if (dr.Read())
+                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
                 {
-                    result = (string)dr["Identification"];
-                    
-                }
+                    if (dr.Read())
+                    {
+                        result = (string)dr["Identification"];
+
+                    }
                     return result;
-            }
+                }
             }
             catch
             {
@@ -265,7 +402,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         }
 
         public int IsBoxSelect(int numberOrderMotehr, string idBox)
-        {         
+        {
 
 
             int resul = 0;
@@ -287,7 +424,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 }
 
                 result = string.IsNullOrEmpty(result) ? "" : result;
-                Trace.Message("DBCommand executed succesfuly");           
+                Trace.Message("DBCommand executed succesfuly");
 
                 resul = result.Equals(idBox, StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
 
@@ -391,14 +528,14 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 Trace.Exception(ex);
                 return 0;
             }
-            }
+        }
 
 
         public ObservableCollection<BoxReport> GetBoxesForPainting(int udtBox)
         {
             try
             {
-                var cm = SelectedCommand(StoredProcedures.GetBoxesForPainting,Configurations.Instance.ConnectionString);
+                var cm = SelectedCommand(StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
                 Trace.Message("DataAccessSQL.GetBoxesForPainting(udtBox= {0}) || SelectedCommand: {1} || ConnectionString: {2}", udtBox, StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
                 Dictionary<string, object> listParams = new Dictionary<string, object>();
                 listParams.Add("@UdtBox", udtBox);
@@ -485,7 +622,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 //listParams.Add("@ChildOrder", null);
                 //listParams.Add("@HeatNumber", null);
                 //listParams.Add("@UdtBox", cajon);
-                Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}", listparams["@ChildOrder"]+" " + listparams["@HeatNumber"]+" " + listparams["@UdtBox"] , StoredProcedures.GetLoadPainting, Configurations.Instance.ConnectionString);
+                Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}", listparams["@ChildOrder"] + " " + listparams["@HeatNumber"] + " " + listparams["@UdtBox"], StoredProcedures.GetLoadPainting, Configurations.Instance.ConnectionString);
                 Dictionary<string, object> listParams = new Dictionary<string, object>();
                 listParams.Add("@ChildOrder", listparams["@ChildOrder"]);
                 listParams.Add("@HeatNumber", listparams["@HeatNumber"]);
@@ -519,7 +656,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                             LotId = dr["LotId"].ToString(),
                             ProductReportBox = dr["ProductReportBox"].ToString(),
                             Active = dr["Active"].ToString()
-                            
+
 
                         };
 
@@ -547,7 +684,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public OPChildrens GetNextOpChildrenActive(int OrdenNumberMother)
         {
             OPChildrens opHija = null;
-                var cm = SelectedCommand(StoredProcedures.GetNextOpChildrenActive, Configurations.Instance.ConnectionString);
+            var cm = SelectedCommand(StoredProcedures.GetNextOpChildrenActive, Configurations.Instance.ConnectionString);
             Trace.Message("DataAccessSQL.GetNextOpChildrenActive(OrdenNumberMother= {0}) || SelectedCommand: {1} || ConnectionString: {2}", OrdenNumberMother, StoredProcedures.GetNextOpChildrenActive, Configurations.Instance.ConnectionString);
             try
             {
@@ -556,7 +693,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 //var machineConfig = ConfigurationManager.AppSettings["Machine"].ToString();
                 Dictionary<string, object> Param = new Dictionary<string, object>();
                 Param.Add("@ordernumber", OrdenNumberMother);
-            
+
                 DataTable resul = cm.ExecuteTable(Param.ToReadOnlyDictionary());// .ExecuteReader();
                 if (resul.Rows.Count > 0)
                 {

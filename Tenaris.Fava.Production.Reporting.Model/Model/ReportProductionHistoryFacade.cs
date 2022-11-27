@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
@@ -102,6 +103,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             return mapping;
         }
 
+
+        //Guardado del reporte REFACTORIZACION
         public void SaveReportProductionHistory(ReportProductionDto reportProductionDto,
             Enumerations.ProductionReportSendStatus sendStatus, IList rejectionReportDetails)
         {
@@ -110,42 +113,45 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             {
                 if(Configurations.Instance.VersionApplication != "V1" || (Convert.ToInt32(Configurations.Instance.Secuencia) > 3 && Convert.ToInt32(Configurations.Instance.Secuencia) < 9))
                 {
-                    var reportProductionHistory = new ReportProductionHistory
-                    {
-                        GoodCount = reportProductionDto.CantidadBuenas,
-                        GroupItemNumber = reportProductionDto.IdUDT,
-                        HeatNumber = reportProductionDto.Colada,
-                        IdHistory = reportProductionDto.IdHistory,
-                        IdMachine = (new CommonMachineRepository().GetMachineByDescription(reportProductionDto.DescripcionMaquina)).Id,
-                        IdOrder = reportProductionDto.Orden,
-                        InsDateTime = DateTime.Now,
-                        InsertedBy = reportProductionDto.IdUser,
-                        TotalQuantity = reportProductionDto.CantidadTotal,
-                        LotNumberHtr = reportProductionDto.Lote,
-                        ReworkedCount = reportProductionDto.CantidadReprocesadas,
-                        ScrapCount = reportProductionDto.CantidadMalas,
-                        SendStatus = sendStatus,
-                        MachineSequence = reportProductionDto.Secuencia,
-                        MachineOperation = reportProductionDto.Operacion,
-                        MachineOption = reportProductionDto.Opcion,
-                        Observation = reportProductionDto.Observaciones,
-                        GroupItemType = reportProductionDto.TipoUDT,
-                        ChildOrder = reportProductionDto.Orden,
-                        ChildGroupItemNumber = reportProductionDto.IdUDT,
-                        ChildGroupItemType = reportProductionDto.TipoUDT
+                    //var reportProductionHistory = new ReportProductionHistory
+                    //{
+                    //    GoodCount = reportProductionDto.CantidadBuenas,
+                    //    GroupItemNumber = reportProductionDto.IdUDT,
+                    //    HeatNumber = reportProductionDto.Colada,
+                    //    IdHistory = reportProductionDto.IdHistory,
+                    //    IdMachine = (new CommonMachineRepository().GetMachineByDescription(reportProductionDto.DescripcionMaquina)).Id,
+                    //    IdOrder = reportProductionDto.Orden,
+                    //    InsDateTime = DateTime.Now,
+                    //    InsertedBy = reportProductionDto.IdUser,
+                    //    TotalQuantity = reportProductionDto.CantidadTotal,
+                    //    LotNumberHtr = reportProductionDto.Lote,
+                    //    ReworkedCount = reportProductionDto.CantidadReprocesadas,
+                    //    ScrapCount = reportProductionDto.CantidadMalas,
+                    //    SendStatus = sendStatus,
+                    //    MachineSequence = reportProductionDto.Secuencia,
+                    //    MachineOperation = reportProductionDto.Operacion,
+                    //    MachineOption = reportProductionDto.Opcion,
+                    //    Observation = reportProductionDto.Observaciones,
+                    //    GroupItemType = reportProductionDto.TipoUDT,
+                    //    ChildOrder = reportProductionDto.Orden,
+                    //    ChildGroupItemNumber = reportProductionDto.IdUDT,
+                    //    ChildGroupItemType = reportProductionDto.TipoUDT
 
-                        //LoadedCount = reportProductionDto.l
+                    //    //LoadedCount = reportProductionDto.l
 
-                    };
+                    //};
+
+                    int idReportProductionHistoryInserted = DataAccessSQL.Instance.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
 
                     if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
                     {
                         foreach (RejectionReportDetail rrd in rejectionReportDetails)
-                            rrd.ReportProductionHistory = reportProductionHistory;
-                        new ReportProductionHistoryRepository().Save(reportProductionHistory, rejectionReportDetails);
+                        {
+                            DataAccessSQL.Instance.InsRejectionReportDetailTestV5(rrd, idReportProductionHistoryInserted);
+                        }
+                             
                     }
-                    else
-                        new ReportProductionHistoryRepository().Save(reportProductionHistory);
+                  
                 }
                 else 
                 {

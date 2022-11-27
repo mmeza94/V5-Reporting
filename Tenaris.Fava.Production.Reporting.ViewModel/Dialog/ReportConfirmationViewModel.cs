@@ -11,6 +11,8 @@ using System.Linq;
 // using Tenaris.Fava.Production.Reporting.OplScada; //V1
 using System.Windows;
 using System.Windows.Input;
+using Tenaris.Fava.Production.Reporting.Model.Business;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
@@ -1026,121 +1028,39 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private void GetPreviousCounters()
         {
-            string description;
-            if (CurrentGeneralPiece.Description.Contains("Forja"))
-                description = "Forjado";
-            else if (CurrentGeneralPiece.Description == "Roscadora")
-                description = "Mecanizado";
-            else
-                description = Configurations.Instance.Operacion;
-            string extremoToString = Configurations.Instance.Machine.ToUpper().Contains("FORJA")? (Extremo1 ? "Extremo 1" : "Extremo 2") : currentGeneralPiece.Extremo;
-            int machineSequence = new ReportProductionHistoryFacade().GetPreviousSequenceByOperation(description + " " + extremoToString) + 1;
-            IList reportItems;
-            int goodCount = 0;
-            int scrapCount = 0;
-            int reworkedCount = 0;
-            int loadedCount = 0;
-
-            if (Configurations.Instance.VersionApplication.Equals("V1"))
-            {
-                reportItems = new ReportProductionHistoryFacade().GetReportProductionHistoryByParamsV1(
-                CurrentGeneralPiece.OrderNumber,
-                CurrentGeneralPiece.GroupItemNumber,
-                CurrentGeneralPiece.HeatNumber,
-                null, null, machineSequence);
-                foreach (ReportProductionHistoryV1 rph in reportItems)
+            //GetPreviousCountersByMachine
+            ObservableCollection<int> items = ProductionReportingBusiness.GetPreviousCountersByMachineTest(
+                new Dictionary<string, object>
                 {
-                    if (CurrentGeneralPiece.Extremo != string.Empty)
-                    {
-                        var operacion = "";
-                        if (CurrentGeneralPiece.Description.Contains("Forjadora"))
-                            operacion = "Forjado";
-                        else if (CurrentGeneralPiece.Description == "Roscadora")
-                            operacion = "Mecanizado";
-                        else
-                            operacion = CurrentGeneralPiece.Description;
-                        if (rph.MachineOperation == (operacion + " " + CurrentGeneralPiece.Extremo))
-                        {
-                            goodCount += rph.GoodCount;
-                            scrapCount += rph.ScrapCount;
-                            reworkedCount += rph.ReworkedCount;
-                            loadedCount += (rph.GoodCount + rph.ScrapCount);
-                        }
 
-                    }
-                    else
-                    {
-                        goodCount += rph.GoodCount;
-                        scrapCount += rph.ScrapCount;
-                        reworkedCount += rph.ReworkedCount;
-                        loadedCount += (rph.GoodCount + rph.ScrapCount);
-                    }
-
-                }
-            }
-            else
-            {
-                reportItems = new ReportProductionHistoryFacade().GetReportProductionHistoryByParams(
-                CurrentGeneralPiece.OrderNumber,
-                CurrentGeneralPiece.GroupItemNumber,
-                CurrentGeneralPiece.HeatNumber,
-                null, null, machineSequence);
-
-                foreach (ReportProductionHistory rph in reportItems)
-                {
-                    if (CurrentGeneralPiece.Extremo != string.Empty)
-                    {
-                        var operacion = "";
-                        if (CurrentGeneralPiece.Description == "Forjadora")
-                            operacion = "Forjado";
-                        else if (CurrentGeneralPiece.Description == "Roscadora")
-                            operacion = "Mecanizado";
-                        else
-                            operacion = CurrentGeneralPiece.Description;
-                        if (rph.MachineOperation == (operacion + " " + CurrentGeneralPiece.Extremo))
-                        {
-                            goodCount += rph.GoodCount;
-                            scrapCount += rph.ScrapCount;
-                            reworkedCount += rph.ReworkedCount;
-                            loadedCount += (rph.GoodCount + rph.ScrapCount);
-                        }
-
-                    }
-                    else
-                    {
-                        goodCount += rph.GoodCount;
-                        scrapCount += rph.ScrapCount;
-                        reworkedCount += rph.ReworkedCount;
-                        loadedCount += (rph.GoodCount + rph.ScrapCount);
-                    }
-
-                }
-            }
-
-
-
-            BuenasAnterior = goodCount;
-            CargadasAnterior = loadedCount;
-            MalasAnterior = scrapCount;
-            ReprocesosAnterior = reworkedCount;
+                        { "@GroupItemNumber", CurrentGeneralPiece.GroupItemNumber },
+                        { "@MachineSequence", Configurations.Instance.Secuencia },
+                        { "@Operation", Configurations.Instance.Operacion }
+                });
+            BuenasAnterior = items[0];
+            MalasAnterior = items[1];
+            ReprocesosAnterior = items[2];
+            CargadasAnterior = BuenasAnterior = MalasAnterior;
             BuenasTotal = BuenasAnterior + BuenasActual;
             MalasTotal = MalasAnterior + MalasActual;
             CargadasTotal = CargadasAnterior + CargadasActual;
             ReprocesosTotal = ReprocesosAnterior + ReprocesosActual;
-
         }
+
+
+
+
 
         private void PopulateRejectionCodeByMachineDescription()
         {
             try
             {
+                RazonDescarte = new ObservableCollection<RejectionCode>(DataAccessSQL.
+                    Instance.GetRejectionCodeByMachineDescriptionTestV5(new Dictionary<string, object>
+                {{
+                    "@MachineDescription",CurrentGeneralPiece.Description
+                } }));
 
-                IList rejectioncode = new RejectionCodeFacade().GetRejectionCodeByMachineDescription(CurrentGeneralPiece.Description);
-                RazonDescarte = new ObservableCollection<RejectionCode>();
-                foreach (var item in rejectioncode)
-                {
-                    RazonDescarte.Add((RejectionCode)item);
-                }
             }
             catch (Exception ex)
             {

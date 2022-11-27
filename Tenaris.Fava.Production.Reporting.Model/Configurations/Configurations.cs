@@ -94,13 +94,16 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
         [XmlElement("Workstation")]
         public string Workstation { get; set; }
 
+        [XmlElement("GetProductionGeneral")]
+        public string GetProductionGeneral { get; set; }
+
 
         public Configurations()
         {
 
         }
 
-        public Configurations(string machineFiltre, string machine, string secuencia, string operacion, string opcion, string maquinaInicialZona, string extremo, string maquinaInicialZonaFiltre, string machineToReport, string extremoFiltre, bool isPintado, string connectionString, string versionApplication, string n1CounterTag, string n2CounterTag, string flagITNOReportBox, string workstation)
+        public Configurations(string machineFiltre, string machine, string secuencia, string operacion, string opcion, string maquinaInicialZona, string extremo, string maquinaInicialZonaFiltre, string machineToReport, string extremoFiltre, bool isPintado, string connectionString, string versionApplication, string n1CounterTag, string n2CounterTag, string flagITNOReportBox, string workstation, string getProductionGeneral)
         {
             MachineFiltre = machineFiltre;
             Machine = machine;
@@ -119,6 +122,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
             N2CounterTag = n2CounterTag;
             FlagITNOReportBox = flagITNOReportBox;
             Workstation = workstation;
+            GetProductionGeneral = getProductionGeneral;
         }
 
         public void SetConfigMachine(Configurations configurations)
@@ -140,6 +144,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
             N2CounterTag = configurations.N2CounterTag;
             FlagITNOReportBox = configurations.FlagITNOReportBox;
             Workstation = configurations.Workstation;
+            GetProductionGeneral = configurations.GetProductionGeneral;
         }
 
         public Configurations GetConfigMachine()
@@ -163,6 +168,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
             configurations.N2CounterTag = N2CounterTag;
             configurations.FlagITNOReportBox = FlagITNOReportBox;
             configurations.Workstation = Workstation;
+            configurations.GetProductionGeneral = GetProductionGeneral;
             return configurations;
         }
 

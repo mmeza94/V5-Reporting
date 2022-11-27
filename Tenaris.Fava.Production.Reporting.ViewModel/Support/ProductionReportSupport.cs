@@ -1,26 +1,20 @@
 ﻿using log4net;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.ViewModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Library.Log;
-using Tenaris.Library.UI.Framework.ViewModel;
-using Tenaris.Library.UI.Framework.Language;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 {
@@ -62,72 +56,16 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         }
 
         //** Listo **//
-        public static ObservableCollection<GeneralPiece> PopulateGeneralProduction(int Orden, int Colada, int Atado, string ConnectionString)
+        public static ObservableCollection<GeneralPiece> PopulateGeneralProduction(int Orden, int Colada, int Atado)
         {
-           
 
-
-            Trace.Message("Starting PopulateGeneralProduction Order:{0}, Colada:{1}, Atado:{2}, connectionstring {3}", Orden, Colada, Atado, ConnectionString);
-
-
-
-            var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado, Configurations.Instance.ConnectionString);
-
-            generalPieces = ProductionReport.GetSendStatusForGeneralPieces(generalPieces);
+            Trace.Message("Starting PopulateGeneralProduction Order:{0}, Colada:{1}, Atado:{2}, connectionstring {3}", Orden, Colada, Atado);
+            var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
             Trace.Message("generalpieces {0}", generalPieces);
-            if (generalPieces != null)
-            {
-                if (!String.IsNullOrEmpty(Configurations.Instance.MachineFiltre))
-                {
-                    currentGeneraPieces = ProductionReport.ClassifyBySendStatus(generalPieces, ConnectionString).Where(x => x.Description == Configurations.Instance.MachineFiltre).ToList();
-                    Trace.Message("Configurations.Instance.MachineFiltre != null {0}--currentGeneraPieces {1}", Configurations.Instance.MachineFiltre, currentGeneraPieces);
-
-                }
-                else
-                {
-                    currentGeneraPieces = ProductionReport.ClassifyBySendStatus(generalPieces, ConnectionString).Where(x => x.Description == Configurations.Instance.Machine).ToList();
-                    Trace.Message("Configurations.Instance.MachineFiltre = null {0}--currentGeneraPieces {1}", Configurations.Instance.Machine, currentGeneraPieces);
-
-
-                }
-                if (Configurations.Instance.Machine.Contains("Roscadora"))
-                {
-                    currentGeneraPieces = currentGeneraPieces.Where(x => (x.SendStatus == Enumerations.ProductionReportSendStatus.Parcial) || (x.SendStatus == Enumerations.ProductionReportSendStatus.Completo)).ToList();
-                    Trace.Message("Configurations.Instance.Machine = Roscadora {0}--currentGeneraPieces {1}", Configurations.Instance.Machine, currentGeneraPieces);
-
-                }
-                else if ((Configurations.Instance.Machine == "Forjadora")) //Checar el modo en que está operando la forjadora 1. BothEnds or OneEnd
-                {
-                    currentGeneraPieces = GetForgeCurrentGeneralPieces(currentGeneraPieces, Atado);
-                    Trace.Message("Configurations.Instance.Machine = Forjadora {0}--currentGeneraPieces {1}", Configurations.Instance.Machine, currentGeneraPieces);
-
-                }
-            }
-            //if (ConfigurationManager.AppSettings["Extremo"].ToString() != "")
-            //    currentGeneraPieces = currentGeneraPieces.Where(x => x.Extremo == ConfigurationManager.AppSettings["Extremo"].ToString()).ToList();
-
-
-            if (Configurations.Instance.Machine == "Forjadora 0")
-            {
-                ObservableCollection<GeneralPiece> currentGeneralPiecesForja0 = new ObservableCollection<GeneralPiece>();
-                foreach (GeneralPiece cgeneralPiece in currentGeneraPieces)
-                {
-
-                    currentGeneralPiecesForja0.Add(dgReporteProduccion_SelectionChangedForja0(cgeneralPiece));
-
-                }
-                currentGeneraPieces = currentGeneralPiecesForja0;
-                return new ObservableCollection<GeneralPiece>(currentGeneraPieces);
-            }
-
-
-
-            //PRUEBADWF BORRAR
-            ITServiceAdapter adapter = new ITServiceAdapter();
-            
-            adapter.GetAccesoriesSpecificationIT(currentGeneraPieces[0].OrderNumber, (currentGeneraPieces[0].HeatNumber));
-
-
+            if (generalPieces == null)
+                return null;
+            currentGeneraPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
+            Trace.Message("Configurations.Instance.MachineFiltre = null {0}--currentGeneraPieces {1}", Configurations.Instance.MachineFiltre, currentGeneraPieces);
             return new ObservableCollection<GeneralPiece>(currentGeneraPieces);
 
 
@@ -178,38 +116,18 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                  && (c.HeatNumber == GeneralPiece.HeatNumber)
                  && (c.ReportSequence == 1) && (c.Extremo == GeneralPiece.Extremo)).First().LoadedCount;
         }
-        
+
         public static bool Report(GeneralPiece currentDGRow, InteractionRequest<Notification> request, InteractionRequest<Notification> IndBoxReportConfirmationRequest,
             InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
             InteractionRequest<Notification> showQuestionRequest, ObservableCollection<ReportProductionHistory> historico)
         {
-
-            //Verifica que el extremo 1 o 2 no hayan sido enviados
-            //if(Configurations.Instance.Machine.Contains("Forjadora"))
-            //{
-
-            //    if (currentDGRow.Extremo == "Extremo 1" && historico.Where(x => x.MachineOperation.Contains("1") && (x.SendStatus == Enumerations.ProductionReportSendStatus.Completo || x.SendStatus == Enumerations.ProductionReportSendStatus.Final)).ToList().Count > 0)
-            //    {
-            //        ShowError showError = new ShowError("Error", string.Format("Este reporte ya ha sido enviado como EXTREMO 1. Operación cancelada"));
-            //        showErrorMessageRequest.Raise(new Notification() { Content = showError });
-            //        return false;
-            //    }
-            //    if (currentDGRow.Extremo == "Extremo 2" && historico.Where(x => x.MachineOperation.Contains("2") && (x.SendStatus == Enumerations.ProductionReportSendStatus.Completo || x.SendStatus == Enumerations.ProductionReportSendStatus.Final)).ToList().Count > 0)
-            //    {
-            //        ShowError showError = new ShowError("Error", string.Format("Este reporte ya ha sido enviado como EXTREMO 2. Operación cancelada"));
-            //        showErrorMessageRequest.Raise(new Notification() { Content = showError });
-            //        return false;
-            //    }
-            //}
-
 
             bool response;
             if (Configurations.Instance.VersionApplication.Equals("V1") && !Configurations.Instance.Secuencia.Equals("8"))
             {
                 Trace.Message("ReportV1 currentDgRow {0}", currentDGRow);
                 response = ReportV1(currentDGRow, request, showErrorMessageRequest, showMessageRequest, showQuestionRequest);
-                //ShowMessage showMessage = new ShowMessage("Reporte de Producción", "La UDT declarada en el servicio\n(Tarjeta de Linea 14024968 colada 321697) actualmente\n no se encuentra cargada en el puesto seleccionado (3-Control \n No Destructivo-Control No Destructivo)");
-                //showMessageRequest.Raise(new Notification() { Content = showMessage });
+                
             }
 
 
@@ -292,7 +210,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 //    return true;
                 //}
                 #endregion
-                return confirmation; 
+                return confirmation;
             }
             else
             {
@@ -308,7 +226,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 string _User = whoIsLogged;
 
                 ProductionBox selectedBox = boxReportConfirmation.SelectedBox;
-                
+
 
                 tbScrapCountL2 = boxReportConfirmation.Malas;
                 tbReworkedCountL2 = boxReportConfirmation.Reprocesos;
@@ -795,20 +713,25 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         public static ObservableCollection<ReportProductionHistoryV1> dgReporteProduccion_SelectionChangedV1(GeneralPiece currentDGRow)
         {
 
-            if (currentDGRow != null)
-            {
-                var generalpiece = GetCurrentGeneralPiece(currentDGRow.IdHistory);
-                if (generalpiece != null)
-                {
-                    //tssLbl.Text = generalpiece.Customer;
-                    ObservableCollection<ReportProductionHistoryV1> productionReportHistories = new ReportProductionHistoryFacade().GetReportProductionHistoryByParamsV1
-                        (generalpiece.OrderNumber, generalpiece.GroupItemNumber,
-                        generalpiece.HeatNumber, null, null, null);
+            if (currentDGRow == null)
+                return null;
 
-                    return new ObservableCollection<ReportProductionHistoryV1>(productionReportHistories);
-                }
-            }
-            return null;
+            var generalpiece = GetCurrentGeneralPiece(currentDGRow.IdHistory);
+
+            if (generalpiece == null)
+                return null;
+            ObservableCollection<ReportProductionHistoryV1> productionReportHistories =
+                DataAccessSQL.Instance.GetReportProductionHistoryByParamsTest(
+                new Dictionary<string, object>
+            {
+                        { "@Order", generalpiece.OrderNumber },
+                        { "@GroupItemNumber", generalpiece.GroupItemNumber },
+                        { "@HeatNumber", generalpiece.HeatNumber },
+                        { "@idHistory", 0 },
+                        { "@SendStatus", 0 },
+                        { "@MachineSequence", 0 }
+            });
+            return productionReportHistories;
         }
 
         public static void InitialMachineZone_CheckedChanged(bool isInitialMachine)

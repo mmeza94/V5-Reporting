@@ -1,15 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Tenaris.Fava.Production.Reporting.Model.Model;
 
 namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 {
     public class StoredProcedures
     {
 
+        #region Test
+        //Testeado para Grana, Enderezadora y CND---probar forja 2 y hornos
+        public static string GetProductionGeneralTest = Configurations.Instance.GetProductionGeneral;
+        public const string GetRejectionCodeByMachineDescriptionTestV5 = "[Production].[GetRejectionCodeByMachineDescriptionTestV5]";
+        //SelectionChanged
+        public const string GetReportProductionHistoryByParamsTest = "[Production].[GetReportProductionHistoryByParamsTest]";
+        public const string GetPreviousCountersByMachineTest = "[Production].[GetPreviousCountersByMachineTest]";
+        public const string InsReportProductionHistoryTestV5 = "[Production].[InsReportProductionHistoryTestV5]";
+        public const string InsRejectionReportDetailTestV5 = "[Production].[InsRejectionReportDetailTestV5]";
+
+
+
+
+
+        //Testeado para Forja 0 y 1
+        public const string GetProductionGeneralV2Test = "[dbo].[GetProductionGeneralV2Test]";
+        //Testeado para Forja 0 y 1
+        public const string GetProductionGeneralTestForjasyHornos = "[dbo].[GetProductionGeneralTestForjasyHornos]";
+
+
+
+        #endregion
+
+        #region Sin refactorizar
         public const string GetProductionGeneral = "[DBO].[GetProductionGeneral]"; //V1B ReportProductionDB
         public const string GetProductionGeneralProgrammed = "[dbo].[GetProductionGeneralProgrammed]"; //V1B ReportProductionDB
         public const string GetProductionGeneralProgrammedTorno4 = "[dbo].[GetProductionGeneralProgrammedTorno4]"; //V1B ReportProductionDB
@@ -26,7 +45,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public const string GetLoadPainting = "[ProductionFIN].[GetLoadPainting]"; //V3 ReportProductionDBV3
         public const string GetCurrentUserByWorkstation = "[Security].[GetCurrentUserByWorkstation]";
         public const string GetActiveBox = "[ProductionGuide].[GetBoxActive]";
-
+        #endregion
 
         //public static Dictionary<string, string> StoresDataBase { get; set; } =new Dictionary<string, string>();
 

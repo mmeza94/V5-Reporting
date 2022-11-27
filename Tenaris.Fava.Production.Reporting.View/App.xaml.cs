@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.Stategy;
 using Tenaris.Fava.Production.Reporting.View.Properties;
 
 namespace Tenaris.Fava.Production.Reporting.View
@@ -16,8 +14,11 @@ namespace Tenaris.Fava.Production.Reporting.View
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
+
     public partial class App : Application
     {
+
+
         public App()
         {
             InitializeCultures();
@@ -40,7 +41,12 @@ namespace Tenaris.Fava.Production.Reporting.View
         }
         public void ApplicationStartup(Object sender, StartupEventArgs e)
         {
+
+            IActions action = new GranalladoraStrategy();
+
+
             Configurations.Instance.GetConfigutation();
+
             if (Configurations.Instance.Machine == "Pintado")
             {
                 StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/PaintingReportView.xaml", UriKind.Relative);
