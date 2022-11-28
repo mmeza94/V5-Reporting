@@ -110,7 +110,6 @@
     <Compile Include="DataBase\Sql\DataAccessSQL.cs" />
     <Compile Include="DataBase\Oracle\DataAccessOracle.cs" />
     <Compile Include="DataBase\Sql\StoredProcedures.cs" />
-    <Compile Include="Interfaces\IActions.cs" />
     <Compile Include="Model\BaseLevel2Object.cs" />
     <Compile Include="Model\BoxLoad.cs" />
     <Compile Include="Model\BoxProductionIT.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="DataBase\HIBernate\Reporitories\ReportProductionHistoryRepository.cs" />
     <Compile Include="DataBase\HIBernate\Reporitories\SampleCuttingRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stategy\GranalladoraStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Configurations\Configurations.xml">

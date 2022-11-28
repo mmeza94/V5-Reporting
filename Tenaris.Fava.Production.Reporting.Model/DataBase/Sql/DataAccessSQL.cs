@@ -58,9 +58,10 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
         #endregion
 
+
         public Library.DbClient.IDbCommand SelectedCommand(string store, string ConnectionString)
         {
-            string connection = ConnectionString; //StoredProcedures.StoresDataBase[store];
+            string connection = ConnectionString;
             DbConnectionString cn = new DbConnectionString("MainConnectionString", connection);
             this.dbClient = new DbClient(cn);
             this.dbClient.AddCommand(store);
@@ -231,7 +232,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         }
 
 
-
         public int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
         {
             try
@@ -309,9 +309,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
 
         }
-
-
-
 
 
         internal string GetCurrentUser()
@@ -436,8 +433,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
             return resul;
         }
-
-
 
         public int GetActiveBox()
         {

@@ -179,6 +179,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             int groupItem = 0;
             string description = "";
             string extreme = "";
+
             try
             {
                 var orderedGeneralPieces = generalPieces.OrderByDescending(item => item.InsDateTime).ToList();
@@ -188,6 +189,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                         groupItem != item.GroupItemNumber || description != item.Description
                         || extreme != item.Extremo)
                     {
+
                         order = item.OrderNumber;
                         heat = item.HeatNumber;
                         groupItem = item.GroupItemNumber;
@@ -197,8 +199,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                         if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
                         && (x.HeatNumber == heat)
                         && (x.GroupItemNumber == groupItem) && (x.Description == description) && x.Extremo == extreme))
-                            generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem,
-                                orderedGeneralPieces, description, extreme));
+
+
+                        generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
                     }
                 });
 

@@ -21,6 +21,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
     public class ProductionReportSupport : NotificationObject
     {
         #region
+
         static GeneralPiece currentGeneralPieceDto;
         static ReportProductionDto currentProductionReportDto;
         static ReportProductionDto productionReportDto;
@@ -34,7 +35,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         private const string ext1 = "Extremo 1";
         private const string ext2 = "Extremo 2";
 
-        // private static ISecurityAdapter Adapter { get; set; }
 
         protected static IDictionary<string, string> adaptersInformation;
 
@@ -42,7 +42,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         public static string whoIsLogged = "";
         //V1: OplSubscription oplSubscription;
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static IList<GeneralPiece> currentGeneraPieces = null;
+        public static IList<GeneralPiece> currentGeneraPieces = null;
 
         public static ReportConfirmationBusiness ReportConfirmationBusiness { get; set; }
         public static void ProductionReport_Load()
@@ -123,19 +123,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         {
 
             bool response;
-            if (Configurations.Instance.VersionApplication.Equals("V1") && !Configurations.Instance.Secuencia.Equals("8"))
-            {
-                Trace.Message("ReportV1 currentDgRow {0}", currentDGRow);
-                response = ReportV1(currentDGRow, request, showErrorMessageRequest, showMessageRequest, showQuestionRequest);
-                
-            }
+
+            Trace.Message("ReportV1 currentDgRow {0}", currentDGRow);
+            response = ReportV1(currentDGRow, request, showErrorMessageRequest, showMessageRequest, showQuestionRequest);
 
 
-            else
-            {
-                Trace.Message("ReportV3 currentDgRow {0}", currentDGRow);
-                response = ReportV3(currentDGRow, request, showErrorMessageRequest, showMessageRequest, showQuestionRequest, IndBoxReportConfirmationRequest);
-            }
+
             if (response)
             {
                 return false;
@@ -144,15 +137,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             return false;
         }
 
-        private static bool ReportExecute(InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
-            InteractionRequest<Notification> showQuestionRequest,
-            ReportConfirmationViewModel reportConfirmation = null,
-            IndBoxReportConfirmationViewModel boxReportConfirmation = null)
+        private static bool ReportExecute(InteractionRequest<Notification> showErrorMessageRequest, 
+            InteractionRequest<Notification> showMessageRequest, InteractionRequest<Notification> showQuestionRequest,
+            ReportConfirmationViewModel reportConfirmation = null, IndBoxReportConfirmationViewModel boxReportConfirmation = null)
         {
-
-
-
-
             if (boxReportConfirmation == null)
             {
                 currentProductionReportDto = reportConfirmation.CurrentReportProduction;
@@ -175,41 +163,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 bool confirmation = ReportConfirmationSupport.ReportConfirmation(tbGoodCountL2, tbScrapCountL2, tbReworkedCountL2, tbLoadedCountL2, reportConfirmation.Extremo, 5,
                     reportConfirmation.RejectionReportDetails, dgRejectionReportDetails, currentProductionReportDto, lbITLoadHelper, tbTotalLoaded,
                     SelectedSendType, tbPreviousLoaded, _User, showQuestionRequest, showMessageRequest, showErrorMessageRequest);
-                #region codigo redundante
-                //if (confirmation)
-                //{
-                //    ReportConfirmationSupport.GetSendStatus(SelectedSendType);
-                //    {
-                //        if (ValidationRules.ValidateRejectionReasons(tbScrapCountL2,
-                //            rejectionReportDetails))
-                //        {
-                //            var confirmMessage = string.Format("Resumen de lo Reportado: \n\n Buenas:{0} \n" +
-                //                " Malas:{1} \n Reprocesos:{2} \n Total:{3} \n\n ¿Desea reportar estas cantidades?", tbGoodCountL2,
-                //                tbScrapCountL2, tbReworkedCountL2, tbLoadedCountL2);
 
-                //            ShowQuestion showQuestion = new ShowQuestion("Confirmar Reporte", confirmMessage);
-                //            showQuestionRequest.Raise(new Notification() { Content = showQuestion });
-                //            if (showQuestion.Result)
-                //            {
-                //                //if (chBEdit.Checked)
-                //                ReportConfirmationSupport.PrepareDtoForProductionReport(currentProductionReportDto, lbITLoadHelper, tbPreviousLoaded,
-                //    tbLoadedCountL2, tbGoodCountL2, tbScrapCountL2, tbReworkedCountL2, user);
-                //                int versionInt = Convert.ToInt32(Configurations.Instance.VersionApplication.Replace("V", ""));
-                //                var response = new ITServiceAdapter().ReportProduction(
-                //                    user, currentProductionReportDto, ReportConfirmationSupport.GetSendStatus(SelectedSendType),
-                //                        true, rejectionReportDetails, versionInt);
-
-                //                ShowMessage showMessage = new ShowMessage("Reporte de Producción", response);
-                //                showMessageRequest.Raise(new Notification() { Content= showMessage });
-                //                ReportConfirmationSupport.CheckReportProductionForNextOperation(response, currentProductionReportDto, lbITLoadHelper, tbTotalLoaded, showMessageRequest);
-
-                //            }
-
-                //        }
-                //    }
-                //    return true;
-                //}
-                #endregion
                 return confirmation;
             }
             else
@@ -244,242 +198,208 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
             InteractionRequest<Notification> showQuestionRequest)
         {
-
             bool response = true;
-            //OplSubscription oplSubscription = new OplSubscription();
-            //oplSubscription.OpenSession();
-            if (Login())
-            {
-                //PRUEBADWF
-                #region FilasHardcode
-                //GeneralPiece prueba1 = new GeneralPiece()
-                //{
-                //    GroupItemNumber = 12345678,
-                //    BuenasReportadas = 0,
-                //    Cargados = 0,
-                //    Customer = "AAA",
-                //    Description = "FORJADORA 0",
-                //    Extremo = "Extremo 1",
-                //    Sended = Model.Enums.Enumerations.AxlrBit.No,
-                //    SendStatus = Model.Enums.Enumerations.ProductionReportSendStatus.Parcial,
-                //    SendedString = "No",
-                //    LoadedCount = 10,
-                //    ReworkedCount = 20,
-                //    GoodCount = 30,
-                //    ScrapCount = 40,
-                //    LotNumberHTR = 50,
-                //    HeatNumber = 12345,
-                //    Location = "AQUI",
-                //    OrderNumber = 0001,
-                //    IdHistory = 11,
-                //    IdBatch = 23,
-                //    GroupItemType = "nose",
-                //    ReportSequence = 1
 
+            //if (!Login())
+            //{
+            //    ShowError showError = new ShowError("Error", string.Format("No se pudo iniciar sesión en el sistema. Operación cancelada"));
+            //    showErrorMessageRequest.Raise(new Notification() { Content = showError });
+            //    return response;
+            //}
 
+            //if (cancel)
+            //    return response;
 
-                //};
-                //currentGeneraPieces.Add(prueba1);
-                //acabaPRUEBA
-                #endregion
+            var reportProductionDto = GetCurrentGroupItemToReport(currentDGRow);
 
-                var reportProductionDto = GetCurrentGroupItemToReport(currentDGRow);
-                if (reportProductionDto != null)
-                {
-
-                    bool bypass = ConfigurationManager.AppSettings["Bypass"] == "true" ? true : false;
-                    if (reportProductionDto.Enviado == Enumerations.AxlrBit.No || bypass || Configurations.Instance.Machine.Contains("Forjadora"))
-                    {
-                        var generalPieceDto = GetCurrentGeneralPiece(currentDGRow.IdHistory);
-                        if (ValidationRules.ValidateReportSequence(currentGeneraPieces, generalPieceDto))
-                        {
-
-                            var maquina = Configurations.Instance.Machine.ToUpper();
-                            if (maquina == reportProductionDto.DescripcionMaquina.ToUpper())
-                            {
-                                string user = whoIsLogged;
-                                ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(
-                                    generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), new OplSubscription(), user);
-
-
-
-                                Trace.Message("reportConfirmation:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount, user);
-                                request.Raise(new Notification() { Content = reportConfirmation });
-                                if (reportConfirmation.Result)
-                                {
-                                    if (Configurations.Instance.Machine.Contains("Forjadora") || Configurations.Instance.Machine.Contains("Roscadora"))
-                                    {
-                                        currentDGRow.Extremo = reportConfirmation.Extremo;
-                                        GetSequenceForDifferentExtreme(currentDGRow, reportProductionDto);
-                                        reportProductionDto.Operacion = GetOperation(currentDGRow, reportProductionDto);
-                                    }
-                                    Login();
-                                    response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
-                                }
-                                else
-                                    response = false;
-
-                            }
-                            else
-                            {
-                                ShowError showError = new ShowError("Error", string.Format("No puede reportar la producción de una máquina distinta a {0}", maquina));
-                                showErrorMessageRequest.Raise(new Notification() { Content = showError });
-
-                            }
-                        }
-                        else
-                        {
-                            ShowError showError = new ShowError("Error", string.Format("Debe reportar el parcial anterior. Operación cancelada"));
-                            showErrorMessageRequest.Raise(new Notification() { Content = showError });
-                        }
-
-
-                    }
-                    else
-                    {
-                        ShowError showError = new ShowError("Error", string.Format("Este reporte ya ha sido enviado. Operación cancelada"));
-                        showErrorMessageRequest.Raise(new Notification() { Content = showError });
-                    }
-                }
-            }
-            else if (cancel)
+            if (reportProductionDto == null)
                 return response;
-            else
+
+
+            bool bypass = ConfigurationManager.AppSettings["Bypass"] == "true";
+
+            if (!(reportProductionDto.Enviado == Enumerations.AxlrBit.No || bypass))
             {
-                ShowError showError = new ShowError("Error", string.Format("No se pudo iniciar sesión en el sistema. Operación cancelada"));
+                ShowError showError = new ShowError("Error", string.Format("Este reporte ya ha sido enviado. Operación cancelada"));
                 showErrorMessageRequest.Raise(new Notification() { Content = showError });
+                return response;
             }
+
+
+            //var generalPieceDto = GetCurrentGeneralPiece(currentDGRow.IdHistory);
+            var generalPieceDto = currentDGRow;
+
+
+            if (!ValidationRules.ValidateReportSequence(currentGeneraPieces, generalPieceDto))
+            {
+                ShowError showError = new ShowError("Error", string.Format("Debe reportar el parcial anterior. Operación cancelada"));
+                showErrorMessageRequest.Raise(new Notification() { Content = showError });
+                return response;
+            }
+
+            var maquina = Configurations.Instance.Machine.ToUpper();
+
+            if (maquina != reportProductionDto.DescripcionMaquina.ToUpper())
+            {
+                ShowError showError = new ShowError("Error", string.Format("No puede reportar la producción de una máquina distinta a {0}", maquina));
+                showErrorMessageRequest.Raise(new Notification() { Content = showError });
+                return response;
+            }
+
+            string user = whoIsLogged;
+            ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(
+                generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
+            request.Raise(new Notification() { Content = reportConfirmation });
+
+            if (!reportConfirmation.Result)
+            {
+                response = false;
+                return response;
+            }
+
+            Login();
+            response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
+
+
+            //else if (cancel)
+            //    return response;
 
             //REP - Bloqueamos nuevamente el Grid para que sea necesario que ingresen nuevamente la clave de supervisor.
 
             return response;
         }
-        private static bool ReportV3(GeneralPiece currentDGRow, InteractionRequest<Notification> request,
-            InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
-            InteractionRequest<Notification> showQuestionRequest, InteractionRequest<Notification> IndBoxReportConfirmationRequest)
-        {
-            //string AssemblyName = $"{Assembly.GetCallingAssembly().Location}\\Adapter";
-            //Assembly assembly = Assembly.LoadFrom("Adapter\\Tenaris.Fava.Production.Reporting.SecurityAdapter.dll");
-            //if(assembly.GetType("SecurityAd") != null)
-            //{
-            //    //Adapter = (ISecurityAdapter)assembly.CreateInstance("Tenaris.Fava.Production.Reporting.SecurityAdapter.SecurityAd");                
-            //}
-            bool response = false;
-            if (Login())
-            {
-                bool cancel;
-                var reportProductionDto = GetCurrentGroupItemToReport(currentDGRow);
-                if (reportProductionDto != null)
-                {
-                    string maquina = Configurations.Instance.Machine;
-                    GeneralPiece generalPieceDto = GetCurrentGeneralPiece(currentDGRow.IdHistory);
-                    bool byPass = ConfigurationManager.AppSettings["Bypass"] == "true" ? true : false;
 
-                    UpdateReportBoxFlag(generalPieceDto);
 
-                    if (maquina.Contains("Roscadora") /*&& generalPieceDto.Extremo.EndsWith("2")*/ && !string.IsNullOrEmpty(generalPieceDto.ReportBox) && generalPieceDto.ReportBox != "N")
-                    {
-                        byPass = true;
-                    }
 
-                    if (reportProductionDto.Enviado == Enumerations.AxlrBit.No || byPass || Configurations.Instance.Machine.Contains("Forjadora"))
-                    {
-                        if (ValidationRules.ValidateReportSequence(currentGeneraPieces, generalPieceDto))
-                        {
-                            //if (maquina.Contains(reportProductionDto.DescripcionMaquina))
-                            if (maquina.ToString().Contains(reportProductionDto.DescripcionMaquina) || reportProductionDto.DescripcionMaquina.Contains("Roscadora"))
-                            {
-                                if (maquina.Contains("Forjadora"))
-                                {
+        #region Report V3
+        //private static bool ReportV3(GeneralPiece currentDGRow, InteractionRequest<Notification> request,
+        //    InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
+        //    InteractionRequest<Notification> showQuestionRequest, InteractionRequest<Notification> IndBoxReportConfirmationRequest)
+        //{
+        //    //string AssemblyName = $"{Assembly.GetCallingAssembly().Location}\\Adapter";
+        //    //Assembly assembly = Assembly.LoadFrom("Adapter\\Tenaris.Fava.Production.Reporting.SecurityAdapter.dll");
+        //    //if(assembly.GetType("SecurityAd") != null)
+        //    //{
+        //    //    //Adapter = (ISecurityAdapter)assembly.CreateInstance("Tenaris.Fava.Production.Reporting.SecurityAdapter.SecurityAd");                
+        //    //}
+        //    bool response = false;
+        //    if (Login())
+        //    {
+        //        bool cancel;
+        //        var reportProductionDto = GetCurrentGroupItemToReport(currentDGRow);
+        //        if (reportProductionDto != null)
+        //        {
+        //            string maquina = Configurations.Instance.Machine;
+        //            GeneralPiece generalPieceDto = GetCurrentGeneralPiece(currentDGRow.IdHistory);
+        //            bool byPass = ConfigurationManager.AppSettings["Bypass"] == "true" ? true : false;
 
-                                    string user = whoIsLogged;
-                                    ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
-                                    Trace.Message("reportConfirmation:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount);
-                                    request.Raise(new Notification() { Content = reportConfirmation });
-                                    if (reportConfirmation.Result)
-                                        response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
+        //            UpdateReportBoxFlag(generalPieceDto);
 
-                                }
+        //            if (maquina.Contains("Roscadora") /*&& generalPieceDto.Extremo.EndsWith("2")*/ && !string.IsNullOrEmpty(generalPieceDto.ReportBox) && generalPieceDto.ReportBox != "N")
+        //            {
+        //                byPass = true;
+        //            }
 
-                                else if ((maquina.Contains("Roscadora") && generalPieceDto.Extremo.EndsWith("2") && !string.IsNullOrEmpty(generalPieceDto.ReportBox) && generalPieceDto.ReportBox != Configurations.Instance.FlagITNOReportBox))/*ConfigurationManager.AppSettings["FlagITNOReportBox"].ToString()*/ //|| Configurations.Instance.VersionApplication == "V4"
-                                {
-                                    //Para Mecanizado
-                                    string user = whoIsLogged;
-                                    IndBoxReportConfirmationViewModel reportConfirmation = new IndBoxReportConfirmationViewModel(generalPieceDto, reportProductionDto, user);
-                                    Trace.Message("IndBoxReportConfirmationViewModel:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount);
-                                    IndBoxReportConfirmationRequest.Raise(new Notification() { Content = reportConfirmation });
-                                    // TO-DO: Implementar dialogo en confirmacion de reporte de cajas
-                                    // Se debe incluir un bool llamado result en el que despues de presionar
-                                    // El boton de aceptar devuelva un true, y false en caso de presionar cancelar
-                                    if (reportConfirmation.Result)
-                                        response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, null, reportConfirmation); // response = reportConfirmation.Result;
-                                }
-                                else
-                                {
-                                    //Las Demas Estaciones                                    
-                                    string user = whoIsLogged;
+        //            if (reportProductionDto.Enviado == Enumerations.AxlrBit.No || byPass || Configurations.Instance.Machine.Contains("Forjadora"))
+        //            {
+        //                if (ValidationRules.ValidateReportSequence(currentGeneraPieces, generalPieceDto))
+        //                {
+        //                    //if (maquina.Contains(reportProductionDto.DescripcionMaquina))
+        //                    if (maquina.ToString().Contains(reportProductionDto.DescripcionMaquina) || reportProductionDto.DescripcionMaquina.Contains("Roscadora"))
+        //                    {
+        //                        if (maquina.Contains("Forjadora"))
+        //                        {
 
-                                    ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
-                                    Trace.Message("reportConfirmation:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount);
-                                    request.Raise(new Notification() { Content = reportConfirmation });
-                                    if (reportConfirmation.Result)
-                                        response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
-                                }
-                            }
-                            else
-                            {
-                                ShowError showError = new ShowError("Error", string.Format("La estación de trabajo no corresponde a la estación de la pieza. Operación cancelada"));
-                                showErrorMessageRequest.Raise(new Notification() { Content = showError });
-                            }
-                        }
-                        else
-                        {
-                            ShowError showError = new ShowError("Error", string.Format("Debe reportar el parcial anterior. Operación cancelada"));
-                            showErrorMessageRequest.Raise(new Notification() { Content = showError });
-                        }
-                    }
-                    else
-                    {
-                        if (maquina.Contains("Pintado"))
-                        {
-                            ShowQuestion showQuestion = new ShowQuestion("Confirmar Reporte Para Embalado", "El registro seleccionado ya está completo como pintado, ¿Desea generar el envío a Embalado?");
-                            showQuestionRequest.Raise(new Notification() { Content = showQuestion });
-                            if (showQuestion.Result)
-                            {
+        //                            string user = whoIsLogged;
+        //                            ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
+        //                            Trace.Message("reportConfirmation:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount);
+        //                            request.Raise(new Notification() { Content = reportConfirmation });
+        //                            if (reportConfirmation.Result)
+        //                                response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
 
-                                //Las Demas Estaciones
-                                string user = whoIsLogged;
+        //                        }
 
-                                reportProductionDto.Almacen = "de pintado";
-                                reportProductionDto.DescripcionMaquina = "Embalado Bateria 1";
-                                reportProductionDto.Enviado = Enumerations.AxlrBit.No;
-                                reportProductionDto.Opcion = "Embalado";
-                                reportProductionDto.Operacion = "Embalado";
-                                reportProductionDto.Secuencia = 12;
+        //                        else if ((maquina.Contains("Roscadora") && generalPieceDto.Extremo.EndsWith("2") && !string.IsNullOrEmpty(generalPieceDto.ReportBox) && generalPieceDto.ReportBox != Configurations.Instance.FlagITNOReportBox))/*ConfigurationManager.AppSettings["FlagITNOReportBox"].ToString()*/ //|| Configurations.Instance.VersionApplication == "V4"
+        //                        {
+        //                            //Para Mecanizado
+        //                            string user = whoIsLogged;
+        //                            IndBoxReportConfirmationViewModel reportConfirmation = new IndBoxReportConfirmationViewModel(generalPieceDto, reportProductionDto, user);
+        //                            Trace.Message("IndBoxReportConfirmationViewModel:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount);
+        //                            IndBoxReportConfirmationRequest.Raise(new Notification() { Content = reportConfirmation });
+        //                            // TO-DO: Implementar dialogo en confirmacion de reporte de cajas
+        //                            // Se debe incluir un bool llamado result en el que despues de presionar
+        //                            // El boton de aceptar devuelva un true, y false en caso de presionar cancelar
+        //                            if (reportConfirmation.Result)
+        //                                response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, null, reportConfirmation); // response = reportConfirmation.Result;
+        //                        }
+        //                        else
+        //                        {
+        //                            //Las Demas Estaciones                                    
+        //                            string user = whoIsLogged;
 
-                                //generalPieceDto.
+        //                            ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
+        //                            Trace.Message("reportConfirmation:GoodCount:{0},ScrapCount:{1},LoadedCount:{2}---> user:{3}", generalPieceDto.GoodCount, generalPieceDto.ScrapCount, generalPieceDto.LoadedCount);
+        //                            request.Raise(new Notification() { Content = reportConfirmation });
+        //                            if (reportConfirmation.Result)
+        //                                response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        ShowError showError = new ShowError("Error", string.Format("La estación de trabajo no corresponde a la estación de la pieza. Operación cancelada"));
+        //                        showErrorMessageRequest.Raise(new Notification() { Content = showError });
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    ShowError showError = new ShowError("Error", string.Format("Debe reportar el parcial anterior. Operación cancelada"));
+        //                    showErrorMessageRequest.Raise(new Notification() { Content = showError });
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (maquina.Contains("Pintado"))
+        //                {
+        //                    ShowQuestion showQuestion = new ShowQuestion("Confirmar Reporte Para Embalado", "El registro seleccionado ya está completo como pintado, ¿Desea generar el envío a Embalado?");
+        //                    showQuestionRequest.Raise(new Notification() { Content = showQuestion });
+        //                    if (showQuestion.Result)
+        //                    {
 
-                                ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
-                                request.Raise(new Notification() { Content = reportConfirmation });
-                                response = reportConfirmation.Result;
+        //                        //Las Demas Estaciones
+        //                        string user = whoIsLogged;
 
-                            }
-                        }
-                        else
-                        {
-                            ShowError showError = new ShowError("Error", string.Format("Este reporte ya ha sido enviado. Operación cancelada"));
-                            showErrorMessageRequest.Raise(new Notification() { Content = showError });
-                        }
-                    }
-                }
-            }
-            //Adapter.Notify -= new EventHandler<ChangedUserEventArgs>(Security_Notify);
-            //Adapter.Uninitialize();
-            //Adapter.Dispose();
-            return response;
-            //return true;
-        }
-        //
+        //                        reportProductionDto.Almacen = "de pintado";
+        //                        reportProductionDto.DescripcionMaquina = "Embalado Bateria 1";
+        //                        reportProductionDto.Enviado = Enumerations.AxlrBit.No;
+        //                        reportProductionDto.Opcion = "Embalado";
+        //                        reportProductionDto.Operacion = "Embalado";
+        //                        reportProductionDto.Secuencia = 12;
+
+        //                        //generalPieceDto.
+
+        //                        ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), user);
+        //                        request.Raise(new Notification() { Content = reportConfirmation });
+        //                        response = reportConfirmation.Result;
+
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    ShowError showError = new ShowError("Error", string.Format("Este reporte ya ha sido enviado. Operación cancelada"));
+        //                    showErrorMessageRequest.Raise(new Notification() { Content = showError });
+        //                }
+        //            }
+        //        }
+        //    }
+        //    //Adapter.Notify -= new EventHandler<ChangedUserEventArgs>(Security_Notify);
+        //    //Adapter.Uninitialize();
+        //    //Adapter.Dispose();
+        //    return response;
+        //    //return true;
+        //}
+        #endregion
+
+
         public static void UpdateReportBoxFlag(GeneralPiece GeneralPiece)
         {
             //comentado para que siempre busque su tipo de reporte en TPS
@@ -534,33 +454,25 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
             if (currentDGRow != null)
             {
-                var GeneralPiece = GetCurrentGeneralPiece(currentDGRow.IdHistory);
+                var GeneralPiece = currentDGRow;
                 reportProductionDto = new ReportProductionDto()
                 {
-                    //V1: TipoUDT = "Tarjeta de Linea",
+                   
                     TipoUDT = string.IsNullOrEmpty(GeneralPiece.GroupItemType) ? "Tarjeta de Linea" : GeneralPiece.GroupItemType,
                     IdBatch = GeneralPiece.IdBatch,
-                    IdHistory = GeneralPiece.IdHistory,//Convert.ToInt32(currentDGRow.Cells[0].Value.ToString()),
-                    Orden = GeneralPiece.OrderNumber,//Convert.ToInt32(currentDGRow.Cells["OrderNumber"].Value.ToString()),
-                    Almacen = GeneralPiece.Location,//currentDGRow.Cells["Location"].Value.ToString(),
-                    IdUDT = GeneralPiece.GroupItemNumber,//Convert.ToInt32(currentDGRow.Cells["GroupItemNumber"].Value.ToString()),
-                    Colada = GeneralPiece.HeatNumber,//Convert.ToInt32(currentDGRow.Cells["HeatNumber"].Value.ToString()),
-                    Lote = GeneralPiece.LotNumberHTR, //String.IsNullOrEmpty(currentDGRow.Cells["LotNumberHTR"].Value.ToString()) ? 0 :
-                                                      //Convert.ToInt32(currentDGRow.Cells["LotNumberHTR"].Value.ToString()),
+                    IdHistory = GeneralPiece.IdHistory,
+                    Orden = GeneralPiece.OrderNumber,
+                    Almacen = GeneralPiece.Location,
+                    IdUDT = GeneralPiece.GroupItemNumber,
+                    Colada = GeneralPiece.HeatNumber,
+                    Lote = GeneralPiece.LotNumberHTR, 
                     Aprietes = 0,
                     DescripcionMaquina = GeneralPiece.Description,
-                    CantidadMalas = GeneralPiece.ScrapCount,//Convert.ToInt32(currentDGRow.Cells["ScrapCount"].Value.ToString()),
-                    CantidadBuenas = GeneralPiece.GoodCount,//Convert.ToInt32(currentDGRow.Cells["GoodCount"].Value.ToString()),
-                    CantidadReprocesadas = GeneralPiece.ReworkedCount,// Convert.ToInt32(currentDGRow.Cells["ReworkedCount"].Value.ToString()),
-                                                                      // Observaciones = "",
+                    CantidadMalas = GeneralPiece.ScrapCount,
+                    CantidadBuenas = GeneralPiece.GoodCount,
+                    CantidadReprocesadas = GeneralPiece.ReworkedCount,
                     Enviado = GeneralPiece.Sended,
-                    //CantidadProcesadas = Convert.ToInt32(currentDGRow.Cells["LoadedCount"].Value.ToString()) -
-                    //                Convert.ToInt32(currentDGRow.Cells["ReworkedCount"].Value.ToString()),
-                    /**TO-DO**/
-                    // Hay que ir a la tabla que contiene los datos del atado, es decir el número de piezas, el 
-                    //número de cantidad de piezas procesadas siempre debe ser <= a la Cantidad Total
-                    // Cantidad Procesadas = Cantidad buenas + descartes
-                    CantidadTotal = GeneralPiece.LoadedCount //- GeneralPiece.ReworkedCount
+                    CantidadTotal = GeneralPiece.LoadedCount 
 
                 };
 

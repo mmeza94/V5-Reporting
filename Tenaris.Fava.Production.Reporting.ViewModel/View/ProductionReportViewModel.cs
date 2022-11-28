@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;	
-using Tenaris.Fava.Production.Reporting.Model.DTO;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using System.Windows;
-using System.Configuration;
-using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
-using Tenaris.Library.UI.Framework.ViewModel;
-using Microsoft.Practices.Prism;
-using Tenaris.Fava.Production.Reporting.ViewModel.Support;
-using Tenaris.Fava.Production.Reporting.Model.Model;
-using System.Text.RegularExpressions;
-using Tenaris.Library.Log;
-using System.Windows.Controls;
+﻿using Castle.Core;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
+using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Stategy;
-using Castle.Core;
+using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
+using Tenaris.Fava.Production.Reporting.ViewModel.Support;
+using Tenaris.Library.Log;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 {
@@ -26,7 +22,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
     public class ProductionReportViewModel : ViewModelBase
     {
 
-        public IActions Actions{ get; set; }
+        public IActions Actions { get; set; }
 
         #region Singleton
         static ProductionReportViewModel classInstance = null;
@@ -51,14 +47,16 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         public ProductionReportViewModel()
         {
             Actions = new GranalladoraStrategy();
-
+            Actions.GeneralMachine.SetNotifications(ReportConfirmationWindowRequest,
+                    IndBoxReportConfirmationWindowRequest, ShowErrorWindowRequest,
+                    ShowMessageWindowRequest, ShowQuestionWindowRequest);
             try
             {
                 Configurations.Instance.GetConfigutation();
                 UnlockControls();
                 IsMaquinaInicial = Configurations.Instance.MaquinaInicialZona == "1";
                 ForjadoraTextboxes = !Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0");
-                ForjaColumnsVisibility = Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0")? Visibility.Visible: Visibility.Collapsed;
+                ForjaColumnsVisibility = Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0") ? Visibility.Visible : Visibility.Collapsed;
                 CommonVisibility = ForjaColumnsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
                 visibilityDataGrid();
                 Machine = Configurations.Instance.Machine;
@@ -75,13 +73,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             {
                 Trace.Exception(ex);
             }
-            
-            
+
+
         }
         private void visibilityDataGrid()
         {
             if (Configurations.Instance.VersionApplication.Equals("V4"))
-            {                
+            {
                 IsVisibility = Visibility.Collapsed;
                 IsVisibility2 = Visibility.Visible;
                 IsVisibilityCantTot = Visibility.Visible;
@@ -93,7 +91,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 IsVisibilityCantTot = Visibility.Collapsed;
             }
             else
-            {                
+            {
                 IsVisibility = Visibility.Collapsed;
                 IsVisibility2 = Visibility.Collapsed;
                 IsVisibilityCantTot = Visibility.Visible;
@@ -212,7 +210,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("Machine");
             }
         }
-        
+
         public Visibility MachineVisibilidad
         {
             get { return machineVisibilidad; }
@@ -432,7 +430,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #region public InteractionRequests<Notification>
         public InteractionRequest<Notification> ReportConfirmationWindowRequest
         {
-            get { return reportConfirmationWindowRequest ?? (reportConfirmationWindowRequest = new InteractionRequest<Notification>()); }         
+            get { return reportConfirmationWindowRequest ?? (reportConfirmationWindowRequest = new InteractionRequest<Notification>()); }
         }
         public InteractionRequest<Notification> IndBoxReportConfirmationWindowRequest
         {
@@ -472,12 +470,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             {
                 if (searchCommand == null)
                 {
-                    searchCommand = new RelayCommand(param =>this.searchCommandExecute(),param => this.ValidateParams(this));
+                    searchCommand = new RelayCommand(param => this.searchCommandExecute(), param => this.ValidateParams(this));
                 }
                 return searchCommand;
             }
         }
-        
+
         public ICommand ReportCommand
         {
             get
@@ -517,9 +515,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #region Commands execute
         private void searchCommandExecute()
         {
-            
 
+            //ProductionReportSupport.PopulateGeneralProduction(Orden, Colada, Atado);
             Resultados = Actions.Search(Orden, Colada, Atado);
+            ProductionReportSupport.currentGeneraPieces = Resultados;
+
+
 
             Resultados.ForEach(item =>
             {
@@ -533,120 +534,38 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             NumBuenas = sumaPiezas.ToString();
             Selected_Bundle = Resultados.FirstOrDefault();
 
-
-
-
-
-            //if (true)
-            //{
-            //    try
-            //    {
-            //        Trace.Debug("PopulateGeneralProduction Orden:{0},Colada:{1},Atado:{2}", Orden, Colada, Atado);
-            //        Resultados = ProductionReportSupport.PopulateGeneralProduction(Orden, Colada, Atado);
-            //        foreach (var item in Resultados)
-            //        {
-            //            if (item.SendStatus != Model.Enums.Enumerations.ProductionReportSendStatus.Final)
-            //                item.GoodCount -= item.ReworkedCount;
-            //        }
-            //        int sumaPiezas = Resultados.Sum(x => x.GoodCount);
-            //        NumResultados = Resultados.Count.ToString();
-            //        NumBuenas = sumaPiezas.ToString();
-            //        Selected_Bundle = Resultados.FirstOrDefault();
-
-
-                    #region FilasHardcode
-                    //PRUEBA DE POPULATE
-                    //GeneralPiece prueba1 = new GeneralPiece()
-                    //{
-                    //    GroupItemNumber = 12345678,
-                    //    BuenasReportadas = 0,
-                    //    Cargados = 0,
-                    //    Customer = "AAA",
-                    //    Description = "Forjadora 0",
-                    //    Extremo = "Extremo 1",
-                    //    Sended = Model.Enums.Enumerations.AxlrBit.No,
-                    //    SendStatus = Model.Enums.Enumerations.ProductionReportSendStatus.Parcial,
-                    //    SendedString = "No",
-                    //    LoadedCount = 10,
-                    //    ReworkedCount = 20,
-                    //    GoodCount = 30,
-                    //    ScrapCount = 40,
-                    //    LotNumberHTR = 50,
-                    //    HeatNumber = 12345,
-                    //    Location = "AQUI",
-                    //    OrderNumber = 0001,
-                    //    IdHistory = 11,
-                    //    IdBatch = 23,
-                    //    GroupItemType = "nose",
-                    //    ReportSequence = 1
-
-
-
-                    //};
-
-                    //GeneralPiece prueba2 = new GeneralPiece()
-                    //{
-                    //    GroupItemNumber = 1222222,
-                    //    BuenasReportadas = 0,
-                    //    Cargados = 10,
-                    //    Customer = "BBB",
-                    //    Description = "Forjadora 0",
-                    //    Extremo = "Extremo 1",
-                    //    Sended = Model.Enums.Enumerations.AxlrBit.No,
-                    //    SendStatus = Model.Enums.Enumerations.ProductionReportSendStatus.Parcial,
-                    //    SendedString = "No",
-                    //    LoadedCount = 10,
-                    //    ReworkedCount = 20,
-                    //    GoodCount = 30,
-                    //    ScrapCount = 40,
-                    //    LotNumberHTR = 50,
-                    //    HeatNumber = 12345,
-                    //    Location = "AQUI",
-                    //    OrderNumber = 0001,
-                    //    IdHistory = 11,
-                    //    IdBatch = 23,
-                    //    GroupItemType = "nose",
-                    //    ReportSequence = 1
-
-                    //};
-                    //Resultados.Add(prueba1);
-                    //Resultados.Add(prueba2);
-                    //acabaPrueba
-                    #endregion
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Trace.Exception(ex);
-            //        throw;
-            //    }
-            //}
-
-            //else
-            //{
-            //    //CODIGO DE PRUEBA
-            //}
         }
+
+        private void testLambda(GeneralPiece item)
+        {
+            if (item.SendStatus != Model.Enums.Enumerations.ProductionReportSendStatus.Final)
+                item.GoodCount -= item.ReworkedCount;
+        }
+
         private void reportCommandExecute()
         {
 
             if (Selected_Bundle != null)
             {
-                GeneralPiece generalPiece = Selected_Bundle;            
+                GeneralPiece generalPiece = Selected_Bundle;
 
-                if (ProductionReportSupport.Report(generalPiece, ReportConfirmationWindowRequest, IndBoxReportConfirmationWindowRequest, ShowErrorWindowRequest, ShowMessageWindowRequest, ShowQuestionWindowRequest, Historico ))
-                {
-                    ReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
-                    
-                }
-                Resultados = new ObservableCollection<GeneralPiece>();
-                searchCommandExecute();
-                selectionChangedCommandExecute();
+                Actions.Report(generalPiece);
+
+                //ProductionReportSupport.Report(generalPiece, ReportConfirmationWindowRequest,
+                //    IndBoxReportConfirmationWindowRequest, ShowErrorWindowRequest,
+                //    ShowMessageWindowRequest, ShowQuestionWindowRequest, Historico);
+
+                //ReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
+
+                //Resultados = new ObservableCollection<GeneralPiece>();
+                //searchCommandExecute();
+                //selectionChangedCommandExecute();
             }
             else
             {
                 ShowError showerror = new ShowError("Error", "Seleccione un registro para reportar");
-                ShowErrorWindowRequest.Raise(new Notification() { Content=showerror});
-               
+                ShowErrorWindowRequest.Raise(new Notification() { Content = showerror });
+
             }
 
 
@@ -671,7 +590,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             {
                 if (Configurations.Instance.VersionApplication.Equals("V1"))
                 {
-                    if (Resultados.Count!=0 && Selected_Bundle ==null)
+                    if (Resultados.Count != 0 && Selected_Bundle == null)
                     {
                         Selected_Bundle = Resultados.FirstOrDefault();
                     }
@@ -707,7 +626,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 {
                     if (Resultados.Count != 0 && Selected_Bundle == null)
                     {
-                        Selected_Bundle=Resultados.FirstOrDefault();
+                        Selected_Bundle = Resultados.FirstOrDefault();
                     }
                     Historico = ProductionReportSupport.dgReporteProduccion_SelectionChanged(Selected_Bundle);
                     Historico.OrderBy(x => x.MachineSequence);
@@ -723,21 +642,21 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
                 Trace.Exception(ex);
             }
-            
-            
+
+
         }
         #endregion
 
         #region CommandsCanExecute
         private bool ValidateParams(object obj)
         {
-            if (Colada>0 || Orden >0 ||Atado>0)
+            if (Colada > 0 || Orden > 0 || Atado > 0)
             {
                 return true;
             }
-            else 
-            { 
-               return false;
+            else
+            {
+                return false;
             }
         }
         #endregion
