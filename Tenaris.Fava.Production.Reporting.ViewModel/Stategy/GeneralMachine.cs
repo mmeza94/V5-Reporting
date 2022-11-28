@@ -1,13 +1,27 @@
-﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+﻿using log4net;
+using Microsoft.Practices.Prism.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Windows.Controls;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Tenaris.Fava.Production.Reporting.Model.Adapter;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
+using Tenaris.Library.Log;
+using Tenaris.Library.UI.Framework.ViewModel;
+using Tenaris.Library.UI.Framework.Language;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Tenaris.Fava.Production.Reporting.ViewModel.Support;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
@@ -25,39 +39,31 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public virtual ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
         {
-            ReportProductionDto reportProductionDto = null;
+            if (currentDGRow == null)
+                return null;
 
-            if (currentDGRow != null)
+            return new ReportProductionDto()
             {
-                var GeneralPiece = currentDGRow;
-                reportProductionDto = new ReportProductionDto()
-                {
+                TipoUDT = string.IsNullOrEmpty(currentDGRow.GroupItemType) ? "Tarjeta de Linea" : currentDGRow.GroupItemType,
+                IdBatch = currentDGRow.IdBatch,
+                IdHistory = currentDGRow.IdHistory,
+                Orden = currentDGRow.OrderNumber,
+                Almacen = currentDGRow.Location,
+                IdUDT = currentDGRow.GroupItemNumber,
+                Colada = currentDGRow.HeatNumber,
+                Lote = currentDGRow.LotNumberHTR,
+                Aprietes = 0,
+                DescripcionMaquina = currentDGRow.Description,
+                CantidadMalas = currentDGRow.ScrapCount,
+                CantidadBuenas = currentDGRow.GoodCount,
+                CantidadReprocesadas = currentDGRow.ReworkedCount,
+                Enviado = currentDGRow.Sended,
+                CantidadTotal = currentDGRow.LoadedCount,
+                Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia),
+                Operacion = Configurations.Instance.Operacion,
+                Opcion = Configurations.Instance.Opcion
+            };
 
-                    TipoUDT = string.IsNullOrEmpty(GeneralPiece.GroupItemType) ? "Tarjeta de Linea" : GeneralPiece.GroupItemType,
-                    IdBatch = GeneralPiece.IdBatch,
-                    IdHistory = GeneralPiece.IdHistory,
-                    Orden = GeneralPiece.OrderNumber,
-                    Almacen = GeneralPiece.Location,
-                    IdUDT = GeneralPiece.GroupItemNumber,
-                    Colada = GeneralPiece.HeatNumber,
-                    Lote = GeneralPiece.LotNumberHTR,
-                    Aprietes = 0,
-                    DescripcionMaquina = GeneralPiece.Description,
-                    CantidadMalas = GeneralPiece.ScrapCount,
-                    CantidadBuenas = GeneralPiece.GoodCount,
-                    CantidadReprocesadas = GeneralPiece.ReworkedCount,
-                    Enviado = GeneralPiece.Sended,
-                    CantidadTotal = GeneralPiece.LoadedCount,
-                    Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia),
-                    Operacion = Configurations.Instance.Operacion,
-                    Opcion = Configurations.Instance.Opcion
-
-
-                };
-
-
-            }
-            return reportProductionDto;
         }
 
 
@@ -77,7 +83,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 ShowErrorMessageRequest.Raise(new Notification() { Content = new ShowError("Error", string.Format("No se pudo iniciar sesión en el sistema. Operación cancelada")) });
                 return false;
             }
-                
+
             return true;
 
         }
@@ -86,6 +92,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public bool IsSended(ReportProductionDto reportDto)
         {
+            if (reportDto == null)
+                return false;
+
             bool bypass = ConfigurationManager.AppSettings["Bypass"] == "true";
             if (!(reportDto.Enviado == Enumerations.AxlrBit.No || bypass))
             {
@@ -123,6 +132,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         }
 
 
+        public int GetFirstPieceLoadedNumberForIT(GeneralPiece GeneralPiece)
+        {
+            int FirstReportedLoadedCount = currentGeneralPieces.Where(c =>(c.GroupItemNumber == GeneralPiece.GroupItemNumber)
+                                           && (c.ReportSequence == 1) && (c.Extremo == GeneralPiece.Extremo)).First().LoadedCount;
+
+            return FirstReportedLoadedCount;
+        }
 
 
 

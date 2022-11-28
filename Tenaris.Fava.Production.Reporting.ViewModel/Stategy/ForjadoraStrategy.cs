@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 {
@@ -15,6 +16,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
     {
 
         public GeneralMachine GeneralMachine { get => this; }
+        public IReportingProcess reportingProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool Report(GeneralPiece currentDGRow)
         {
@@ -27,9 +29,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             throw new NotImplementedException();
         }
 
-        public override ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
+        public  ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
         {
-            ReportProductionDto reportDto=GetCurrentGroupItemToReport(currentDGRow);
+            ReportProductionDto reportDto = currentDGRow.BuildReportProductionDTO();
             reportDto.Operacion = GetOperation(currentDGRow, reportDto);
             reportDto.Secuencia = GetSequenceForDifferentExtreme(currentDGRow, reportDto);
             return reportDto;

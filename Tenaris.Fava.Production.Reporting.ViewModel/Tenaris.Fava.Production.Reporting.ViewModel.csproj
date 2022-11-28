@@ -111,10 +111,12 @@
     <Compile Include="Dialog\ShowQuestion.cs" />
     <Compile Include="Dialog\ValidationRules.cs" />
     <Compile Include="Interfaces\IActions.cs" />
+    <Compile Include="Interfaces\IReportingProcess.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Stategy\ForjadoraStrategy.cs" />
     <Compile Include="Stategy\GeneralMachine.cs" />
     <Compile Include="Stategy\GranalladoraStrategy.cs" />
+    <Compile Include="Stategy\RProcess\RPGeneral.cs" />
     <Compile Include="Support\IndBoxReportConfirmationSupport.cs" />
     <Compile Include="Support\ManagerConfigurations.cs" />
     <Compile Include="Support\PaintingReportConfirmationSupport.cs" />
@@ -144,5 +146,6 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

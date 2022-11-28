@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tenaris.Fava.Production.Reporting.Model.Enums;
+﻿using Tenaris.Fava.Production.Reporting.Model.Enums;
 
 namespace Tenaris.Fava.Production.Reporting.Model.DTO
 {
@@ -24,33 +19,20 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
         public string DescripcionMaquina { get; set; }
         public int CantidadMalas { get; set; }
         public Enumerations.AxlrBit Enviado { get; set; }
-        
-        public int CantidadProcesadas
-        {
-            get { return CantidadBuenas + CantidadMalas; }
-        }
+
+        public int CantidadProcesadas { get { return CantidadBuenas + CantidadMalas; } }
         public int CantidadReprocesadas { get; set; }
         public int CantidadTotal { get; set; }
-        public int ColadaSalida
-        {
-
-            get { return Colada; }
-        }
-        public int IdUDTSalida
-        {
-            get { return IdUDT; }
-        }
-        public int LoteSalida
-        {
-            get { return Lote; }
-        }
+        public int ColadaSalida { get { return Colada; } }
+        public int IdUDTSalida { get { return IdUDT; } }
+        public int LoteSalida { get { return Lote; } }
         public string Observaciones { get; set; }
-        public string TipoUDTSalida
-        {
-            get { return TipoUDT; }
-        }
+        public string TipoUDTSalida { get { return TipoUDT; } }
         public int IdBatch { get; set; }
         public string IdUser { get; set; }
+
+
+
     }
 }
 

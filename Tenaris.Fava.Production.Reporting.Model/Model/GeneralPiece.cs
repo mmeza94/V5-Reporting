@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
+using Tenaris.Fava.Production.Reporting.Model.Model;
 
 namespace Tenaris.Fava.Production.Reporting.Model.DTO
 {
@@ -54,5 +55,34 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
 
         public string ShiftDate { get; set; }
         public string ShiftNumber { get; set; }
+
+
+   
+
+        public ReportProductionDto BuildReportProductionDTO()
+        {
+            return new ReportProductionDto()
+            {
+                TipoUDT = string.IsNullOrEmpty(this.GroupItemType) ? "Tarjeta de Linea" : this.GroupItemType,
+                IdBatch = this.IdBatch,
+                IdHistory = this.IdHistory,
+                Orden = this.OrderNumber,
+                Almacen = this.Location,
+                IdUDT = this.GroupItemNumber,
+                Colada = this.HeatNumber,
+                Lote = this.LotNumberHTR,
+                Aprietes = 0,
+                DescripcionMaquina = this.Description,
+                CantidadMalas = this.ScrapCount,
+                CantidadBuenas = this.GoodCount,
+                CantidadReprocesadas = this.ReworkedCount,
+                Enviado = this.Sended,
+                CantidadTotal = this.LoadedCount,
+                Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia),
+                Operacion = Configurations.Instance.Operacion,
+                Opcion = Configurations.Instance.Opcion
+            };
+            
+        }
     }
 }

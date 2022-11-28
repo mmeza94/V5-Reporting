@@ -76,7 +76,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
       
 
         }
-        public ReportConfirmationViewModel(GeneralPiece generalPiece, ReportProductionDto productionReport, int firstTotalLoadedPieces, OplSubscription oplSubs, string user)
+        public ReportConfirmationViewModel(GeneralPiece generalPiece, ReportProductionDto productionReport, 
+            int firstTotalLoadedPieces,bool pointlessparameter ,string user)
         {
             Extremo2 = generalPiece.Extremo.Contains("2") ? true : false ;
             Extremo1 = !Extremo2;
@@ -89,7 +90,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
             ITLoadHelper = firstTotalLoadedPieces;
             GetPreviousCounters();
-            _OplSusbcription = oplSubs;
+
             CounterTagN1 = Configurations.Instance.N1CounterTag;
             CounterTagN2 = Configurations.Instance.N2CounterTag;
             //TbN1Counter = _OplSusbcription.GetCounterTag(CounterTagN1);
@@ -115,6 +116,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
 
         }
+
+
         public ReportConfirmationViewModel(GeneralPiece generalPiece, ReportProductionDto productionReport, int firstTotalLoadedPieces, string user)
         {
             

@@ -1,25 +1,31 @@
-﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
-using System.Windows.Controls;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
-using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
+using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
-using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
+using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
-using Tenaris.Fava.Production.Reporting.ViewModel.Support;
+using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
 
 namespace Tenaris.Fava.Production.Reporting.Model.Stategy
 {
     public class GranalladoraStrategy : GeneralMachine, IActions
     {
         #region Properties
-
         public GeneralMachine GeneralMachine { get => this; }
+        public IReportingProcess reportingProcess { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        public GranalladoraStrategy()
+        {
+            reportingProcess = new RPGeneral(this);
+        }
+
         #endregion
 
         #region Implements methods
@@ -40,28 +46,40 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
             }
         }
 
-
-
         public bool Report(GeneralPiece currentDGRow)
         {
-            bool response = true;
-            var generalPieceDto = currentDGRow;
-            var reportProductionDto = GetCurrentGroupItemToReport(currentDGRow);
 
-            if (!Login())
-                return response;
-            //if (reportProductionDto == null)
-            //    return response;
-            if (!IsSended(reportProductionDto))
-                return response;
+            if (!reportingProcess.CanReport(currentDGRow))
+                return false;
 
-            if (!IsReportSequenceValidated(currentGeneralPieces, generalPieceDto))
-                return response;
-          
+            if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
+                return false;
+
+
+
+            // ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(
+            //                        generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), true, WhoIsLogged);
+            //Request.Raise(new Notification() { Content = reportConfirmation });
+
+
+            //myReports.ReportProduction();
+            //myReports.PrepareDtoForProductionReport();
+
+            //ReportConfirmationValidation();
+            //PrepareDtoForProductionReport();
+            //ReportProduction();
+
+
+            //if (reportConfirmation.Result)
+
+            //    response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
+
+
+
+
             return false;
         }
 
-        
         #endregion
 
     }
