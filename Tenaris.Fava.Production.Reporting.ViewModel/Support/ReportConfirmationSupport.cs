@@ -64,7 +64,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                         }
                         var response = iTServiceAdapter.ReportProduction(user,
                             currentProductionReportDto, GetSendStatus(SelectedSendType),
-                                true, rejectionReportDetails, versionInt);
+                                true, rejectionReportDetails);
                         
                         ShowMessage showMessage = new ShowMessage("Reporte de Producción", response);
                         showMessageRequest.Raise(new Notification() { Content = showMessage });

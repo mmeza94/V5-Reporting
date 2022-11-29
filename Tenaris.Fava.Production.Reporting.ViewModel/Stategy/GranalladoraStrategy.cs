@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
-using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
@@ -16,6 +16,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
         #region Properties
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
+        public ITServiceAdapter Adapter { get; set; }
 
         #endregion
 
@@ -23,6 +24,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
 
         public GranalladoraStrategy()
         {
+            Adapter = new ITServiceAdapter();
             reportingProcess = new RPGeneral(this);
         }
 
@@ -55,27 +57,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
             if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
                 return false;
 
+            ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport().ValidateReportStructure().PrepareDtoForProductionReport();
 
-
-            // ReportConfirmationViewModel reportConfirmation = new ReportConfirmationViewModel(
-            //                        generalPieceDto, reportProductionDto, GetFirstPieceLoadedNumberForIT(generalPieceDto), true, WhoIsLogged);
-            //Request.Raise(new Notification() { Content = reportConfirmation });
-
-
-            //myReports.ReportProduction();
-            //myReports.PrepareDtoForProductionReport();
-
-            //ReportConfirmationValidation();
-            //PrepareDtoForProductionReport();
-            //ReportProduction();
-
-
-            //if (reportConfirmation.Result)
-
-            //    response = ReportExecute(showErrorMessageRequest, showMessageRequest, showQuestionRequest, reportConfirmation);
-
-
-
+            Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO,
+                currentReportProductionDTO.SelectedSendType, true,
+                reportingProcess.dgRejectionReportDetails);
 
             return false;
         }

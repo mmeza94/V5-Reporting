@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
@@ -99,7 +100,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                     UpdDateTime = item.UpdDateTime
                 }); ;
             }
-            
+
             return mapping;
         }
 
@@ -108,90 +109,28 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         public void SaveReportProductionHistory(ReportProductionDto reportProductionDto,
             Enumerations.ProductionReportSendStatus sendStatus, IList rejectionReportDetails)
         {
-
             try
             {
-                if(Configurations.Instance.VersionApplication != "V1" || (Convert.ToInt32(Configurations.Instance.Secuencia) > 3 && Convert.ToInt32(Configurations.Instance.Secuencia) < 9))
-                {
-                    //var reportProductionHistory = new ReportProductionHistory
-                    //{
-                    //    GoodCount = reportProductionDto.CantidadBuenas,
-                    //    GroupItemNumber = reportProductionDto.IdUDT,
-                    //    HeatNumber = reportProductionDto.Colada,
-                    //    IdHistory = reportProductionDto.IdHistory,
-                    //    IdMachine = (new CommonMachineRepository().GetMachineByDescription(reportProductionDto.DescripcionMaquina)).Id,
-                    //    IdOrder = reportProductionDto.Orden,
-                    //    InsDateTime = DateTime.Now,
-                    //    InsertedBy = reportProductionDto.IdUser,
-                    //    TotalQuantity = reportProductionDto.CantidadTotal,
-                    //    LotNumberHtr = reportProductionDto.Lote,
-                    //    ReworkedCount = reportProductionDto.CantidadReprocesadas,
-                    //    ScrapCount = reportProductionDto.CantidadMalas,
-                    //    SendStatus = sendStatus,
-                    //    MachineSequence = reportProductionDto.Secuencia,
-                    //    MachineOperation = reportProductionDto.Operacion,
-                    //    MachineOption = reportProductionDto.Opcion,
-                    //    Observation = reportProductionDto.Observaciones,
-                    //    GroupItemType = reportProductionDto.TipoUDT,
-                    //    ChildOrder = reportProductionDto.Orden,
-                    //    ChildGroupItemNumber = reportProductionDto.IdUDT,
-                    //    ChildGroupItemType = reportProductionDto.TipoUDT
-
-                    //    //LoadedCount = reportProductionDto.l
-
-                    //};
-
-                    int idReportProductionHistoryInserted = DataAccessSQL.Instance.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
-
+                    int idReportProductionHistoryInserted = ProductionReportingBusiness.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
                     if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
-                    {
                         foreach (RejectionReportDetail rrd in rejectionReportDetails)
-                        {
-                            DataAccessSQL.Instance.InsRejectionReportDetailTestV5(rrd, idReportProductionHistoryInserted);
-                        }
-                             
-                    }
-                  
-                }
-                else 
-                {
-                    var reportProductionHistory = new ReportProductionHistoryV1
-                    {
-                        GoodCount = reportProductionDto.CantidadBuenas,
-                        GroupItemNumber = reportProductionDto.IdUDT,
-                        HeatNumber = reportProductionDto.Colada,
-                        IdHistory = reportProductionDto.IdHistory,
-                        IdMachine = (new CommonMachineRepository().GetMachineByDescription(reportProductionDto.DescripcionMaquina)).Id,
-                        IdOrder = reportProductionDto.Orden,
-                        InsDateTime = DateTime.Now,
-                        InsertedBy = reportProductionDto.IdUser,
-                        TotalQuantity = reportProductionDto.CantidadTotal,
-                        LotNumberHtr = reportProductionDto.Lote,
-                        ReworkedCount = reportProductionDto.CantidadReprocesadas,
-                        ScrapCount = reportProductionDto.CantidadMalas,
-                        SendStatus = sendStatus,
-                        MachineSequence = reportProductionDto.Secuencia,
-                        MachineOperation = reportProductionDto.Operacion,
-                        MachineOption = reportProductionDto.Opcion,
-                        Observation = reportProductionDto.Observaciones
-
-                        //LoadedCount = reportProductionDto.l
-
-                    };
-
-                    if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
-                    {
-                        List<RejectionReportDetailV1> mappedlist = RejectionMapper(new List<RejectionReportDetail>(rejectionReportDetails.OfType<RejectionReportDetail>()));
-
-                        foreach (RejectionReportDetailV1 rrd in mappedlist)
-                            rrd.ReportProductionHistory = reportProductionHistory;
-                        new ReportProductionHistoryV1Repository().Save(reportProductionHistory, mappedlist);
-                    }
-                    else
-                        new ReportProductionHistoryV1Repository().Save(reportProductionHistory);
-                }
+                            ProductionReportingBusiness.InsRejectionReportDetailTestV5(rrd, idReportProductionHistoryInserted);
                 
+
+
+                    //if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
+                    //{
+                    //    List<RejectionReportDetailV1> mappedlist = RejectionMapper(
+                    //        new List<RejectionReportDetail>(rejectionReportDetails.OfType<RejectionReportDetail>()));
+                    //    foreach (RejectionReportDetailV1 rrd in mappedlist)
+                    //        rrd.ReportProductionHistory = reportProductionHistory;
+                    //    new ReportProductionHistoryV1Repository().Save(reportProductionHistory, mappedlist);
+                    //}
+                    //else
+                    //    new ReportProductionHistoryV1Repository().Save(reportProductionHistory);
                 
+
+
             }
             catch (Exception ex)
             {
@@ -247,7 +186,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                     else
                         new ReportProductionHistoryRepository().SaveReportProductionHistory(reportProductionHistory);
                 }
-                else 
+                else
                 {
                     var reportProductionHistory = new ReportProductionHistoryV1
                     {
@@ -289,7 +228,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                     else
                         new ReportProductionHistoryRepository().SaveReportProductionHistory(reportProductionHistory);
                 }
-             
+
             }
             catch (Exception ex)
             {

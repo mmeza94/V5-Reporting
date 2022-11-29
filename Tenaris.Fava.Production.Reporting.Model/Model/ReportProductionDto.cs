@@ -20,6 +20,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
         public int CantidadMalas { get; set; }
         public Enumerations.AxlrBit Enviado { get; set; }
 
+        public Enumerations.ProductionReportSendStatus SelectedSendType { get; set; }
+
         public int CantidadProcesadas { get { return CantidadBuenas + CantidadMalas; } }
         public int CantidadReprocesadas { get; set; }
         public int CantidadTotal { get; set; }

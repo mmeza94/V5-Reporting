@@ -380,7 +380,54 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
         #region ProductionReport
         //PRODUCTIONrEPORT
-        public bool TPSLoadMaterial(ReportProductionDto reportProductionDto, int Version) //usada en Business/ProductionReport -> WIN/ReportConfirmation y cajas
+
+        public bool TPSLoadMaterial(ReportProductionDto reportProductionDto) //usada en Business/ProductionReport -> WIN/ReportConfirmation y cajas
+        {
+            Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errores = null;
+            bool result = false;
+
+            var programmedPieces =  reportProductionDto.CantidadTotal;
+            //new GroupItemProgramFacade().
+            //    GetProgrammedPieces(reportProductionDto);
+            result = //true;
+                 IT.LoadMaterialIT(
+                     out errores,
+               reportProductionDto.Orden,
+               reportProductionDto.Colada,
+               reportProductionDto.TipoUDT,
+               reportProductionDto.IdUDT.ToString(),
+               reportProductionDto.Almacen,
+               //reportProductionDto.CantidadProcesadas.ToString(),
+               programmedPieces.ToString(),
+               reportProductionDto.Secuencia.ToString(),
+               "observaciones",
+               reportProductionDto.Operacion,
+               reportProductionDto.Opcion,
+               reportProductionDto.Lote.ToString()
+               );
+            var respuesta = new StringBuilder();
+            if (errores != null)
+            {
+                foreach (var item in errores.List)
+                {
+                    respuesta.Append("---- Error Carga de Material----");
+                    respuesta.Append("\nCodigo: ");
+                    respuesta.Append(item.Value.Code);
+                    respuesta.Append("\nDescripcion: ");
+                    respuesta.Append("\n" + item.Value.Description);
+                }
+                log.Error(respuesta.ToString());
+                log.Error(string.Format("Petición: {0}", GetXmlSerialization(reportProductionDto)));
+
+            }
+            return true;
+        }
+
+
+
+
+
+            public bool TPSLoadMaterial(ReportProductionDto reportProductionDto, int Version) //usada en Business/ProductionReport -> WIN/ReportConfirmation y cajas
         {
             Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errores = null;
             bool result = false;
@@ -592,6 +639,49 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             return probetas;
         }
 
+
+        private bool TPSReportNotOnRevenido(string user, ReportProductionDto reportProductionDto, ref ErrorCollection errores, 
+             IList rejectionReportDetails)
+        {
+            bool result = false;
+            try
+            {
+
+                var programmedPieces = reportProductionDto.CantidadTotal;
+
+                reportProductionDto.CantidadTotal = programmedPieces;
+                result =
+                    IT.ReportProductionIT(user,
+                                           reportProductionDto.TipoUDT,
+                                           reportProductionDto.IdUDT,
+                                           reportProductionDto.Colada,
+                                           reportProductionDto.Lote,
+                                           reportProductionDto.Aprietes,
+                                           reportProductionDto.Secuencia,
+                                           reportProductionDto.Operacion,
+                                           reportProductionDto.Opcion,
+                                           reportProductionDto.CantidadBuenas,
+                                           reportProductionDto.CantidadProcesadas,
+                                           reportProductionDto.CantidadReprocesadas,
+                                           //programmedPieces,
+                                           reportProductionDto.CantidadTotal,
+                                           reportProductionDto.ColadaSalida,
+                                           reportProductionDto.IdUDTSalida,
+                                           reportProductionDto.LoteSalida,
+                                           "Observaciones",
+                                           reportProductionDto.TipoUDTSalida,
+                                           GetTPSDescartes(reportProductionDto, rejectionReportDetails)
+                                           , out errores);
+            }
+            catch (Exception ex)
+            { throw ex; }
+            return result;
+        }
+
+
+
+
+
         private bool TPSReportNotOnRevenido(string user, ReportProductionDto reportProductionDto, ref ErrorCollection errores, //usada en Business/ProductionReport -> WIN/ReportConfirmation
              IList rejectionReportDetails, int Version)
         {
@@ -652,6 +742,45 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             { throw ex; }
             return result;
         }
+
+        public string TPSReportProduction(string user, ReportProductionDto reportProductionDto,  //usada en Business/ProductionReport -> WIN/ReportConfirmation //NO USA DIRECTAMENTE ITSERVICE
+           Enumerations.ProductionReportSendStatus sendStatus, IList rejectionReportDetails)
+        {
+            Trace.Message("----------------------ITServiceAdapter----------------------");
+            Trace.Message($"USER recived in Adapter: {user}");
+            Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errores = null;
+
+            Tenaris.Fava.Production.Reporting.ITConnection.ITService.Probeta[] samples = null;
+            var respuesta = new StringBuilder();
+
+            try
+            {
+                bool sendIT = false;
+               
+                sendIT = TPSReportNotOnRevenido(user, reportProductionDto, ref errores, rejectionReportDetails);
+
+                if (sendIT)
+                {
+                    //Guardado en BD
+                    new ReportProductionHistoryFacade().SaveReportProductionHistory(reportProductionDto, sendStatus, rejectionReportDetails);
+                }
+
+                respuesta = ProcessTPSErrors(reportProductionDto, errores, samples);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message.ToString());
+                log.Error(string.Format("Petición: {0}", GetXmlSerialization(reportProductionDto)));
+                throw ex;
+            }
+            return respuesta.ToString();
+        }
+
+
+
+
+
+
 
 
         public string TPSReportProduction(string user, ReportProductionDto reportProductionDto,  //usada en Business/ProductionReport -> WIN/ReportConfirmation //NO USA DIRECTAMENTE ITSERVICE
@@ -774,6 +903,20 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
             return descartes;
         }
+
+
+        private Descarte[] GetTPSDescartes(ReportProductionDto reportProductionDto, IList rejectionReportDetails)
+        {
+            
+                return GetTPSDescartesV1(reportProductionDto, rejectionReportDetails);
+                
+            
+        }
+
+
+
+
+
         private Descarte[] GetTPSDescartes(ReportProductionDto reportProductionDto, IList rejectionReportDetails, int Version)
         {
             if (Version == 1)
@@ -1119,7 +1262,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
         //PUBLICOS
         public string ReportProduction(string user, ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus
-              , bool loadMaterial, IList rejectionReportDetails, int Version)
+              , bool loadMaterial, IList rejectionReportDetails)
         {
 
             //PRUEBADWF OBTENER NUEVA SECUENCIA PARA ENVIO A TPS (BARRAS DE PESO)
@@ -1144,9 +1287,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             try
             {
                 if (loadMaterial)
-                    TPSLoadMaterial(reportProductionDto, Version);
+                    TPSLoadMaterial(reportProductionDto);
 
-                respuesta = TPSReportProduction(user, reportProductionDto, sendStatus, rejectionReportDetails, Version);
+                respuesta = TPSReportProduction(user, reportProductionDto, sendStatus, rejectionReportDetails);
 
             }
             catch (Exception ex)

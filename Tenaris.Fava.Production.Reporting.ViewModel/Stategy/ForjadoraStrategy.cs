@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
@@ -17,6 +18,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ITServiceAdapter Adapter { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool Report(GeneralPiece currentDGRow)
         {
