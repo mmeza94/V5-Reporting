@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -62,12 +61,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 Machine = Configurations.Instance.Machine;
                 MachineVisibilidad = ConfigurationManager.AppSettings["isMachineVisible"].ToString() == "1" ? Visibility.Visible : Visibility.Collapsed;
                 LabelMachine = string.IsNullOrEmpty(ConfigurationManager.AppSettings["LabelMachine"].ToString()) ? ConfigurationManager.AppSettings["Machine"].ToString() : ConfigurationManager.AppSettings["LabelMachine"].ToString();
-
-
-
-
-
-
             }
             catch (Exception ex)
             {
@@ -518,9 +511,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
             //ProductionReportSupport.PopulateGeneralProduction(Orden, Colada, Atado);
             Resultados = Actions.Search(Orden, Colada, Atado);
-            ProductionReportSupport.currentGeneraPieces = Resultados;
 
-
+            //ProductionReportSupport.currentGeneraPieces = Resultados;
 
             Resultados.ForEach(item =>
             {
@@ -535,31 +527,20 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             Selected_Bundle = Resultados.FirstOrDefault();
 
         }
-
-        private void testLambda(GeneralPiece item)
-        {
-            if (item.SendStatus != Model.Enums.Enumerations.ProductionReportSendStatus.Final)
-                item.GoodCount -= item.ReworkedCount;
-        }
-
         private void reportCommandExecute()
         {
 
             if (Selected_Bundle != null)
             {
-                GeneralPiece generalPiece = Selected_Bundle;
+                //GeneralPiece generalPiece = Selected_Bundle;
 
-                Actions.Report(generalPiece);
+                Actions.Report(Selected_Bundle);
 
-                //ProductionReportSupport.Report(generalPiece, ReportConfirmationWindowRequest,
-                //    IndBoxReportConfirmationWindowRequest, ShowErrorWindowRequest,
-                //    ShowMessageWindowRequest, ShowQuestionWindowRequest, Historico);
+                ReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
 
-                //ReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
-
-                //Resultados = new ObservableCollection<GeneralPiece>();
-                //searchCommandExecute();
-                //selectionChangedCommandExecute();
+                Resultados = new ObservableCollection<GeneralPiece>();
+                searchCommandExecute();
+                selectionChangedCommandExecute();
             }
             else
             {
@@ -574,7 +555,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         {
             if (IsLocked)
             {
-                if (ProductionReportSupport.Login())
+                if (Actions.GeneralMachine.Login())
                 {
                     UnlockControls();
                 }
@@ -586,63 +567,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         }
         private void selectionChangedCommandExecute()
         {
-            try
-            {
-                if (Configurations.Instance.VersionApplication.Equals("V1"))
-                {
-                    if (Resultados.Count != 0 && Selected_Bundle == null)
-                    {
-                        Selected_Bundle = Resultados.FirstOrDefault();
-                    }
-                    ObservableCollection<ReportProductionHistoryV1> prodHistory = ProductionReportSupport.dgReporteProduccion_SelectionChangedV1(Selected_Bundle);
-                    Historico = BindingHistory(prodHistory);
-                    //Esto reorganiza el history por la secuencia para V1
-                    List<ReportProductionHistory> LISTAhist = new List<ReportProductionHistory>();
-                    LISTAhist = Historico.OrderBy(x => x.MachineSequence).ToList();
-                    ObservableCollection<ReportProductionHistory> tempHist = new ObservableCollection<ReportProductionHistory>(LISTAhist);
-                    Historico = tempHist;
 
+            if (Resultados.Count != 0 && Selected_Bundle == null)
+                Selected_Bundle = Resultados.FirstOrDefault();
 
-
-
-
-                    //COMENTARIO PARA FORJADORA 0
-                    //if (Configurations.Instance.Machine == "Forjadora 0")
-                    //{
-                    //    bool flag = false;
-                    //    GeneralPiece newSel = ProductionReportSupport.dgReporteProduccion_SelectionChangedForja0(Selected_Bundle);
-                    //    Selected_Bundle = newSel;
-                    //    onPropertyChanged("Resultados");
-                    //    //var x = Resultados;
-                    //    //Resultados = x;
-                    //    //Resultados[2] = newSel;
-                    //    //onPropertyChanged("Resultados");
-                    //    //Resultados[Index] = newSel;
-                    //    //Selected_Bundle = resultados[Index];
-
-                    //}
-                }
-                else
-                {
-                    if (Resultados.Count != 0 && Selected_Bundle == null)
-                    {
-                        Selected_Bundle = Resultados.FirstOrDefault();
-                    }
-                    Historico = ProductionReportSupport.dgReporteProduccion_SelectionChanged(Selected_Bundle);
-                    Historico.OrderBy(x => x.MachineSequence);
-                    //Esto reorganiza el history por la secuencia
-                    List<ReportProductionHistory> LISTAhist = new List<ReportProductionHistory>();
-                    LISTAhist = Historico.OrderBy(x => x.MachineSequence).ToList();
-                    ObservableCollection<ReportProductionHistory> tempHist = new ObservableCollection<ReportProductionHistory>(LISTAhist);
-                    Historico = tempHist;
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Trace.Exception(ex);
-            }
-
+            Historico = Actions.dgReporteProduccion_SelectionChanged(Selected_Bundle);
 
         }
         #endregion
@@ -662,51 +591,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #endregion
 
         #region Methods
-        private ObservableCollection<ReportProductionHistory> BindingHistory(ObservableCollection<ReportProductionHistoryV1> prodHistory)
-        {
-            ObservableCollection<ReportProductionHistory> list = new ObservableCollection<ReportProductionHistory>();
-            if (prodHistory != null)
-            {
-                foreach (ReportProductionHistoryV1 rph in prodHistory)
-                {
-                    ReportProductionHistory rph0 = new ReportProductionHistory();
-                    rph0.IdHistory = rph.IdHistory;
-                    rph0.Id = rph.Id;
-                    rph0.IdOrder = rph.IdOrder;
-                    rph0.HeatNumber = rph.HeatNumber;
-                    rph0.GroupItemNumber = rph.GroupItemNumber;
-                    rph0.SendStatus = rph.SendStatus;
-                    rph0.TotalQuantity = rph.TotalQuantity;
-                    rph0.GoodCount = rph.GoodCount;
-                    rph0.ScrapCount = rph.ScrapCount;
-                    rph0.ReworkedCount = rph.ReworkedCount;
-                    rph0.IdMachine = rph.IdMachine;
-                    rph0.LotNumberHtr = rph.LotNumberHtr;
-                    rph0.InsDateTime = rph.InsDateTime;
-                    rph0.InsertedBy = rph.InsertedBy;
-                    rph0.UpdDateTime = rph.UpdDateTime;
-                    rph0.UpdatedBy = rph.UpdatedBy;
-                    rph0.MachineSequence = rph.MachineSequence;
-                    rph0.MachineOption = rph.MachineOption;
-                    rph0.MachineOperation = rph.MachineOperation;
-                    rph0.Observation = rph.Observation;
-                    rph0.GroupItemType = rph.SendStatus.ToString();
-                    rph0.ChildOrder = null;
-                    rph0.ChildGroupItemNumber = null;
-                    rph0.ChildGroupItemType = String.Empty;
-                    list.Add(rph0);
-                }
-            }
-
-            return list;
-        }
+       
         private void LockControls()
         {
             Lock_Visibility = Visibility.Collapsed;
             Unlock_Visibility = Visibility.Visible;
             IsLocked = true;
             IsReportButtonEnabled = false;
-            ProductionReportSupport.whoIsLogged = "";
+            
         }
         private void UnlockControls()
         {

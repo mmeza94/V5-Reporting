@@ -18,5 +18,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Interfaces
         IReportingProcess BuildReport();
         IReportingProcess ValidateReportStructure();
         ReportProductionDto PrepareDtoForProductionReport();
+
+        void ShowITMessage(string reponse);
+
+        void CheckReportProductionForNextOperation(string reponse);
     }
 }

@@ -69,6 +69,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 return reportProductDto.Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia);
         }
 
-      
+
+
+        ObservableCollection<ReportProductionHistory> IActions.dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

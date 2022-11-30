@@ -15,6 +15,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Interfaces
         ObservableCollection<GeneralPiece> Search(int Orden, int Colada, int Atado);
         bool Report(GeneralPiece currentDGRow);
 
+        ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle);
 
         //void GetMachineInformation(ref ReportProductionDto reportProductDto, GeneralPiece currentDGRow);
 

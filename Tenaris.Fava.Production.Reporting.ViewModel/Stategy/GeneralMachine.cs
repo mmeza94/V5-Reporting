@@ -30,6 +30,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
     {
 
         public string WhoIsLogged { get; set; }
+        public ITServiceAdapter Adapter { get; set; }
         public IList<GeneralPiece> currentGeneralPieces { get; set; }
         public InteractionRequest<Notification> Request { get; set; }
         public InteractionRequest<Notification> IndBoxReportConfirmationRequest { get; set; }
@@ -37,7 +38,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         public InteractionRequest<Notification> ShowMessageRequest { get; set; }
         public InteractionRequest<Notification> ShowQuestionRequests { get; set; }
 
-        
+        public GeneralMachine()
+        {
+            Adapter = new ITServiceAdapter();
+        }
 
 
         public bool Login()
@@ -114,6 +118,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         }
 
 
+        
 
 
 

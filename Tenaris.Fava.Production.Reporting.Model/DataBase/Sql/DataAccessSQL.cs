@@ -159,16 +159,16 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         }
 
 
-        public ObservableCollection<ReportProductionHistoryV1> GetReportProductionHistoryByParamsTest(Dictionary<string, object> listParams)
+        public ObservableCollection<ReportProductionHistory> GetReportProductionHistoryByParamsTest(Dictionary<string, object> listParams)
         {
             var cm = SelectedCommand(StoredProcedures.GetReportProductionHistoryByParamsTest, Configurations.Instance.ConnectionString);
-            ReportProductionHistoryV1 historyReport;
-            ObservableCollection<ReportProductionHistoryV1> items = new ObservableCollection<ReportProductionHistoryV1>();
+            ReportProductionHistory historyReport;
+            ObservableCollection<ReportProductionHistory> items = new ObservableCollection<ReportProductionHistory>();
             using (var reader = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
             {
                 while (reader.Read())
                 {
-                    historyReport = new ReportProductionHistoryV1()
+                    historyReport = new ReportProductionHistory()
                     {
                         Id = Convert.ToInt32(reader["idReportProductionHistory"]),
                         IdHistory = Convert.ToInt32(reader["IdHistory"]),
@@ -189,7 +189,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                         MachineSequence = Convert.ToInt32(reader["MachineSequence"]),
                         MachineOption = reader["MachineOption"].ToString(),
                         MachineOperation = reader["MachineOperation"].ToString(),
-                        Observation = reader["Observation"].ToString()
+                        Observation = reader["Observation"].ToString(),
+                        GroupItemType = reader.GetSchemaTable().Select("ColumnName='GroupItemType'").Count() == 1 ? reader["GroupItemType"].ToString() : null,
+                        ChildOrder= reader.GetSchemaTable().Select("ColumnName='ChildOrder'").Count() == 1 ? Convert.ToInt32(reader["ChildOrder"]) : 0,
+                        ChildGroupItemNumber= reader.GetSchemaTable().Select("ColumnName='ChildGroupItemNumber'").Count() == 1 ? Convert.ToInt32(reader["ChildGroupItemNumber"]) : 0,
+                        ChildGroupItemType = reader.GetSchemaTable().Select("ColumnName='ChildGroupItemType'").Count() == 1 ? reader["ChildGroupItemType"].ToString() : null
 
                     };
                     items.Add(historyReport);

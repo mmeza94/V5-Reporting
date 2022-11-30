@@ -3,12 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Support;
@@ -158,6 +160,48 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
 
         }
+
+        public void ShowITMessage(string reponse)
+        {
+            ShowMessage showMessage = new ShowMessage("Reporte de Producción", reponse);
+            GeneralMachine.ShowMessageRequest.Raise(new Notification() { Content = showMessage });
+        }
+
+        public void CheckReportProductionForNextOperation(string reponse)
+        {
+            if (reponse.StartsWith("Reporte Enviado Correctamente"))
+            {
+                var message = "";
+                var numeroOperacionsiguiente = ReportProductionDto.Secuencia + 1;
+                var operation = ConfigurationManager.AppSettings.Get("Operation_" + (numeroOperacionsiguiente).ToString());
+
+                var isAvailable = GeneralMachine.Adapter.IsGroupItemAvailableForNextOperation(ReportProductionDto.IdUDT,
+                    ReportProductionDto.Colada, ReportProductionDto.Orden, ReportProductionDto.Secuencia);
+
+                if (isAvailable)
+                {
+
+                    message = string.Format("Disponible para la siguiente\n operación:{0}",
+                       operation);
+
+                }
+                else
+                {
+                    var firstItReport = lbITLoadHelper;
+                    var totalLoaded = tbTotalLoaded;
+                    var piecesForReport = firstItReport - totalLoaded;
+                    message = string.Format("El atado NO se encuentra disponible\npara la siguiente operación:{0}.\n" +
+                    "Es posible que falten {1} piezas por reportar",
+                       operation, piecesForReport.ToString());
+                }
+                ShowMessage showMessage = new ShowMessage("Reporte de Disponibilidad", message);
+                GeneralMachine.ShowMessageRequest.Raise(new Notification() { Content = showMessage });
+
+
+            }
+        }
+
+
 
 
         #region Metodos temporales

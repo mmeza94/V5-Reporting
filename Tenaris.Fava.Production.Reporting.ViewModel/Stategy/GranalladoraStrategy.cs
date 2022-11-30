@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Support;
+using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
@@ -16,7 +19,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
         #region Properties
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
-        public ITServiceAdapter Adapter { get; set; }
+        
 
         #endregion
 
@@ -24,7 +27,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
 
         public GranalladoraStrategy()
         {
-            Adapter = new ITServiceAdapter();
             reportingProcess = new RPGeneral(this);
         }
 
@@ -37,7 +39,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
             {
                 var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
                 if (generalPieces == null)
-                    return null;
+                    return new ObservableCollection<GeneralPiece>();
                 currentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
 
                 return new ObservableCollection<GeneralPiece>(currentGeneralPieces);
@@ -61,11 +63,39 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
                                                                              .ValidateReportStructure()
                                                                              .PrepareDtoForProductionReport();
 
-            Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO,
-                currentReportProductionDTO.SelectedSendType, true,
-                reportingProcess.dgRejectionReportDetails);
+            var response  = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
+                true,reportingProcess.dgRejectionReportDetails);
+
+
+            reportingProcess.ShowITMessage(response);
+
+  
+
+            reportingProcess.CheckReportProductionForNextOperation(response);
 
             return false;
+        }
+
+        public ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
+        {
+            if (SelectedBundle == null)
+                return new ObservableCollection<ReportProductionHistory>();
+
+            ObservableCollection<ReportProductionHistory> productionReportHistories =
+                DataAccessSQL.Instance.GetReportProductionHistoryByParamsTest(
+                new Dictionary<string, object>
+            {
+                        { "@Order", SelectedBundle.OrderNumber },
+                        { "@GroupItemNumber", SelectedBundle.GroupItemNumber },
+                        { "@HeatNumber", SelectedBundle.HeatNumber },
+                        { "@idHistory", 0 },
+                        { "@SendStatus", 0 },
+                        { "@MachineSequence", 0 }
+            });
+
+            //productionReportHistories;
+
+            return productionReportHistories;
         }
 
         #endregion
