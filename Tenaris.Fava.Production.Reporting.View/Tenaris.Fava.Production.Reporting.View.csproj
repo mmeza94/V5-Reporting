@@ -55,16 +55,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\FAVA\ReporteProduccion\Tenaris.Production.Reporting v1\SharedLib\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\ViewDll\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Lib\Microsoft.Practices.Prism.dll</HintPath>
+      <HintPath>..\SharedLib\ViewDll\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Interactivity">
-      <HintPath>..\..\..\V5 Corregida\V5 condialogs\packages\Lib\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\ViewDll\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -78,15 +80,17 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Tenaris.Fava.Production.Reporting.Languages">
-      <HintPath>..\..\..\Proyecto_FAVA_Inicial\Reporting.V5\Tenaris.Fava.Production.Reporting.Languages\bin\Debug\Tenaris.Fava.Production.Reporting.Languages.dll</HintPath>
+    <Reference Include="Tenaris.Fava.Production.Reporting.Languages, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\ViewDll\Tenaris.Fava.Production.Reporting.Languages.dll</HintPath>
     </Reference>
     <Reference Include="Tenaris.Library.Common, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Lib\Tenaris.Library.Common.dll</HintPath>
+      <HintPath>..\SharedLib\ViewDll\Tenaris.Library.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Tenaris.Library.Framework">
-      <HintPath>..\packages\Tenaris.Library.Framework.4.1.2\lib\net40\Tenaris.Library.Framework.dll</HintPath>
+    <Reference Include="Tenaris.Library.Framework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=d69ca37b4d4b73b8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\ViewDll\Tenaris.Library.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Tenaris.Library.Log, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,14 +98,15 @@
     </Reference>
     <Reference Include="Tenaris.Library.Proxy, Version=3.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\NUEVONUEVONUEVO\ACTUALIZACION\Respaldo-todaslasventanasprincipales\Reporting.V5\SharedLib\Tenaris.Library.Proxy.dll</HintPath>
+      <HintPath>..\SharedLib\ViewDll\Tenaris.Library.Proxy.dll</HintPath>
     </Reference>
-    <Reference Include="Tenaris.Library.UI.Framework">
-      <HintPath>..\packages\Tenaris.Library.UI.Framework.4.2.1\lib\net40\Tenaris.Library.UI.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Tenaris.Library.UI.Framework.Language, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Tenaris.Library.UI.Framework, Version=4.2.0.0, Culture=neutral, PublicKeyToken=24bb34fc85917712, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Tenaris.Library.UI.Framework.Language.4.2.1\lib\net40\Tenaris.Library.UI.Framework.Language.dll</HintPath>
+      <HintPath>..\SharedLib\ViewDll\Tenaris.Library.UI.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tenaris.Library.UI.Framework.Language, Version=4.2.0.0, Culture=neutral, PublicKeyToken=74523413bfd549e8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\ViewDll\Tenaris.Library.UI.Framework.Language.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
