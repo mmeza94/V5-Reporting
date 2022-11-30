@@ -337,6 +337,19 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
         }
 
+
+        public bool LoginUser(string User, string Password)
+        {
+
+            var cm = SelectedCommand(StoredProcedures.LoginUser,Configurations.Instance.ConnectionString);
+            Dictionary<string, object> listParams = new Dictionary<string, object>();
+            listParams.Add("@UserName", User);
+            listParams.Add("@Password", Password);
+
+
+            return cm.ExecuteScalar(listParams.ToReadOnlyDictionary()) != null;
+        }
+
         public ObservableCollection<ReportProductionHistory> GetReportProductionHistory(Dictionary<String, object> listParams, string ConnectionString)
         {
 

@@ -57,7 +57,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
             if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
                 return false;
 
-            ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport().ValidateReportStructure().PrepareDtoForProductionReport();
+            ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
+                                                                             .ValidateReportStructure()
+                                                                             .PrepareDtoForProductionReport();
 
             Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO,
                 currentReportProductionDTO.SelectedSendType, true,

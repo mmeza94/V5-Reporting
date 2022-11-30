@@ -716,7 +716,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
         public static bool Unlock(string username, string password)
         {
-            return UserFacade.Login(username, password);
+            return UserFacade.LoginHibernate(username, password);
         }
 
 

@@ -23,7 +23,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories
                 var items = criteria.List<User>();
                 if (items.Count > 0)
                     user = items.First();
-
             }
             catch (Exception ex)
             {

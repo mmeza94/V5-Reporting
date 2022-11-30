@@ -9,7 +9,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 {
     public class UserFacade
     {
-        public static bool Login(string userName, string password)
+        public static bool LoginHibernate(string userName, string password)
         {
             try
             {

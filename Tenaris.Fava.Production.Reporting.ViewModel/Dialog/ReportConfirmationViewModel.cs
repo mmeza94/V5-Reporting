@@ -928,13 +928,18 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             LoginViewModel login = new LoginViewModel();
             
             LoginWindowRequest.Raise(new Notification { Content = login });
-            if (login.Result ? ProductionReportSupport.Unlock(login.Username, login.Password) : false)
-            {
-                Locked = false;
-                IsEditionEnabled = true;
-                LockVisibility = Visibility.Visible;
-                UnlockVisibility = Visibility.Collapsed;
-            }
+
+            if (!login.Result)
+                return;
+
+            if (!ProductionReportingBusiness.LoginUser(login.Username, login.Password))
+                return;
+
+            Locked = false;
+            IsEditionEnabled = true;
+            LockVisibility = Visibility.Visible;
+            UnlockVisibility = Visibility.Collapsed;
+
             login.Password = "";
             login = null;
         }
@@ -974,25 +979,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             Motivo = "";
 
 
-            //if (rejection != null)
-            //{
-            //    if (RejectionReportDetails.FirstOrDefault(x => x.RejectionCode.Equals(rejection.RejectionCode)) == null)
-            //    {
-            //        RejectionReportDetails.Add(rejection);
-            //        Cantidad = 0;
-            //        DestinoSelected = Destino.FirstOrDefault();
-            //        RazonDescarteSelected = RazonDescarte.FirstOrDefault();
-            //        Motivo = "";
-            //    }
-            //    else
-            //    {
-                    
-            //        ShowError showerror = new ShowError("Error", "No se pueden agregar los mismos códigos de descarte");
-            //        ShowErrorWindowRequest.Raise(new Notification() { Content = showerror });
-                    
-            //    }
-
-            //}
+        
         }
 
 

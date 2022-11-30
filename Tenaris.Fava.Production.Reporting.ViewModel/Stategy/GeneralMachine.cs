@@ -37,34 +37,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         public InteractionRequest<Notification> ShowMessageRequest { get; set; }
         public InteractionRequest<Notification> ShowQuestionRequests { get; set; }
 
-        public virtual ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
-        {
-            if (currentDGRow == null)
-                return null;
-
-            return new ReportProductionDto()
-            {
-                TipoUDT = string.IsNullOrEmpty(currentDGRow.GroupItemType) ? "Tarjeta de Linea" : currentDGRow.GroupItemType,
-                IdBatch = currentDGRow.IdBatch,
-                IdHistory = currentDGRow.IdHistory,
-                Orden = currentDGRow.OrderNumber,
-                Almacen = currentDGRow.Location,
-                IdUDT = currentDGRow.GroupItemNumber,
-                Colada = currentDGRow.HeatNumber,
-                Lote = currentDGRow.LotNumberHTR,
-                Aprietes = 0,
-                DescripcionMaquina = currentDGRow.Description,
-                CantidadMalas = currentDGRow.ScrapCount,
-                CantidadBuenas = currentDGRow.GoodCount,
-                CantidadReprocesadas = currentDGRow.ReworkedCount,
-                Enviado = currentDGRow.Sended,
-                CantidadTotal = currentDGRow.LoadedCount,
-                Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia),
-                Operacion = Configurations.Instance.Operacion,
-                Opcion = Configurations.Instance.Opcion
-            };
-
-        }
+        
 
 
         public bool Login()

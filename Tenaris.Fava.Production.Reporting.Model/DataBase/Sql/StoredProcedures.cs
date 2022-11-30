@@ -14,6 +14,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public const string GetPreviousCountersByMachineTest = "[Production].[GetPreviousCountersByMachineTest]";
         public const string InsReportProductionHistoryTestV5 = "[Production].[InsReportProductionHistoryTestV5]";
         public const string InsRejectionReportDetailTestV5 = "[Production].[InsRejectionReportDetailTestV5]";
+        public const string LoginUser = "[Common].[LoginUserTestV5]";
 
 
 

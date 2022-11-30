@@ -132,6 +132,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
         }
 
 
+        public static bool LoginUser(string user, string Password)
+        {
+            return DataAccessSQL.Instance.LoginUser( user,  Password);
+
+        }
 
         #endregion
     }
