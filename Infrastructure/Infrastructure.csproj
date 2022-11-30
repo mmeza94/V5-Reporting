@@ -61,21 +61,25 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLib\Microsoft.Practices.Prism.MefExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.UnityExtensions">
-      <HintPath>..\..\..\_temp\_bin\Microsoft.Practices.Prism\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.UnityExtensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\InfrastructureDll\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\..\_temp\_bin\Microsoft.Practices.Prism\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\InfrastructureDll\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\..\..\_temp\_bin\Microsoft.Practices.Prism\Microsoft.Practices.Unity.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\InfrastructureDll\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\..\..\_temp\_bin\System.Windows.Interactivity\System.Windows.Interactivity.dll</HintPath>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLib\InfrastructureDll\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Presentation" />
     <Reference Include="System.Xaml" />
