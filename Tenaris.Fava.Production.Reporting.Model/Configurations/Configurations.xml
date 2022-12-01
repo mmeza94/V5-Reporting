@@ -23,6 +23,7 @@
 		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>MV-GRANALLA1</Workstation>
+		
 
 
 	</configsection>

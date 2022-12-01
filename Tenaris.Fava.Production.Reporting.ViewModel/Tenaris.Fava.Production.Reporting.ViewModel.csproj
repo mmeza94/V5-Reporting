@@ -131,8 +131,6 @@
     <Compile Include="Support\ManagerConfigurations.cs" />
     <Compile Include="Support\PaintingReportConfirmationSupport.cs" />
     <Compile Include="Support\PaintingReportSupport.cs" />
-    <Compile Include="Support\ProductionReportSupport.cs" />
-    <Compile Include="Support\ReportConfirmationSupport.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="View\PaintingReportViewModel.cs" />
     <Compile Include="View\ProductionReportViewModel.cs" />

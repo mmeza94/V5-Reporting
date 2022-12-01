@@ -425,9 +425,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
 
 
-
-
-            public bool TPSLoadMaterial(ReportProductionDto reportProductionDto, int Version) //usada en Business/ProductionReport -> WIN/ReportConfirmation y cajas
+        public bool TPSLoadMaterial(ReportProductionDto reportProductionDto, int Version) //usada en Business/ProductionReport -> WIN/ReportConfirmation y cajas
         {
             Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errores = null;
             bool result = false;
@@ -779,10 +777,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
 
 
-
-
-
-
         public string TPSReportProduction(string user, ReportProductionDto reportProductionDto,  //usada en Business/ProductionReport -> WIN/ReportConfirmation //NO USA DIRECTAMENTE ITSERVICE
             Enumerations.ProductionReportSendStatus sendStatus, IList rejectionReportDetails, int Version)
         {
@@ -976,289 +970,23 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
         #endregion
 
-        #region TPSMassiveLoadApp
-        //TPSmASSIVElOADaPP ReportingUtilities
-        public static void ProductionReport(string user, IList massiveLoadRows) //NO USA DIRECTAMENTE ITSERVICE
-        {
-
-            ErrorCollection errores = null;
-
-            var respuesta = new StringBuilder();
-            int cont = 1;
-            foreach (MassiveLoad massiveLoad in massiveLoadRows)
-            {
-                try
-                {
-                    massiveLoad.Operation = GetOptionOperationBySequence(massiveLoad.MachineSequence)["Operation"].ToString();
-                    massiveLoad.Option = GetOptionOperationBySequence(massiveLoad.MachineSequence)["Option"].ToString();
-
-                    if (!IsAlreadyReported(massiveLoad))//|| massiveLoad.MachineSequence != 7)
-                    {
-                        TPSLoadMaterial(massiveLoad);
-                        Console.WriteLine("**** Reportando" + cont.ToString() + ":" + GetInfo(massiveLoad) + " ***");
-                        bool sendIT = TPSProductionReport(user, massiveLoad, ref errores);
-                        if (sendIT)
-                        {
-                            massiveLoad.SendStatus = Enumerations.ProductionReportSendStatus.Completo;
-                            new MassiveReportHistoryFacade().SaveTpsMassiveReportHistory(massiveLoad); //Grabamos N2
-                            Console.WriteLine("Registro Reportado" + GetInfo(massiveLoad));
-                        }
-                        else
-                        {
-                            massiveLoad.SendStatus = null;
-                            massiveLoad.ErrorMessage = ProcessErrorsFromTPS(massiveLoad, errores);
-                            new MassiveLoadFacade().SaveMassiveLoadItem(massiveLoad);
-                            // break;
-                        }
-                    }
-                    else
-                    {
-                        massiveLoad.SendStatus = null;
-                        massiveLoad.ErrorMessage = "Registro previamente reportado";
-                        log.Error("Registro previamente reportado" + GetInfo(massiveLoad));
-                        new MassiveLoadFacade().SaveMassiveLoadItem(massiveLoad);
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    log.Error(ex.Message.ToString());
-                    log.Error(string.Format("Petición: {0}", GetXmlSerialization(massiveLoad)));
-                    throw ex;
-                }
-                cont++;
-            }
-            //return respuesta.ToString();
-        }
-
-        private static bool TPSProductionReport(string user, MassiveLoad massiveLoad, ref ErrorCollection errores)
-        {
-            ITServ IT = new ITServ();
-
-            bool result = false;
-            try
-            {
-                Trace.Message("----------------------ITServiceAdapter----------------------");
-                Trace.Message($"USER recived in Adapter: {user}");
-
-                result = IT.ReportProductionIT(user,
-                    "Tarjeta de Linea",
-                           massiveLoad.GroupItemNumber,
-                           massiveLoad.HeatNumber,
-                           massiveLoad.LotNumberHTR, 0,
-                           massiveLoad.MachineSequence,
-                           GetOptionOperationBySequence(massiveLoad.MachineSequence)["Operation"].ToString(),
-                           GetOptionOperationBySequence(massiveLoad.MachineSequence)["Option"].ToString(),
-                           massiveLoad.GoodCount,
-                           massiveLoad.GoodCount + massiveLoad.ScrapCount, 0,
-                           (massiveLoad.MachineSequence != 12) ? massiveLoad.TotalQuantity : massiveLoad.CargaInicial,
-                           (massiveLoad.MachineSequence != 12) ? massiveLoad.HeatNumber : 0,
-                           (massiveLoad.MachineSequence != 12) ? massiveLoad.GroupItemNumber : massiveLoad.UdtSalida,//corregir por número chapa o udtsalida
-                           (massiveLoad.MachineSequence != 12) ? massiveLoad.LotNumberHTR : 0,
-                           "Observaciones",
-                           (massiveLoad.MachineSequence != 12) ? "Tarjeta de Linea" : "caja",
-                           GetTPSDescartes(massiveLoad),
-                           out errores);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
-        private static bool TPSLoadMaterial(MassiveLoad massiveLoad)
-        {
-            ITServ IT = new ITServ();
-            //ITService.TServiceClient fava = new ITService.TServiceClient();
-            ErrorCollection errores = null;
-            bool result = false;
-            try
-            {
-
-                result = //true;
-                     IT.LoadMaterialIT(
-                         out errores,
-                   massiveLoad.IdOrder,
-                   massiveLoad.HeatNumber,
-                   "Tarjeta de Linea",//massiveLoad.TipoUDT,
-                   massiveLoad.GroupItemNumber.ToString(),//reportProductionDto.IdUDT.ToString(),
-                   massiveLoad.WareHouse,//reportProductionDto.Almacen,
-                                         //reportProductionDto.CantidadProcesadas.ToString(),
-                   (massiveLoad.MachineSequence != 12) ? massiveLoad.TotalQuantity.ToString() : massiveLoad.CargaInicial.ToString(),//programmedPieces.ToString(),
-                   massiveLoad.MachineSequence.ToString(),
-                   "observaciones",
-                   massiveLoad.Operation,
-                   massiveLoad.Option,
-                   massiveLoad.LotNumberHTR.ToString()
-                   );
-                var respuesta = new StringBuilder();
-                if (errores != null)
-                {
-                    foreach (var item in errores.List)
-                    {
-                        respuesta.Append("---- Error Carga de Material----");
-                        respuesta.Append("\nCodigo: ");
-                        respuesta.Append(item.Value.Code);
-                        respuesta.Append("\nDescripcion: ");
-                        respuesta.Append("\n" + item.Value.Description);
-                    }
-                    log.Error(respuesta.ToString());
-                    log.Error(string.Format("Petición: {0}", GetXmlSerialization(massiveLoad)));
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-
-                log.Error(ex.Message.ToString());
-                log.Error(string.Format("Petición: {0}", GetXmlSerialization(massiveLoad)));
-                throw ex;
-            }
-            return result;
-        }
-
-        #endregion
-
-        //metodos privados TPSMASSIVE
-        #region TPSMASSIVE privados
-        private static Hashtable GetOptionOperationBySequence(int sequence)
-        {
-            var ht = new Hashtable();
-            switch (sequence)
-            {
-                case 1:
-                    ht.Add("Option", "Granallado Materia Prima");
-                    ht.Add("Operation", "Granallado Materia Prima");
-                    break;
-                case 2:
-                    ht.Add("Option", "Enderezado");
-                    ht.Add("Operation", "Enderezado");
-                    break;
-                case 3:
-                    ht.Add("Option", "Control No Destructivo");
-                    ht.Add("Operation", "Control No Destructivo");
-                    break;
-                case 4:
-                    ht.Add("Option", "Forja 1");
-                    ht.Add("Operation", "Forjado Extremo 1");
-                    break;
-                case 5:
-                    ht.Add("Option", "Forja 1");
-                    ht.Add("Operation", "Forjado Extremo 2");
-                    break;
-                case 6:
-                    ht.Add("Option", "Normalizado 1");
-                    ht.Add("Operation", "Normalizado");
-                    break;
-                case 7:
-                    ht.Add("Option", "Revenido 1");
-                    ht.Add("Operation", "Revenido");
-                    break;
-                case 8:
-                    ht.Add("Option", "Granallado 1");
-                    ht.Add("Operation", "Granallado");
-                    break;
-                case 9:
-                    ht.Add("Option", "Mecanizado 1");
-                    ht.Add("Operation", "Mecanizado Extremo 1");
-                    break;
-                case 10:
-                    ht.Add("Option", "Mecanizado 1");
-                    ht.Add("Operation", "Mecanizado Extremo 2");
-                    break;
-                case 11:
-                    ht.Add("Option", "Pintado 1");
-                    ht.Add("Operation", "Pintado");
-                    break;
-                case 12:
-                    ht.Add("Option", "Embalado");
-                    ht.Add("Operation", "Embalado");
-                    break;
-                default:
-                    break;
-            }
-            return ht;
-        }
+        
+      
 
 
 
-        private static bool IsAlreadyReported(MassiveLoad massiveLoad)
-        {
-            bool isAlreadyReported = false;
-            try
-            {
-                var items = new MassiveReportHistoryFacade().GetMassiveReportHistoryByParams(
-                    massiveLoad.IdOrder, massiveLoad.GroupItemNumber, massiveLoad.HeatNumber,
-                    null, massiveLoad.MachineSequence, massiveLoad.ReportSequence);
-                if (items != null)
-                    if (items.Count > 0)
-                        isAlreadyReported = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return isAlreadyReported;
-        }
+      
 
 
 
-        private static string GetInfo(MassiveLoad massiveLoad)
-        {
-            return string.Format(" Orden {0}, Colada {1}, Atado {2}, Secuencia {3}, Operación: {4}",
-                             massiveLoad.IdOrder.ToString(),
-                             massiveLoad.HeatNumber.ToString(), massiveLoad.GroupItemNumber.ToString(),
-                             massiveLoad.MachineSequence.ToString(), massiveLoad.MachineOperation);
-        }
-
-
-        private static string ProcessErrorsFromTPS(MassiveLoad massiveLoad, ErrorCollection errores)
-        {
-            StringBuilder respuesta = new StringBuilder();
-            if (errores != null)
-            {
-                foreach (var item in errores.List)
-                {
-                    respuesta.Append("---- Error Reporte de Producción----");
-                    respuesta.Append("\nCodigo: ");
-                    respuesta.Append(item.Value.Code);
-                    respuesta.Append("\nDescripcion: ");
-                    respuesta.Append("\n" + item.Value.Description);
-                }
-                log.Error(respuesta.ToString());
-                log.Error(string.Format("Petición: {0}", GetXmlSerialization(massiveLoad)));
-
-            }
-            else
-            {
-                Console.WriteLine("Reporte No enviado -Atado:" + GetInfo(massiveLoad));
-                log.Error("Reporte No enviado -Atado:" + GetInfo(massiveLoad));
-                respuesta.Append("Reporte No enviado -Atado:" + GetInfo(massiveLoad));
-            }
-            return respuesta.ToString();
-        }
+   
+       
 
 
 
 
-        private static Descarte[] GetTPSDescartes(MassiveLoad massiveLoad) //sobrecarga
-        {
-            //RejectionCode rejectionCode = new RejectionCodeFacade().GetRejectionCodeByCode(massiveLoad.RejectionCode);
-            Descarte[] descartes = new Descarte[1];
-            if (massiveLoad.ScrapCount > 0)
-            {
-                Descarte descarte = new Descarte();
-                descarte.Destino = (massiveLoad.Destiny != string.Empty) ? massiveLoad.Destiny : "Decisión de Ingeniería";
-                descarte.Motivo = massiveLoad.RejectionCode;//"VVT";
-                descarte.Tipo = "1";
-                descarte.Cantidad = Convert.ToString(massiveLoad.ScrapCount);
-                descartes[0] = descarte;
-            }
-            return descartes;
-        }
-        #endregion
+        
+       
 
         //PUBLICOS
         public string ReportProduction(string user, ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus

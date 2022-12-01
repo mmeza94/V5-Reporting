@@ -43,6 +43,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
 
         #endregion
 
+
         [XmlElement("MachineFiltre")]
         public string MachineFiltre { get; set; }
 

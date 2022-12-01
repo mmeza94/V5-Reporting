@@ -14,6 +14,7 @@ using System.Windows.Input;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
+using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
@@ -198,7 +199,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         private string counterTagN1;
         private string counterTagN2;
         private int tbN1Counter;
-        private OplSubscription _oplSusbscription;
+        //private OplSubscription _oplSusbscription;
         private string tipoEnvioSelected;
         private string user;
         private string selectedSendType;
@@ -321,16 +322,16 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             }
         }
 
-        public OplSubscription _OplSusbcription
-        {
-            get { return _oplSusbscription; }
-            set
-            {
-                if (value == _oplSusbscription) return;
-                _oplSusbscription = value;
-                OnPropertyChanged("_OplSusbcription");
-            }
-        }
+        //public OplSubscription _OplSusbcription
+        //{
+        //    get { return _oplSusbscription; }
+        //    set
+        //    {
+        //        if (value == _oplSusbscription) return;
+        //        _oplSusbscription = value;
+        //        OnPropertyChanged("_OplSusbcription");
+        //    }
+        //}
 
 
 
@@ -954,7 +955,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private void addRejectionCommandExecute()
         {
-            var rejection = ReportConfirmationSupport.btnAddRejectionDetail_Click(Cantidad, RazonDescarteSelected, DestinoSelected, Motivo,
+            var rejection = btnAddRejectionDetail_Click(Cantidad, RazonDescarteSelected, DestinoSelected, Motivo,
                             Trabajado, Extremo1);
 
             if (RejectionReportDetails.FirstOrDefault(x => x.RejectionCode.Equals(rejection.RejectionCode)) != null)
@@ -981,7 +982,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         
         }
-
 
         public bool AcceptCanExecute()
         {
@@ -1037,10 +1037,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             ReprocesosTotal = ReprocesosAnterior + ReprocesosActual;
         }
 
-
-
-
-
         private void PopulateRejectionCodeByMachineDescription()
         {
             try
@@ -1089,7 +1085,51 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         }
 
 
+        private RejectionReportDetail btnAddRejectionDetail_Click(int tbScrapCountForRejection, RejectionCode SelectedRejectionCode, string DestinationSelectedItem,
+            string motivo, bool worked, bool extremo1)
+        {
+            if (RejectionReportDetails == null)
+                RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
 
+
+            short cantidad = (short)tbScrapCountForRejection;
+
+            var rejectionCode = SelectedRejectionCode;
+            var rejectionReportDetail = new RejectionReportDetail();
+            if (Configurations.Instance.Secuencia == "8")
+            {
+                var TEMrejectionReportDetail = new RejectionReportDetail
+                {
+                    RejectionCode = rejectionCode,
+                    ScrapCount = cantidad,
+                    Active = Enumerations.AxlrBit.Si,
+                    InsDateTime = DateTime.Now,
+                    Destino = DestinationSelectedItem,
+                    Observation = motivo,
+                    Trabajado = (worked) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No,
+                    Extremo = extremo1 ? "Extremo 1" : "Extremo 2"
+                };
+                rejectionReportDetail = TEMrejectionReportDetail;
+            }
+            else
+            {
+                var TEMrejectionReportDetail = new RejectionReportDetail
+                {
+                    RejectionCode = rejectionCode,
+                    ScrapCount = cantidad,
+                    Active = Enumerations.AxlrBit.Si,
+                    InsDateTime = DateTime.Now,
+                    Destino = DestinationSelectedItem,
+                    Observation = motivo,
+                    Trabajado = worked ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No
+                };
+                rejectionReportDetail = TEMrejectionReportDetail;
+            }
+
+
+            return rejectionReportDetail;
+
+        }
 
     }
 }

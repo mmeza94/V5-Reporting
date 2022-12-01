@@ -536,7 +536,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
                 Actions.Report(Selected_Bundle);
 
-                ReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
+                //ReportConfirmationViewModel.RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
 
                 Resultados = new ObservableCollection<GeneralPiece>();
                 searchCommandExecute();
