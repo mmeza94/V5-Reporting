@@ -86,7 +86,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories
             return tblResult;
         }
 
-
         public Enumerations.ForgeMode GetCurrentForgeMode(int groupItemNumber)
         {
             DataTable tblResult = new DataTable();

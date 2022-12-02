@@ -24,7 +24,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 {
     public class IndBoxReportConfirmationSupport
     {
-
+        
 
 
 

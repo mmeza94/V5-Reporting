@@ -150,9 +150,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             {
                 while (reader.Read())
                 {
-                    items.Add(Convert.ToInt32(reader["GoodCount"]));
-                    items.Add(Convert.ToInt32(reader["ScrapCount"]));
-                    items.Add(Convert.ToInt32(reader["ReworkedCount"]));
+                    items.Add(reader["GoodCount"].ToString().ToInteger());
+                    items.Add(reader["ScrapCount"].ToString().ToInteger());
+                    items.Add(reader["ReworkedCount"].ToString().ToInteger());
                 }
             }
             return items;
@@ -191,8 +191,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                         MachineOperation = reader["MachineOperation"].ToString(),
                         Observation = reader["Observation"].ToString(),
                         GroupItemType = reader.GetSchemaTable().Select("ColumnName='GroupItemType'").Count() == 1 ? reader["GroupItemType"].ToString() : null,
-                        ChildOrder= reader.GetSchemaTable().Select("ColumnName='ChildOrder'").Count() == 1 ? Convert.ToInt32(reader["ChildOrder"]) : 0,
-                        ChildGroupItemNumber= reader.GetSchemaTable().Select("ColumnName='ChildGroupItemNumber'").Count() == 1 ? Convert.ToInt32(reader["ChildGroupItemNumber"]) : 0,
+                        ChildOrder = reader.GetSchemaTable().Select("ColumnName='ChildOrder'").Count() == 1 ? Convert.ToInt32(reader["ChildOrder"]) : 0,
+                        ChildGroupItemNumber = reader.GetSchemaTable().Select("ColumnName='ChildGroupItemNumber'").Count() == 1 ? Convert.ToInt32(reader["ChildGroupItemNumber"]) : 0,
                         ChildGroupItemType = reader.GetSchemaTable().Select("ColumnName='ChildGroupItemType'").Count() == 1 ? reader["ChildGroupItemType"].ToString() : null
 
                     };
@@ -345,7 +345,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public bool LoginUser(string User, string Password)
         {
 
-            var cm = SelectedCommand(StoredProcedures.LoginUser,Configurations.Instance.ConnectionString);
+            var cm = SelectedCommand(StoredProcedures.LoginUser, Configurations.Instance.ConnectionString);
             Dictionary<string, object> listParams = new Dictionary<string, object>();
             listParams.Add("@UserName", User);
             listParams.Add("@Password", Password);

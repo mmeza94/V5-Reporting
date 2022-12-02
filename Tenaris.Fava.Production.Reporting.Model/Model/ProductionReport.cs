@@ -1,20 +1,19 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Text;
-using log4net;
+using Tenaris.Fava.Production.Reporting.ITConnection.ITService;
+using Tenaris.Fava.Production.Reporting.Model.Adapter;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
-using System.Configuration;
-using Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories;
-
-using System.Collections.ObjectModel;
-using Tenaris.Fava.Production.Reporting.Model.Business;
-using Tenaris.Fava.Production.Reporting.Model.Adapter;
-using Tenaris.Fava.Production.Reporting.ITConnection.ITService;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories;
 
 namespace Tenaris.Fava.Production.Reporting.Model.Support
 {
@@ -40,7 +39,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             {
                 throw ex;
             }
-      
+
 
         }
 
@@ -109,7 +108,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
             var table = ProductionReportingBusiness.GetReportProductionHistory(listparams, ConnectionString);
             resul = table.Sum(x => x.GoodCount);
-           
+
 
 
             //foreach (var item in table)
@@ -140,7 +139,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                         generalpiece.Sended = (reportProductionHistory != null) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No;
                         generalpiece.SendedString = (reportProductionHistory != null) ? "Si" : "No";
                     }
-                    
+
                 }
             }
             else
@@ -159,7 +158,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         public bool IsForjadoraAndForgeModeIsOnline(int groupItemNumber)
         {
             var result = false;
-            
+
             if (ConfigurationManager.AppSettings["MaquinaInicialZona"].ToString() == "1" && ConfigurationManager.AppSettings["Machine"].ToString() == "Forjadora") // Solo entra si está ubicado en la forja 1. 
             {
                 var forgeMode = new ProductionReportFacade().GetCurrentForgeMode(groupItemNumber);
@@ -199,9 +198,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                         if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
                         && (x.HeatNumber == heat)
                         && (x.GroupItemNumber == groupItem) && (x.Description == description) && x.Extremo == extreme))
-
-
-                        generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
+                            generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
                     }
                 });
 
@@ -337,9 +334,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 //reportProductionDtoToSend.IdUDT = Convert.ToInt32(reportProductionDto.BoxUdt);
                 //reportProductionDtoToSend.DescripcionMaquina = "Pintado";
 
-                
 
-                respuesta = new ITServiceAdapter().TPSReportProduction(reportProductionDto.IdUser,reportProductionDtoToSend, sendStatus, rejectionReportDetails, 3);
+
+                respuesta = new ITServiceAdapter().TPSReportProduction(reportProductionDto.IdUser, reportProductionDtoToSend, sendStatus, rejectionReportDetails, 3);
             }
             catch (Exception ex)
             {
@@ -445,8 +442,12 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         #region METHOS PRIVATE
         private static IList<GeneralPiece> GetSomePieces(int order, int heat, int groupItem, IList<GeneralPiece> generalPieces, string description, string extreme)
         {
-            var somePieces = generalPieces.Where(x => (x.OrderNumber == order) && (x.HeatNumber == heat) &&
-            (x.GroupItemNumber == groupItem) && (x.Description == description) && (x.Extremo == extreme)).OrderBy(x => x.InsDateTime).ToList();
+            var somePieces = generalPieces
+                .Where(x => (x.OrderNumber == order)
+            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
+            && (x.Description == description) && (x.Extremo == extreme))
+                .OrderBy(x => x.InsDateTime)
+                .ToList();
             try
             {
 

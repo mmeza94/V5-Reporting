@@ -1,7 +1,6 @@
 ﻿using Castle.Core;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
@@ -12,7 +11,7 @@ using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Stategy;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
-using Tenaris.Fava.Production.Reporting.ViewModel.Support;
+using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
 using Tenaris.Library.Log;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.View
@@ -43,24 +42,27 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #endregion
 
         #region Constructor
+
         public ProductionReportViewModel()
         {
-            Actions = new GranalladoraStrategy();
-            Actions.GeneralMachine.SetNotifications(ReportConfirmationWindowRequest,
-                    IndBoxReportConfirmationWindowRequest, ShowErrorWindowRequest,
-                    ShowMessageWindowRequest, ShowQuestionWindowRequest);
+            Actions = new ForjadoraStrategy();
+            Actions.GeneralMachine
+                .SetRequest(ReportConfirmationWindowRequest)
+                .SetIndBoxReportConfirmationRequest(IndBoxReportConfirmationWindowRequest)
+                .SetShowErrorMessageRequest(ShowErrorWindowRequest)
+                .SetShowMessageRequest(ShowMessageWindowRequest)
+                .SetShowQuestionRequests(ShowQuestionWindowRequest);
             try
             {
-                Configurations.Instance.GetConfigutation();
-                UnlockControls();
-                IsMaquinaInicial = Configurations.Instance.MaquinaInicialZona == "1";
-                ForjadoraTextboxes = !Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0");
-                ForjaColumnsVisibility = Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0") ? Visibility.Visible : Visibility.Collapsed;
-                CommonVisibility = ForjaColumnsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-                visibilityDataGrid();
-                Machine = Configurations.Instance.Machine;
-                MachineVisibilidad = ConfigurationManager.AppSettings["isMachineVisible"].ToString() == "1" ? Visibility.Visible : Visibility.Collapsed;
-                LabelMachine = string.IsNullOrEmpty(ConfigurationManager.AppSettings["LabelMachine"].ToString()) ? ConfigurationManager.AppSettings["Machine"].ToString() : ConfigurationManager.AppSettings["LabelMachine"].ToString();
+                UnlockControls()
+                    .MaquinaInicial()
+                    .IsForjadora()
+                    .IsForjaColumnsVisibility()
+                    .IsCommonVisibility()
+                    .visibilityDataGrid()
+                    .IsMachineVisible()
+                    .IsLabelMachineVisible()
+                    .InitMachine();
             }
             catch (Exception ex)
             {
@@ -69,13 +71,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
 
         }
-        private void visibilityDataGrid()
+        private ProductionReportViewModel visibilityDataGrid()
         {
             if (Configurations.Instance.VersionApplication.Equals("V4"))
             {
                 IsVisibility = Visibility.Collapsed;
                 IsVisibility2 = Visibility.Visible;
                 IsVisibilityCantTot = Visibility.Visible;
+
             }
             else if (Configurations.Instance.Machine.Equals("Forjadora 0"))
             {
@@ -89,11 +92,61 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 IsVisibility2 = Visibility.Collapsed;
                 IsVisibilityCantTot = Visibility.Visible;
             }
+
+            return this;
         }
 
         #endregion
 
-        #region private properties
+        #region Builder
+        public ProductionReportViewModel MaquinaInicial()
+        {
+            IsMaquinaInicial = Configurations.Instance.MaquinaInicialZona == "1";
+            return this;
+        }
+
+        public ProductionReportViewModel IsForjadora()
+        {
+            ForjadoraTextboxes = !Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0");
+            return this;
+        }
+
+        public ProductionReportViewModel IsForjaColumnsVisibility()
+        {
+            ForjaColumnsVisibility = Configurations.Instance.Machine.ToUpper().Equals("FORJADORA 0") ? Visibility.Visible : Visibility.Collapsed;
+            return this;
+        }
+
+        public ProductionReportViewModel IsCommonVisibility()
+        {
+            CommonVisibility = ForjaColumnsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            return this;
+        }
+
+        public ProductionReportViewModel IsMachineVisible()
+        {
+            MachineVisibilidad = ConfigurationManager.AppSettings["isMachineVisible"].ToString() == "1" ? Visibility.Visible : Visibility.Collapsed;
+            return this;
+        }
+
+        public ProductionReportViewModel IsLabelMachineVisible()
+        {
+            LabelMachine = string.IsNullOrEmpty(ConfigurationManager.AppSettings["LabelMachine"].ToString())
+                ? ConfigurationManager.AppSettings["Machine"].ToString() : ConfigurationManager.AppSettings["LabelMachine"].ToString();
+            return this;
+        }
+
+        public ProductionReportViewModel InitMachine()
+        {
+            Machine = Configurations.Instance.Machine;
+            return this;
+        }
+
+        #endregion
+
+        #region Properties
+
+        #region Private properties
         private int orden;
         private int colada;
         private int atado;
@@ -124,7 +177,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         private ObservableCollection<ReportProductionHistoryV1> historicoV1;
         #endregion
 
-        #region private InteracionRequests<Notification>
+        #region Private InteracionRequests<Notification>
         private InteractionRequest<Notification> reportConfirmationWindowRequest { get; set; }
         private InteractionRequest<Notification> indBoxReportConfirmationWindowRequest { get; set; }
         private InteractionRequest<Notification> showQuestionWindowRequest { get; set; }
@@ -132,12 +185,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         private InteractionRequest<Notification> showErrorWindowRequest { get; set; }
         private InteractionRequest<Notification> showPaintingWindowRequest { get; set; }
 
-        #endregion
+        #endregion 
 
-        #region public properties
-
-
-
+        #region Public properties
         public string LabelMachine
         {
             get { return labelMachine; }
@@ -148,7 +198,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("LabelMachine");
             }
         }
-
         public string Extremo
         {
             get { return extremo; }
@@ -159,7 +208,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("Extremo");
             }
         }
-
         public Visibility IsVisibility
         {
             get { return isVisibility; }
@@ -170,7 +218,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("IsVisibility");
             }
         }
-
         public Visibility IsVisibility2
         {
             get { return isVisibility2; }
@@ -181,7 +228,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("IsVisibility2");
             }
         }
-
         public Visibility IsVisibilityCantTot
         {
             get { return isVisibilityCantTot; }
@@ -192,7 +238,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("IsVisibilityCantTot");
             }
         }
-
         public string Machine
         {
             get { return machine; }
@@ -203,7 +248,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("Machine");
             }
         }
-
         public Visibility MachineVisibilidad
         {
             get { return machineVisibilidad; }
@@ -214,7 +258,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 onPropertyChanged("MachineVisibilidad");
             }
         }
-
         public Visibility ForjaColumnsVisibility
         {
             get { return forjaColumnsVisibility; }
@@ -420,7 +463,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         }
         #endregion
 
-        #region public InteractionRequests<Notification>
+        #endregion
+
+        #region Public InteractionRequests<Notification>
         public InteractionRequest<Notification> ReportConfirmationWindowRequest
         {
             get { return reportConfirmationWindowRequest ?? (reportConfirmationWindowRequest = new InteractionRequest<Notification>()); }
@@ -527,6 +572,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             Selected_Bundle = Resultados.FirstOrDefault();
 
         }
+
+
         private void reportCommandExecute()
         {
 
@@ -591,21 +638,22 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #endregion
 
         #region Methods
-       
-        private void LockControls()
+        private ProductionReportViewModel LockControls()
         {
             Lock_Visibility = Visibility.Collapsed;
             Unlock_Visibility = Visibility.Visible;
             IsLocked = true;
             IsReportButtonEnabled = false;
-            
+            return this;
+
         }
-        private void UnlockControls()
+        private ProductionReportViewModel UnlockControls()
         {
             Lock_Visibility = Visibility.Visible;
             Unlock_Visibility = Visibility.Collapsed;
             IsLocked = false;
             IsReportButtonEnabled = true;
+            return this;
         }
         #endregion
 

@@ -2,18 +2,11 @@
 
 <Configurations>
 
-
-
-
-
-
-
-
 	<!--GRANALLADORA MATERIA PRIMA-->
-
 	<configsection name="GRANALLADORA" >
 
 		<Machine>Granalladora</Machine>
+		<MachineFiltre>Granalladora</MachineFiltre>
 		<Secuencia>1</Secuencia>
 		<Operacion>Granallado Materia Prima</Operacion>
 		<Opcion>Granallado Materia Prima</Opcion>
@@ -23,16 +16,15 @@
 		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>MV-GRANALLA1</Workstation>
-		
-
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5]</GetProductionGeneral>
 
 	</configsection>
 
 	<!--ENDERAZADO-->
 	<configsection name="ENDEREZADORA">
 
-
 		<Machine>Enderezadora</Machine>
+		<MachineFiltre>Enderezadora</MachineFiltre>
 		<Secuencia>2</Secuencia>
 		<Operacion>Enderezado</Operacion>
 		<Opcion>Enderezado</Opcion>
@@ -42,13 +34,14 @@
 		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>MV-ENDEREZADO</Workstation>
-
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5]</GetProductionGeneral>
 	</configsection>
 
 	<!--CND-->
 	<configsection name="CND">
 
 		<Machine>Cnd</Machine>
+		<MachineFiltre>Cnd</MachineFiltre>
 		<Secuencia>3</Secuencia>
 		<Operacion>Control No Destructivo</Operacion>
 		<Opcion>Control No Destructivo</Opcion>
@@ -58,7 +51,7 @@
 		<ConnectionString>Data Source=10.92.35.100;Initial Catalog=L2_GEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>VM-CND</Workstation>
-
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5]</GetProductionGeneral>
 
 	</configsection>
 
@@ -67,6 +60,7 @@
 	<configsection name="FORJADORA 0">
 
 		<Machine>Forjadora 0</Machine>
+		<MachineFiltre>Forjadora 0</MachineFiltre>
 		<Secuencia>4</Secuencia>
 		<Operacion>Forjado Extremo 1</Operacion>
 		<Opcion>Forja 0</Opcion>
@@ -78,6 +72,7 @@
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>VM-CARGA-FORJA</Workstation>
 		<ExtrempFiltre>Extremo 1</ExtrempFiltre>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralV2Test]</GetProductionGeneral>
 
 
 
@@ -88,6 +83,7 @@
 	<configsection name="FORJADORA 1">
 
 		<Machine>Forjadora 0</Machine>
+		<MachineFiltre>Forjadora 0</MachineFiltre>
 		<Secuencia>4</Secuencia>
 		<Operacion>Forjado Extremo 2</Operacion>
 		<Opcion>Forja 1</Opcion>
@@ -98,12 +94,14 @@
 		<FlagITNOReportBox>N</FlagITNOReportBox>
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>VM-FORJA-0</Workstation>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralV2Test]</GetProductionGeneral>
 	</configsection>
 
 
 	<configsection name="FORJADORA 2">
 
 		<Machine>Forjadora</Machine>
+		<MachineFiltre>Forjadora</MachineFiltre>
 		<Secuencia>5</Secuencia>
 		<Operacion>Forjado Extremo 2</Operacion>
 		<Opcion>Forja 1</Opcion>
@@ -114,8 +112,9 @@
 		<FlagITNOReportBox></FlagITNOReportBox>
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>VM-FORJA</Workstation>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornos]</GetProductionGeneral>
 	</configsection>
-	
+
 	<!--HORNO NORMALIZADO-->
 
 	<configsection name="HNORMALIZADO">
@@ -134,6 +133,7 @@
 		<ExtremoFiltre></ExtremoFiltre>
 		<MachineFiltre>Horno de Normalizado</MachineFiltre>
 		<Workstation>VM-NORMALIZADO</Workstation>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornos]</GetProductionGeneral>
 
 
 
@@ -156,6 +156,7 @@
 		<ExtremoFiltre></ExtremoFiltre>
 		<MachineFiltre>Horno de Revenido</MachineFiltre>
 		<Workstation>VM-REVENIDO</Workstation>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornos]</GetProductionGeneral>
 
 
 
@@ -178,7 +179,7 @@
 		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
 		<ExtremoFiltre></ExtremoFiltre>
 		<Workstation>VM-GRA-02</Workstation>
-		
+
 
 
 	</configsection>
@@ -193,7 +194,7 @@
 		<Opcion>Mecanizado 1</Opcion>
 		<MaquinaInicialZona>1</MaquinaInicialZona>
 		<Extremo>Extremo 1</Extremo>
-		<MachineFiltre></MachineFiltre>
+		<MachineFiltre>Roscadora</MachineFiltre>
 		<isPintando>False</isPintando>
 		<ConnectionString>Data Source=10.92.35.102;Initial Catalog=L2_MECA;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<VersionApplication>V4</VersionApplication>
@@ -207,6 +208,7 @@
 	<configsection name="ROSCADORA2">
 
 		<Machine>Roscadora</Machine>
+		<MachineFiltre>Roscadora</MachineFiltre>
 		<Secuencia>9</Secuencia>
 		<Operacion>Mecanizado Extremo 1</Operacion>
 		<Opcion>Mecanizado 2</Opcion>
@@ -223,6 +225,7 @@
 	<configsection name="ROSCADORA3">
 
 		<Machine>Roscadora</Machine>
+		<MachineFiltre>Roscadora</MachineFiltre>
 		<Secuencia>9</Secuencia>
 		<Operacion>Mecanizado Extremo 1</Operacion>
 		<Opcion>Mecanizado 3</Opcion>
@@ -236,25 +239,25 @@
 	</configsection>
 
 
-  <!--MECANIZADO 4-->
+	<!--MECANIZADO 4-->
 
-  <configsection name="ROSCADORA4">
+	<configsection name="ROSCADORA4">
 
-    <Machine>Roscadora</Machine>
-    <Secuencia>9</Secuencia>
-    <Operacion>Mecanizado Extremo 1</Operacion>
-    <Opcion>Mecanizado 4</Opcion>
-    <MaquinaInicialZona>0</MaquinaInicialZona>
-    <Extremo>Extremo 2</Extremo>
-    <isPintando>False</isPintando>
-	  <MachineFiltre>Roscadora 4</MachineFiltre>
-	  <MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
-	  <ExtremoFiltre>Extremo 1</ExtremoFiltre>
-    <ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_MECA2;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
-    <Workstation>VM-MECANIZADO4</Workstation>
-    <VersionApplication>V3</VersionApplication>
+		<Machine>Roscadora</Machine>
+		<Secuencia>9</Secuencia>
+		<Operacion>Mecanizado Extremo 1</Operacion>
+		<Opcion>Mecanizado 4</Opcion>
+		<MaquinaInicialZona>0</MaquinaInicialZona>
+		<Extremo>Extremo 2</Extremo>
+		<isPintando>False</isPintando>
+		<MachineFiltre>Roscadora 4</MachineFiltre>
+		<MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
+		<ExtremoFiltre>Extremo 1</ExtremoFiltre>
+		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_MECA2;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
+		<Workstation>VM-MECANIZADO4</Workstation>
+		<VersionApplication>V3</VersionApplication>
 
-  </configsection>
+	</configsection>
 
 
 
@@ -263,6 +266,7 @@
 	<configsection name="PINTADO">
 
 		<Machine>Pintado</Machine>
+		<MachineFiltre>Pintado</MachineFiltre>
 		<Secuencia>11</Secuencia>
 		<Operacion>Pintado</Operacion>
 		<Opcion>Pintado 1</Opcion>
@@ -284,6 +288,7 @@
 	<configsection name="INYECTORA">
 
 		<Machine>Inyectora</Machine>
+		<MachineFiltre>Inyectora</MachineFiltre>
 		<Secuencia>11</Secuencia>
 		<Operacion>Inyectado</Operacion>
 		<Opcion>Inyectado</Opcion>
@@ -296,15 +301,15 @@
 
 	</configsection>
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	<!--///////////////////   COPLES   /////////////////////////-->
-	
-	
+
+
 
 
 	<!--ROSCADORA SALIDA-->

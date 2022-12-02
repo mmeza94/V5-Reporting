@@ -35,6 +35,14 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
         }
 
 
+        public static ObservableCollection<ReportProductionHistory> GetReportProductionHistoryByParamsTest(Dictionary<string, object> listParams)
+        {
+            return DataAccessSQL.Instance.GetReportProductionHistoryByParamsTest(listParams);
+
+        }
+
+
+
         public static int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
         {
             return DataAccessSQL.Instance.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
@@ -42,11 +50,17 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
         }
 
 
+
+
+
+
         public static void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionReportDetail, int IdReportProductionHistoryInserted)
         {
              DataAccessSQL.Instance.InsRejectionReportDetailTestV5(rejectionReportDetail, IdReportProductionHistoryInserted);
 
         }
+
+
 
 
 

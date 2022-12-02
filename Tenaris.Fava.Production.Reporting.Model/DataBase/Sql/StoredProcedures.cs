@@ -20,9 +20,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
 
 
-        //Testeado para Forja 0 y 1
+        
         public const string GetProductionGeneralV2Test = "[dbo].[GetProductionGeneralV2Test]";
-        //Testeado para Forja 0 y 1
+        
         public const string GetProductionGeneralTestForjasyHornos = "[dbo].[GetProductionGeneralTestForjasyHornos]";
 
 

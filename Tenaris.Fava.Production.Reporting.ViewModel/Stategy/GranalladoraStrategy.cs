@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Tenaris.Fava.Production.Reporting.Model.Adapter;
-using Tenaris.Fava.Production.Reporting.Model.Data_Access;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Support;
-using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
@@ -16,11 +14,10 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
 {
     public class GranalladoraStrategy : GeneralMachine, IActions
     {
+
         #region Properties
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
-        
-
         #endregion
 
         #region Constructor
@@ -40,9 +37,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
                 var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
                 if (generalPieces == null)
                     return new ObservableCollection<GeneralPiece>();
-                currentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
+                CurrentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
 
-                return new ObservableCollection<GeneralPiece>(currentGeneralPieces);
+                return new ObservableCollection<GeneralPiece>(CurrentGeneralPieces);
             }
             catch (Exception)
             {
@@ -52,8 +49,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
 
         public bool Report(GeneralPiece currentDGRow)
         {
+            var ReportPRoduction = currentDGRow.BuildReportProductionDTO();
 
-            if (!reportingProcess.CanReport(currentDGRow))
+            if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
                 return false;
 
             if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
@@ -63,13 +61,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
                                                                              .ValidateReportStructure()
                                                                              .PrepareDtoForProductionReport();
 
-            var response  = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
-                true,reportingProcess.dgRejectionReportDetails);
+            var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
+                true, reportingProcess.dgRejectionReportDetails);
 
 
             reportingProcess.ShowITMessage(response);
 
-  
+
 
             reportingProcess.CheckReportProductionForNextOperation(response);
 
@@ -82,7 +80,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
                 return new ObservableCollection<ReportProductionHistory>();
 
             ObservableCollection<ReportProductionHistory> productionReportHistories =
-                DataAccessSQL.Instance.GetReportProductionHistoryByParamsTest(
+               ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
                 new Dictionary<string, object>
             {
                         { "@Order", SelectedBundle.OrderNumber },

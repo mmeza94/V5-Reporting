@@ -1,14 +1,11 @@
 ﻿using Infrastructure.InteractionRequests;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Practices.Prism.ViewModel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
-// using Tenaris.Fava.Production.Reporting.OplScada; //V1
 using System.Windows;
 using System.Windows.Input;
 using Tenaris.Fava.Production.Reporting.Model.Business;
@@ -16,146 +13,77 @@ using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
-using Tenaris.Fava.Production.Reporting.ViewModel.Support;
-using Tenaris.Library.UI.Framework.ViewModel;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel
 {
-    //BASADA EN V4
-
-
 
     public class ReportConfirmationViewModel : IPopupWindowActionAware, INotifyPropertyChanged
     {
 
-
-
-
-
-        //Constructor
-        public ReportConfirmationViewModel(GeneralPiece currentPiece)
+        #region Constructor
+        public ReportConfirmationViewModel()
         {
-            Orden = currentPiece.OrderNumber;
-            Colada = currentPiece.HeatNumber;
-            Atado = currentPiece.GroupItemNumber;
-            CurrentGeneralPiece = currentPiece;
-            //Extremo = currentPiece.Extremo;
-         
 
+            TipoEnvio = new List<string>() { "Parcial", "Final", "Completo" };
+            Destino = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
 
-
-            //Cantidades actuales                        
-            BuenasActual = currentPiece.GoodCount;
-            MalasActual = currentPiece.ScrapCount;
-            ReprocesosActual = currentPiece.ReworkedCount;
-            CargadasActual = currentPiece.LoadedCount;
-            //Extremo = currentPiece.Extremo;
-      
-
-            //Cantidades totales
-            BuenasTotal = BuenasAnterior + BuenasActual;
-            MalasTotal = MalasAnterior + MalasActual;
-            ReprocesosTotal = ReprocesosAnterior + ReprocesosActual;
-            CargadasTotal = CargadasAnterior + CargadasActual;
-
+            RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
+            CounterTagN1 = Configurations.Instance.N1CounterTag;
+            CounterTagN2 = Configurations.Instance.N2CounterTag;
+            DestinoSelected = Destino.FirstOrDefault();
             UnlockVisibility = Visibility.Visible;
             LockVisibility = Visibility.Collapsed;
 
-            //TipoEnvio = ConfigurationManager.AppSettings.Get("TipoEnvio").Split(',').ToList();
-
-            //Extremo1 = (ConfigurationManager.AppSettings.Get("ExtremDefaultSelect") == "1") ? true : false;
-            //Extremo2 = (ConfigurationManager.AppSettings.Get("ExtremDefaultSelect") == "0") ? true : false;
-            ExtremosVisibility = (ConfigurationManager.AppSettings.Get("VisibleExtremeRadioButton") == "1") ? Visibility.Visible : Visibility.Collapsed;
-            Trabajado = (ConfigurationManager.AppSettings.Get("WorkedCheckBoxChecked") == "1") ? true : false;
-            TrabajadoVisibility = (ConfigurationManager.AppSettings.Get("VisibleWorkedCheckbox") == "1") ? Visibility.Visible : Visibility.Collapsed;
-            rejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
-            Destino = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
             ContadorVisibility = ConfigurationManager.AppSettings["isContadorVisible"] == "true" ? Visibility.Visible : Visibility.Collapsed;
-            //Extremo = currentPiece.Extremo;
-      
+            ExtremoEditable = Configurations.Instance.Machine.Contains("Forjadora") ? Visibility.Visible : Visibility.Collapsed;
 
-        }
-        public ReportConfirmationViewModel(GeneralPiece generalPiece, ReportProductionDto productionReport, 
-            int firstTotalLoadedPieces,bool pointlessparameter ,string user)
-        {
-            Extremo2 = generalPiece.Extremo.Contains("2") ? true : false ;
-            Extremo1 = !Extremo2;
-            
-
-            CurrentGeneralPiece = generalPiece;
-            CurrentReportProduction = productionReport;
-            PopulateLevel2Counters();
-            PopulateRejectionCodeByMachineDescription();
-            RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
-            ITLoadHelper = firstTotalLoadedPieces;
-            GetPreviousCounters();
-
-            CounterTagN1 = Configurations.Instance.N1CounterTag;
-            CounterTagN2 = Configurations.Instance.N2CounterTag;
-            //TbN1Counter = _OplSusbcription.GetCounterTag(CounterTagN1);
             Trabajado = ConfigurationManager.AppSettings.Get("WorkedCheckBoxChecked") == "1";
-            TrabajadoVisibility = (ConfigurationManager.AppSettings.Get("VisibleWorkedCheckbox") == "1") ? Visibility.Visible : Visibility.Collapsed;
-            TipoEnvio = new List<string>() { "Parcial", "Final", "Completo" };
-            //Extremo1 = ConfigurationManager.AppSettings.Get("ExtremDefaultSelect") == "1";
-            //Extremo2 = ConfigurationManager.AppSettings.Get("ExtremDefaultSelect") == "0";
-            ExtremosVisibility = (ConfigurationManager.AppSettings.Get("VisibleExtremeRadioButton") == "1") ? Visibility.Visible : Visibility.Collapsed;
-            User = user;
-            Destino = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
-            DestinoSelected = Destino.FirstOrDefault();
-            RazonDescarteSelected = RazonDescarte.FirstOrDefault();
-            UnlockVisibility = Visibility.Visible;
-            LockVisibility = Visibility.Collapsed;
-            ContadorVisibility = ConfigurationManager.AppSettings["isContadorVisible"] == "true" ? Visibility.Visible : Visibility.Collapsed;
-            //Extremo = generalPiece.Extremo;
-            ExtremoEditable = Configurations.Instance.Machine.Contains("Forjadora") ? Visibility.Visible : Visibility.Collapsed;
-            //ExtremosVisibility = Configurations.Instance.Secuencia == "8" ? Visibility.Visible : Visibility.Collapsed; 
+            TrabajadoVisibility = ConfigurationManager.AppSettings.Get("VisibleWorkedCheckbox") == "1" ? Visibility.Visible : Visibility.Collapsed;
 
+            ExtremosVisibility = ConfigurationManager.AppSettings.Get("VisibleExtremeRadioButton") == "1" ? Visibility.Visible : Visibility.Collapsed;
 
-
-
-
-        }
-
-
-        public ReportConfirmationViewModel(GeneralPiece generalPiece, ReportProductionDto productionReport, int firstTotalLoadedPieces, string user)
-        {
-            
-            CurrentGeneralPiece = generalPiece;
-            CurrentReportProduction = productionReport;
-            PopulateLevel2Counters();
-            PopulateRejectionCodeByMachineDescription();
-            RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
-            ITLoadHelper = firstTotalLoadedPieces;
-            GetPreviousCounters();
-            CounterTagN1 = Configurations.Instance.N1CounterTag;
-            CounterTagN2 = Configurations.Instance.N2CounterTag;
-            Destino = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
-            DestinoSelected = Destino.FirstOrDefault();
-            RazonDescarteSelected = RazonDescarte.FirstOrDefault();
-            Trabajado = (ConfigurationManager.AppSettings.Get("WorkedCheckBoxChecked") == "1") ? true : false;
-            TrabajadoVisibility = (ConfigurationManager.AppSettings.Get("VisibleWorkedCheckbox") == "1") ? Visibility.Visible : Visibility.Collapsed;
-            TipoEnvio = new List<string>() { "Parcial", "Final", "Completo" };
-            //Extremo1 = (ConfigurationManager.AppSettings.Get("ExtremDefaultSelect") == "1") ? true : false;
-            //Extremo2 = (ConfigurationManager.AppSettings.Get("ExtremDefaultSelect") == "0") ? true : false;
-            ExtremosVisibility = (ConfigurationManager.AppSettings.Get("VisibleExtremeRadioButton") == "1") ? Visibility.Visible : Visibility.Collapsed;
-            User = user;
-            UnlockVisibility = Visibility.Visible;
-            LockVisibility = Visibility.Collapsed;
-            ContadorVisibility = ConfigurationManager.AppSettings["isContadorVisible"] == "true" ? Visibility.Visible : Visibility.Collapsed;
             lockCommandExecute();
-            //Extremo = generalPiece.Extremo;
-       
-            ExtremoEditable = Configurations.Instance.Machine.Contains("Forjadora") ? Visibility.Visible : Visibility.Collapsed;
-            Extremo1 = true;
 
         }
+        #endregion
 
+        #region Builder
 
-        public Window HostWindow { get; set; }
+        public ReportConfirmationViewModel SetGeneralPiece(GeneralPiece generalPiece)
+        {
+            CurrentGeneralPiece = generalPiece;
+            Extremo2 = generalPiece.Extremo.Contains("2");
+            Extremo1 = !Extremo2;
+            this.PopulateLevel2Counters()
+                .SetSendStatus()
+                .PopulateRejectionCodeByMachineDescription()
+                .GetPreviousCounters();
+            RazonDescarteSelected = RazonDescarte.FirstOrDefault();
+            return this;
+        }
 
-        //Propiedades privadas
+        public ReportConfirmationViewModel SetReportProductionDto(ReportProductionDto reportProductionDto)
+        {
+            CurrentReportProduction = reportProductionDto;
+            return this;
+        }
+
+        public ReportConfirmationViewModel SetUser(string user)
+        {
+            this.User = user;
+            return this;
+        }
+
+        public ReportConfirmationViewModel SetITLoadHelper(int firstTotalLoadedPieces)
+        {
+            this.ITLoadHelper = firstTotalLoadedPieces;
+            return this;
+        }
+
+        #endregion
+
+        #region Propiedades privadas
         private ObservableCollection<RejectionReportDetail> rejectionReportDetails;
         private string motivo;
         private bool trabajado;
@@ -204,6 +132,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         private string user;
         private string selectedSendType;
         private bool result;
+        private string extremo;
+        #endregion
+
+        #region Private InteractionRequest
+
         private InteractionRequest<Notification> reportConfirmationWindowRequest { get; set; }
 
         private InteractionRequest<Notification> loginConfirmationWindowRequest { get; set; }
@@ -213,7 +146,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         private InteractionRequest<Notification> showErrorWindowRequest { get; set; }
         private InteractionRequest<Notification> loginWindowRequest { get; set; }
 
+        #endregion
 
+        #region Public InteractionRequest
         public InteractionRequest<Notification> ReportConfirmationWindowRequest
         {
             get { return reportConfirmationWindowRequest ?? (reportConfirmationWindowRequest = new InteractionRequest<Notification>()); }
@@ -238,10 +173,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         public InteractionRequest<Notification> LoginWindowRequest
         {
             get { return loginWindowRequest ?? (loginWindowRequest = new InteractionRequest<Notification>()); }
-            
-        }
-        private string extremo;
 
+        }
+        #endregion
+
+        #region Public Properties
         public string Extremo
         {
             get { return extremo; }
@@ -387,6 +323,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
                 OnPropertyChanged("NumDetalles");
             }
         }
+
+
         public RejectionReportDetail RejectionReportDetailSelected
         {
             get { return rejectionReportDetailSelected; }
@@ -453,7 +391,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             set
             {
                 if (value == extremo2) return;
-                extremo2 = value;                
+                extremo2 = value;
                 OnPropertyChanged("Extremo2");
             }
         }
@@ -463,7 +401,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             set
             {
                 if (value == extremo1) return;
-                extremo1 = value;                
+                extremo1 = value;
                 OnPropertyChanged("Extremo1");
             }
         }
@@ -753,26 +691,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
                 OnPropertyChanged("TbN1Counter");
             }
         }
+        public Window HostWindow { get; set; }
+        public Notification HostNotification { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public string Title => "Confirmacion de reporte de produccion";
+        #endregion
 
-
-        public void CloseWindows(object param)
-        {
-            if (this.HostWindow != null)
-            {
-                this.HostWindow.Close();
-            }
-        }
-        private void CloseWindow()
-        {
-            CloseWindows(this);
-        }
-
-
-
-
-
-
-        //Comandos
+        #region Private Comandos
         private ICommand unlockCommand;
         private ICommand lockCommand;
         private ICommand addRejectionCommand;
@@ -780,9 +705,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         private ICommand acceptCommand;
         private ICommand cancelCommand;
         private ICommand extremoChangedCommand;
+        #endregion
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        #region Public Commands
         public ICommand CancelCommand2
         {
             get
@@ -799,30 +724,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         {
             get
             {
-                if(extremoChangedCommand == null)
+                if (extremoChangedCommand == null)
                 {
                     extremoChangedCommand = new RelayCommand(param => this.extremoChangedCommandExecute(), null);
                 }
                 return extremoChangedCommand;
             }
         }
-
-        private void extremoChangedCommandExecute()
-        {
-            GetPreviousCounters();
-        }
-
-        private bool cancelCommandCanExecute()
-        {
-            return true;
-        }
-
-        private void cancelCommandExecute()
-        {
-            Result = false;
-            CloseWindow();
-        }
-
         public ICommand AcceptCommand2
         {
             get
@@ -834,42 +742,17 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
                 return acceptCommand;
             }
         }
-
-        private void acceptCommandExecute()
-        {
-            Extremo = Extremo1 == true ? "Extremo 1" : "Extremo 2";
-            Result = true;
-            GC.Collect();
-            CloseWindow();
-        }
-
-        private bool acceptCommandCanExecute()
-        {
-            return true;
-        }
-
-
-
-        //Comandos publicos
         public ICommand RemoveRejectionCommand
         {
             get
             {
                 if (removeRejectionCommand == null)
                 {
-                    removeRejectionCommand = new RelayCommand(param => this.removeRejectionCommandExecute(),param => this.removeRejectionCommandCanExecute());
+                    removeRejectionCommand = new RelayCommand(param => this.removeRejectionCommandExecute(), param => this.removeRejectionCommandCanExecute());
                 }
                 return removeRejectionCommand;
             }
         }
-
-        private bool removeRejectionCommandCanExecute()
-        {
-            if (RejectionReportDetails.Count != 0)
-                return true;
-            return false;
-        }
-
         public ICommand UnlockCommand
         {
             get
@@ -903,31 +786,65 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
                 return addRejectionCommand;
             }
         }
+        #endregion
 
-        private bool AddRejectionCommandCanExecute()
+        #region Commands Execute
+        private void extremoChangedCommandExecute()
         {
-            if (Cantidad > 0 && DestinoSelected != null && RazonDescarteSelected != null)            
-                return true;            
+            GetPreviousCounters();
+        }
+
+        private bool cancelCommandCanExecute()
+        {
+            return true;
+        }
+
+        private void cancelCommandExecute()
+        {
+            Result = false;
+            CloseWindow();
+        }
+
+
+        private void acceptCommandExecute()
+        {
+            Extremo = Extremo1 == true ? "Extremo 1" : "Extremo 2";
+            Result = true;
+            GC.Collect();
+            CloseWindow();
+        }
+
+        private bool acceptCommandCanExecute()
+        {
+            return true;
+        }
+
+        //Comandos publicos
+        private bool removeRejectionCommandCanExecute()
+        {
+            if (RejectionReportDetails.Count != 0)
+                return true;
             return false;
         }
 
-        public string Title => "Confirmacion de reporte de produccion";
-
-        public Notification HostNotification { get ; set; }
-        
-
+        private bool AddRejectionCommandCanExecute()
+        {
+            if (Cantidad > 0 && DestinoSelected != null && RazonDescarteSelected != null)
+                return true;
+            return false;
+        }
 
         //Ejecución de comandos
         private void removeRejectionCommandExecute()
         {
-            if(RejectionReportDetails != null || RejectionReportDetails.Count > 0)
+            if (RejectionReportDetails != null || RejectionReportDetails.Count > 0)
                 RejectionReportDetails.Clear();
         }
 
         private void unlockCommandExecute()
         {
             LoginViewModel login = new LoginViewModel();
-            
+
             LoginWindowRequest.Raise(new Notification { Content = login });
 
             if (!login.Result)
@@ -980,7 +897,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             Motivo = "";
 
 
-        
+
         }
 
         public bool AcceptCanExecute()
@@ -1005,7 +922,26 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
         {
             return true;
         }
-        private void SetSendStatus()
+
+        #endregion
+
+        #region Public Methods
+        public void CloseWindows(object param)
+        {
+            if (this.HostWindow != null)
+            {
+                this.HostWindow.Close();
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+        private void CloseWindow()
+        {
+            CloseWindows(this);
+        }
+        private ReportConfirmationViewModel SetSendStatus()
         {
             switch (CurrentGeneralPiece.SendStatus)
             {
@@ -1013,31 +949,32 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
                 case Model.Enums.Enumerations.ProductionReportSendStatus.Final: SelectedSendType = "Final"; break;
                 default: SelectedSendType = "Completo"; break;
             }
-
+            return this;
         }
 
-        private void GetPreviousCounters()
+        private ReportConfirmationViewModel GetPreviousCounters()
         {
-            //GetPreviousCountersByMachine
             ObservableCollection<int> items = ProductionReportingBusiness.GetPreviousCountersByMachineTest(
                 new Dictionary<string, object>
                 {
-
                         { "@GroupItemNumber", CurrentGeneralPiece.GroupItemNumber },
                         { "@MachineSequence", Configurations.Instance.Secuencia },
                         { "@Operation", Configurations.Instance.Operacion }
                 });
+
             BuenasAnterior = items[0];
             MalasAnterior = items[1];
             ReprocesosAnterior = items[2];
+
             CargadasAnterior = BuenasAnterior = MalasAnterior;
             BuenasTotal = BuenasAnterior + BuenasActual;
             MalasTotal = MalasAnterior + MalasActual;
             CargadasTotal = CargadasAnterior + CargadasActual;
             ReprocesosTotal = ReprocesosAnterior + ReprocesosActual;
+            return this;
         }
 
-        private void PopulateRejectionCodeByMachineDescription()
+        private ReportConfirmationViewModel PopulateRejectionCodeByMachineDescription()
         {
             try
             {
@@ -1052,9 +989,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             {
                 throw ex;
             }
+            return this;
         }
 
-        private void PopulateLevel2Counters()
+        private ReportConfirmationViewModel PopulateLevel2Counters()
         {
             CargadasActual = CurrentGeneralPiece.LoadedCount;
             BuenasActual = CurrentGeneralPiece.GoodCount;
@@ -1063,7 +1001,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             Atado = CurrentGeneralPiece.GroupItemNumber;
             Colada = CurrentGeneralPiece.HeatNumber;
             Orden = CurrentGeneralPiece.OrderNumber;
-            SetSendStatus();
+            return this;
         }
         private void VerifyPropertyName(string propertyName)
         {
@@ -1073,17 +1011,16 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
                 throw new ArgumentException("Property not found", propertyName);
             }
         }
-        
+
         private void OnPropertyChanged(string propertyName)
         {
             VerifyPropertyName(propertyName);
             var handler = PropertyChanged;
-            if(handler != null)
+            if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
 
         private RejectionReportDetail btnAddRejectionDetail_Click(int tbScrapCountForRejection, RejectionCode SelectedRejectionCode, string DestinationSelectedItem,
             string motivo, bool worked, bool extremo1)
@@ -1130,6 +1067,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
             return rejectionReportDetail;
 
         }
+
+        #endregion
 
     }
 }

@@ -34,6 +34,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
         public string IdUser { get; set; }
 
 
+       
+
 
     }
 }

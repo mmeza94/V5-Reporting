@@ -1,27 +1,12 @@
-﻿using log4net;
-using Microsoft.Practices.Prism.ViewModel;
-using System;
-using System.Collections;
+﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
-using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
-using Tenaris.Fava.Production.Reporting.Model.Model;
-
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
-using Tenaris.Library.Log;
-using Tenaris.Library.UI.Framework.ViewModel;
-using Tenaris.Library.UI.Framework.Language;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Tenaris.Fava.Production.Reporting.ViewModel.Support;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
@@ -31,12 +16,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public string WhoIsLogged { get; set; }
         public ITServiceAdapter Adapter { get; set; }
-        public IList<GeneralPiece> currentGeneralPieces { get; set; }
-        public InteractionRequest<Notification> Request { get; set; }
-        public InteractionRequest<Notification> IndBoxReportConfirmationRequest { get; set; }
-        public InteractionRequest<Notification> ShowErrorMessageRequest { get; set; }
-        public InteractionRequest<Notification> ShowMessageRequest { get; set; }
-        public InteractionRequest<Notification> ShowQuestionRequests { get; set; }
+        public IList<GeneralPiece> CurrentGeneralPieces { get; set; }
+        public InteractionRequest<Notification> Request, IndBoxReportConfirmationRequest,
+            ShowErrorMessageRequest, ShowMessageRequest, ShowQuestionRequests;
 
         public GeneralMachine()
         {
@@ -65,8 +47,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         }
 
-
-
         public bool IsSended(ReportProductionDto reportDto)
         {
             if (reportDto == null)
@@ -84,19 +64,48 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
 
-        public void SetNotifications(InteractionRequest<Notification> request, InteractionRequest<Notification> IndBoxReportConfirmationRequest,
-            InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
-            InteractionRequest<Notification> showQuestionRequests)
+        //public void SetNotifications(InteractionRequest<Notification> request, InteractionRequest<Notification> IndBoxReportConfirmationRequest,
+        //    InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
+        //    InteractionRequest<Notification> showQuestionRequests)
+        //{
+        //    this.Request = request;
+        //    this.IndBoxReportConfirmationRequest = IndBoxReportConfirmationRequest;
+        //    this.ShowErrorMessageRequest = showErrorMessageRequest;
+        //    this.ShowMessageRequest = showMessageRequest;
+        //    this.ShowQuestionRequests = showQuestionRequests;
+        //}
+
+
+        public GeneralMachine SetRequest(InteractionRequest<Notification> request)
         {
             this.Request = request;
-            this.IndBoxReportConfirmationRequest = IndBoxReportConfirmationRequest;
-            this.ShowErrorMessageRequest = showErrorMessageRequest;
-            this.ShowMessageRequest = showMessageRequest;
-            this.ShowQuestionRequests = showQuestionRequests;
+            return this;
         }
 
+        public GeneralMachine SetIndBoxReportConfirmationRequest(InteractionRequest<Notification> IndBoxReportConfirmationRequest)
+        {
+            this.IndBoxReportConfirmationRequest = IndBoxReportConfirmationRequest;
+            return this;
+        }
 
+        public GeneralMachine SetShowErrorMessageRequest(InteractionRequest<Notification> showErrorMessageRequest)
+        {
+            this.ShowErrorMessageRequest = showErrorMessageRequest;
+            return this;
+        }
 
+        public GeneralMachine SetShowMessageRequest(InteractionRequest<Notification> showMessageRequest)
+        {
+            this.ShowMessageRequest = showMessageRequest;
+            return this;
+        }
+
+        public GeneralMachine SetShowQuestionRequests(InteractionRequest<Notification> ShowQuestionRequests)
+        {
+            this.ShowQuestionRequests = ShowQuestionRequests;
+            return this;
+        }
+                
         public bool IsReportSequenceValidated(IList<GeneralPiece> generalPieces, GeneralPiece currentGeneralPice)
         {
             if (!ValidationRules.ValidateReportSequence(generalPieces, currentGeneralPice))
@@ -111,17 +120,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public int GetFirstPieceLoadedNumberForIT(GeneralPiece GeneralPiece)
         {
-            int FirstReportedLoadedCount = currentGeneralPieces.Where(c =>(c.GroupItemNumber == GeneralPiece.GroupItemNumber)
+            int FirstReportedLoadedCount = CurrentGeneralPieces.Where(c => (c.GroupItemNumber == GeneralPiece.GroupItemNumber)
                                            && (c.ReportSequence == 1) && (c.Extremo == GeneralPiece.Extremo)).First().LoadedCount;
 
             return FirstReportedLoadedCount;
         }
-
-
-        
-
-
-
 
     }
 }

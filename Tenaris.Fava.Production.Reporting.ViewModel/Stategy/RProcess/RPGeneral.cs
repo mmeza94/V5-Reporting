@@ -1,16 +1,9 @@
 ﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Support;
@@ -31,16 +24,17 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         public int tbGoodCountL2 { get; set; }
         public ShowQuestion showQuestion { get; set; }
 
-        public  RPGeneral(GeneralMachine generalMachine)
+        public RPGeneral(GeneralMachine generalMachine)
         {
             this.GeneralMachine = generalMachine;
         }
 
-        public bool CanReport(GeneralPiece currentDGRow)
+        public bool CanReport(GeneralPiece currentDGRow, ReportProductionDto reportProductionDto)
         {
             bool response = true;
-            var generalPieceDto = currentDGRow;
-            ReportProductionDto = generalPieceDto.BuildReportProductionDTO();
+
+            ReportProductionDto = reportProductionDto;
+
             var maquina = Configurations.Instance.Machine;
 
             if (!GeneralMachine.Login())
@@ -49,7 +43,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
             if (!GeneralMachine.IsSended(ReportProductionDto))
                 return response;
 
-            if (!GeneralMachine.IsReportSequenceValidated(GeneralMachine.currentGeneralPieces, generalPieceDto))
+            if (!GeneralMachine.IsReportSequenceValidated(GeneralMachine.CurrentGeneralPieces, currentDGRow))
                 return response;
 
             return response;
@@ -57,8 +51,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
         public bool IsReportConfirmationAccepted(GeneralPiece currentDGRow)
         {
-            reportConfirmation = new ReportConfirmationViewModel(
-                                    currentDGRow, ReportProductionDto, GeneralMachine.GetFirstPieceLoadedNumberForIT(currentDGRow), true, GeneralMachine.WhoIsLogged);
+            reportConfirmation = new ReportConfirmationViewModel()
+                .SetGeneralPiece(currentDGRow)
+                .SetReportProductionDto(ReportProductionDto)
+                .SetITLoadHelper(GeneralMachine.GetFirstPieceLoadedNumberForIT(currentDGRow))
+                .SetUser(GeneralMachine.WhoIsLogged);
             GeneralMachine.Request.Raise(new Notification() { Content = reportConfirmation });
 
             return reportConfirmation.Result;
@@ -71,14 +68,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
             ReportProductionDto.IdUDT = reportConfirmation.Atado;
             ReportProductionDto.Orden = reportConfirmation.Orden;
             ReportProductionDto.Colada = reportConfirmation.Colada;
-            
+
             dgRejectionReportDetails = reportConfirmation.RejectionReportDetails;
-            
+
             tbScrapCountL2 = reportConfirmation.MalasActual;
             tbReworkedCountL2 = reportConfirmation.ReprocesosActual;
             tbLoadedCountL2 = reportConfirmation.CargadasActual;
             tbGoodCountL2 = reportConfirmation.BuenasActual;
-            
+
             lbITLoadHelper = reportConfirmation.ITLoadHelper;
             tbTotalLoaded = reportConfirmation.CargadasTotal;
             tbPreviousLoaded = reportConfirmation.CargadasAnterior;
@@ -88,16 +85,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
             return this;
         }
 
-
         public IReportingProcess ValidateReportStructure()
         {
-            if(!ValidationRules.ValidateRejectionReasons(tbScrapCountL2, dgRejectionReportDetails))
+            if (!ValidationRules.ValidateRejectionReasons(tbScrapCountL2, dgRejectionReportDetails))
             {
                 ShowError showError = new ShowError("Error", "La cantidad de Detalles de Rechazos no coincide con la cantidad de Piezas Malas");
                 GeneralMachine.ShowErrorMessageRequest.Raise(new Notification() { Content = showError });
                 return null;
             }
-                
+
 
             var confirmMessage = string.Format("Resumen de lo Reportado: \n\n Buenas:{0} \n" +
                         " Malas:{1} \n Reprocesos:{2} \n Total:{3} \n \n ¿Desea reportar estas cantidades?", tbGoodCountL2,
@@ -112,7 +108,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         {
             if (!showQuestion.Result)
                 return null;
-            IsCND();
+            //IsCND();
             ReportProductionDto.CantidadMalas = tbScrapCountL2;
             ReportProductionDto.CantidadBuenas = tbGoodCountL2;
             ReportProductionDto.CantidadReprocesadas = tbReworkedCountL2;
@@ -122,21 +118,19 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
             return ReportProductionDto;
 
-            
+
         }
 
+        //private void IsCND()
+        //{
+        //    if (Configurations.Instance.Machine.ToUpper().Equals("CND"))
+        //    {
+        //        ReportProductionDto.CantidadTotal =  lbITLoadHelper;
+        //        return;
+        //    }
+        //    ReportProductionDto.CantidadTotal = (lbITLoadHelper - tbPreviousLoaded == 0) ? tbLoadedCountL2 : lbITLoadHelper - tbPreviousLoaded;
 
-        private void IsCND()
-        {
-            if (Configurations.Instance.Machine.ToUpper().Equals("CND"))
-            {
-                ReportProductionDto.CantidadTotal =  lbITLoadHelper;
-                return;
-            }
-            ReportProductionDto.CantidadTotal = (lbITLoadHelper - tbPreviousLoaded == 0) ? tbLoadedCountL2 : lbITLoadHelper - tbPreviousLoaded;
-
-        } 
-
+        //} 
 
         private void GetSendStatus()
         {
@@ -150,10 +144,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 case "Final":
                     sendStatus = Enumerations.ProductionReportSendStatus.Final;
                     break;
-                default: 
+                default:
                     break;
 
-                   
+
             }
 
             ReportProductionDto.SelectedSendType = sendStatus;
@@ -174,16 +168,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 var message = "";
                 var numeroOperacionsiguiente = ReportProductionDto.Secuencia + 1;
                 var operation = ConfigurationManager.AppSettings.Get("Operation_" + (numeroOperacionsiguiente).ToString());
-
                 var isAvailable = GeneralMachine.Adapter.IsGroupItemAvailableForNextOperation(ReportProductionDto.IdUDT,
                     ReportProductionDto.Colada, ReportProductionDto.Orden, ReportProductionDto.Secuencia);
-
                 if (isAvailable)
                 {
-
                     message = string.Format("Disponible para la siguiente\n operación:{0}",
                        operation);
-
                 }
                 else
                 {
@@ -196,19 +186,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 }
                 ShowMessage showMessage = new ShowMessage("Reporte de Disponibilidad", message);
                 GeneralMachine.ShowMessageRequest.Raise(new Notification() { Content = showMessage });
-
-
             }
         }
 
-
-
-
         #region Metodos temporales
         #endregion
-
-
-
 
     }
 }

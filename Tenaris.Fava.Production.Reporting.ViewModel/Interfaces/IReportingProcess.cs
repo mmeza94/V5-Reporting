@@ -13,7 +13,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Interfaces
         int tbReworkedCountL2 { get; set; }
         int tbLoadedCountL2 { get; set; }
         int tbGoodCountL2 { get; set; }
-        bool CanReport(GeneralPiece currentDGRow);
+        bool CanReport(GeneralPiece currentDGRow,ReportProductionDto reportProductionDto);
         bool IsReportConfirmationAccepted(GeneralPiece currentDGRow);
         IReportingProcess BuildReport();
         IReportingProcess ValidateReportStructure();

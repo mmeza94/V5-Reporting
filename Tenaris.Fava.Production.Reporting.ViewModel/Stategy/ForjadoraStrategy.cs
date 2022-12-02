@@ -6,10 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
+using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 {
@@ -17,18 +20,55 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
     {
 
         public GeneralMachine GeneralMachine { get => this; }
-        public IReportingProcess reportingProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ITServiceAdapter Adapter { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IReportingProcess reportingProcess { get ; set ; }
+
+        public ForjadoraStrategy()
+        {
+            reportingProcess = new RPGeneral(this);
+        }
 
         public bool Report(GeneralPiece currentDGRow)
         {
-            throw new NotImplementedException();
+            var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
+
+            if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
+                return false;
+
+            if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
+                return false;
+
+            ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
+                                                                             .ValidateReportStructure()
+                                                                             .PrepareDtoForProductionReport();
+
+            var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
+                true, reportingProcess.dgRejectionReportDetails);
+
+
+            reportingProcess.ShowITMessage(response);
+
+
+
+            reportingProcess.CheckReportProductionForNextOperation(response);
+
+            return false;
         }
 
         public ObservableCollection<GeneralPiece> Search(int Orden, int Colada, int Atado)
         {
+            try
+            {
+                var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
+                if (generalPieces == null)
+                    return new ObservableCollection<GeneralPiece>();
+                CurrentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
 
-            throw new NotImplementedException();
+                return new ObservableCollection<GeneralPiece>(CurrentGeneralPieces);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public  ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
@@ -73,7 +113,24 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         ObservableCollection<ReportProductionHistory> IActions.dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
         {
-            throw new NotImplementedException();
+            if (SelectedBundle == null)
+                return new ObservableCollection<ReportProductionHistory>();
+
+            ObservableCollection<ReportProductionHistory> productionReportHistories =
+               ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
+                new Dictionary<string, object>
+            {
+                        { "@Order", SelectedBundle.OrderNumber },
+                        { "@GroupItemNumber", SelectedBundle.GroupItemNumber },
+                        { "@HeatNumber", SelectedBundle.HeatNumber },
+                        { "@idHistory", 0 },
+                        { "@SendStatus", 0 },
+                        { "@MachineSequence", 0 }
+            });
+
+            //productionReportHistories;
+
+            return productionReportHistories;
         }
     }
 }
