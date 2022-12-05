@@ -54,7 +54,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 .SetShowQuestionRequests(ShowQuestionWindowRequest);
             try
             {
-                UnlockControls()
+                this.UnlockControls()
                     .MaquinaInicial()
                     .IsForjadora()
                     .IsForjaColumnsVisibility()

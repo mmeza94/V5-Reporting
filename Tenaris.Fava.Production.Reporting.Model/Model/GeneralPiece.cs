@@ -80,7 +80,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
                 CantidadTotal = this.LoadedCount,
                 Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia),
                 Operacion = Configurations.Instance.Operacion,
-                Opcion = Configurations.Instance.Opcion
+                Opcion = Configurations.Instance.Opcion,
+                
             };
             
         }

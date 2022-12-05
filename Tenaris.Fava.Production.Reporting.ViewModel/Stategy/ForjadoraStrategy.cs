@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+﻿using Castle.Core;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,9 +19,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 {
     public class ForjadoraStrategy : GeneralMachine, IActions
     {
-
+        private ObservableCollection<ReportProductionHistory> productionReportHistories;
+        private GeneralPiece SelectedBundle;
         public GeneralMachine GeneralMachine { get => this; }
-        public IReportingProcess reportingProcess { get ; set ; }
+        public IReportingProcess reportingProcess { get; set; }
 
         public ForjadoraStrategy()
         {
@@ -51,6 +53,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             reportingProcess.CheckReportProductionForNextOperation(response);
 
+
             return false;
         }
 
@@ -61,7 +64,16 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
                 if (generalPieces == null)
                     return new ObservableCollection<GeneralPiece>();
+
                 CurrentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
+
+
+                if (Configurations.Instance.Machine == "Forjadora 0")
+                {
+                    CurrentGeneralPieces.ForEach(piece => GeneralPieceProcessor(piece));
+
+                }
+
 
                 return new ObservableCollection<GeneralPiece>(CurrentGeneralPieces);
             }
@@ -71,7 +83,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             }
         }
 
-        public  ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
+        public ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
         {
             ReportProductionDto reportDto = currentDGRow.BuildReportProductionDTO();
             reportDto.Operacion = GetOperation(currentDGRow, reportDto);
@@ -109,28 +121,69 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 return reportProductDto.Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia);
         }
 
-
-
-        ObservableCollection<ReportProductionHistory> IActions.dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
+        public ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
         {
+            this.SelectedBundle = SelectedBundle;
             if (SelectedBundle == null)
-                return new ObservableCollection<ReportProductionHistory>();
+                return productionReportHistories = new ObservableCollection<ReportProductionHistory>();
 
-            ObservableCollection<ReportProductionHistory> productionReportHistories =
-               ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
-                new Dictionary<string, object>
-            {
-                        { "@Order", SelectedBundle.OrderNumber },
-                        { "@GroupItemNumber", SelectedBundle.GroupItemNumber },
-                        { "@HeatNumber", SelectedBundle.HeatNumber },
-                        { "@idHistory", 0 },
-                        { "@SendStatus", 0 },
-                        { "@MachineSequence", 0 }
-            });
-
-            //productionReportHistories;
-
+            productionReportHistories = ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
+                 new Dictionary<string, object>
+             {
+                                { "@Order", SelectedBundle.OrderNumber },
+                                { "@GroupItemNumber", SelectedBundle.GroupItemNumber },
+                                { "@HeatNumber", SelectedBundle.HeatNumber },
+                                { "@idHistory", 0 },
+                                { "@SendStatus", 0 },
+                                { "@MachineSequence", 0 }
+             });
             return productionReportHistories;
         }
+
+
+        private void GeneralPieceProcessor(GeneralPiece currentDGRow)
+        {
+            var num1 = 0;
+            var num2 = 0;
+
+            ObservableCollection<ReportProductionHistory> collection = dgReporteProduccion_SelectionChanged(currentDGRow);
+
+            foreach (ReportProductionHistory productionHistory in collection)
+            {
+                if (productionHistory.MachineOperation.Contains(SelectedBundle.Extremo))
+                {
+                    num1 += productionHistory.GoodCount;
+                    num2 += productionHistory.ScrapCount;
+                }
+
+            }
+
+            currentDGRow.BuenasReportadas = num1;
+            currentDGRow.MalasReportadas = num2;
+            currentDGRow.TotalReportado = (num1 + num2);
+            currentDGRow.PendientesPorReportar = currentDGRow.LoadedCount - (num1 + num2);
+            if (currentDGRow.PendientesPorReportar != 0)
+            {
+                currentDGRow.GoodCount = currentDGRow.GoodCount - num1;
+                currentDGRow.ScrapCount = currentDGRow.ScrapCount - num2;
+                currentDGRow.LoadedCount = currentDGRow.GoodCount + currentDGRow.ScrapCount;
+            }
+            else
+            {
+                currentDGRow.GoodCount = 0;
+                currentDGRow.ScrapCount = 0;
+                currentDGRow.LoadedCount = 0;
+            }
+
+
+            currentDGRow.Cargados = currentDGRow.BuenasReportadas + currentDGRow.MalasReportadas;
+
+
+        }
+
+
+
+
+
     }
 }

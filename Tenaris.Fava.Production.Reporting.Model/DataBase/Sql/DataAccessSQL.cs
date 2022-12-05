@@ -244,6 +244,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 Dictionary<string, object> listParams = new Dictionary<string, object>
                 {
                     { "@GoodCount", reportProductionDto.CantidadBuenas },
+                    {"@TipoUdt" ,reportProductionDto.TipoUDT },
                     {"@GroupItemNumber" , reportProductionDto.IdUDT },
                     {"@HeatNumber",reportProductionDto.Colada },
                     {"@idHistory" ,reportProductionDto.IdHistory },

@@ -12,6 +12,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 {
     public class RPGeneral : IReportingProcess
     {
+        #region Properties
         private int lbITLoadHelper, tbTotalLoaded, tbPreviousLoaded;
         private string SelectedSendType, _User;
         public ObservableCollection<RejectionReportDetail> dgRejectionReportDetails { get; set; }
@@ -23,11 +24,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         public int tbLoadedCountL2 { get; set; }
         public int tbGoodCountL2 { get; set; }
         public ShowQuestion showQuestion { get; set; }
+        #endregion
 
+        #region Constructor
         public RPGeneral(GeneralMachine generalMachine)
         {
             this.GeneralMachine = generalMachine;
         }
+        #endregion
 
         public bool CanReport(GeneralPiece currentDGRow, ReportProductionDto reportProductionDto)
         {
@@ -188,9 +192,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 GeneralMachine.ShowMessageRequest.Raise(new Notification() { Content = showMessage });
             }
         }
-
-        #region Metodos temporales
-        #endregion
 
     }
 }

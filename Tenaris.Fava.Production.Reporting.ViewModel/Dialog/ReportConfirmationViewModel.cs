@@ -954,25 +954,41 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private ReportConfirmationViewModel GetPreviousCounters()
         {
+           
+         
             ObservableCollection<int> items = ProductionReportingBusiness.GetPreviousCountersByMachineTest(
                 new Dictionary<string, object>
                 {
                         { "@GroupItemNumber", CurrentGeneralPiece.GroupItemNumber },
                         { "@MachineSequence", Configurations.Instance.Secuencia },
-                        { "@Operation", Configurations.Instance.Operacion }
+                        { "@Operation", GetMachineDescription() }
                 });
 
             BuenasAnterior = items[0];
             MalasAnterior = items[1];
             ReprocesosAnterior = items[2];
 
-            CargadasAnterior = BuenasAnterior = MalasAnterior;
+            CargadasAnterior = BuenasAnterior + MalasAnterior;
             BuenasTotal = BuenasAnterior + BuenasActual;
             MalasTotal = MalasAnterior + MalasActual;
             CargadasTotal = CargadasAnterior + CargadasActual;
             ReprocesosTotal = ReprocesosAnterior + ReprocesosActual;
             return this;
         }
+
+
+        private string GetMachineDescription()
+        {
+            
+            if (CurrentGeneralPiece.Description.Contains("Forja"))
+                return  "Forjado";
+
+            else if (CurrentGeneralPiece.Description == "Roscadora")
+                return "Mecanizado";
+
+            return  Configurations.Instance.Operacion;
+        }
+
 
         private ReportConfirmationViewModel PopulateRejectionCodeByMachineDescription()
         {

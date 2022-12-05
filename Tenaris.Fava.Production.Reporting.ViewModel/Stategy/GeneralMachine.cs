@@ -62,20 +62,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return true;
         }
 
-
-
-        //public void SetNotifications(InteractionRequest<Notification> request, InteractionRequest<Notification> IndBoxReportConfirmationRequest,
-        //    InteractionRequest<Notification> showErrorMessageRequest, InteractionRequest<Notification> showMessageRequest,
-        //    InteractionRequest<Notification> showQuestionRequests)
-        //{
-        //    this.Request = request;
-        //    this.IndBoxReportConfirmationRequest = IndBoxReportConfirmationRequest;
-        //    this.ShowErrorMessageRequest = showErrorMessageRequest;
-        //    this.ShowMessageRequest = showMessageRequest;
-        //    this.ShowQuestionRequests = showQuestionRequests;
-        //}
-
-
         public GeneralMachine SetRequest(InteractionRequest<Notification> request)
         {
             this.Request = request;
@@ -105,7 +91,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             this.ShowQuestionRequests = ShowQuestionRequests;
             return this;
         }
-                
+
         public bool IsReportSequenceValidated(IList<GeneralPiece> generalPieces, GeneralPiece currentGeneralPice)
         {
             if (!ValidationRules.ValidateReportSequence(generalPieces, currentGeneralPice))
@@ -116,7 +102,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             }
             return true;
         }
-
 
         public int GetFirstPieceLoadedNumberForIT(GeneralPiece GeneralPiece)
         {
