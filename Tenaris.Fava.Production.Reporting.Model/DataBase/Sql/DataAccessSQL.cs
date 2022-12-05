@@ -175,11 +175,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                         IdOrder = Convert.ToInt32(reader["OrderNumber"]),
                         HeatNumber = Convert.ToInt32(reader["HeatNumber"]),
                         GroupItemNumber = Convert.ToInt32(reader["GroupItemNumber"]),
+
                         SendStatus = (Enumerations.ProductionReportSendStatus)reader["SendStatus"],
                         TotalQuantity = Convert.ToInt32(reader["TotalQuantity"]),
                         GoodCount = Convert.ToInt32(reader["GoodCount"]),
                         ScrapCount = Convert.ToInt32(reader["ScrapCount"]),
                         ReworkedCount = Convert.ToInt32(reader["ReworkedCount"]),
+
                         IdMachine = Convert.ToInt32(reader["IdMachine"]),
                         LotNumberHtr = Convert.ToInt32(reader["LotNumberHtr"]),
                         InsDateTime = DateTime.Parse((reader["InsDateTime"].ToString())),
@@ -189,10 +191,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                         MachineSequence = Convert.ToInt32(reader["MachineSequence"]),
                         MachineOption = reader["MachineOption"].ToString(),
                         MachineOperation = reader["MachineOperation"].ToString(),
+
+
                         Observation = reader["Observation"].ToString(),
                         GroupItemType = reader.GetSchemaTable().Select("ColumnName='GroupItemType'").Count() == 1 ? reader["GroupItemType"].ToString() : null,
-                        ChildOrder = reader.GetSchemaTable().Select("ColumnName='ChildOrder'").Count() == 1 ? Convert.ToInt32(reader["ChildOrder"]) : 0,
-                        ChildGroupItemNumber = reader.GetSchemaTable().Select("ColumnName='ChildGroupItemNumber'").Count() == 1 ? Convert.ToInt32(reader["ChildGroupItemNumber"]) : 0,
+                        ChildOrder = reader.GetSchemaTable().Select("ColumnName='ChildOrderNumber'").Count() == 1 ? reader["ChildOrderNumber"].ToString().ToInteger() : 0,
+
+                        ChildGroupItemNumber = reader.GetSchemaTable().Select("ColumnName='ChildGroupItemNumber'").Count() == 1 ? reader["ChildGroupItemNumber"].ToString().ToInteger() : 0,
                         ChildGroupItemType = reader.GetSchemaTable().Select("ColumnName='ChildGroupItemType'").Count() == 1 ? reader["ChildGroupItemType"].ToString() : null
 
                     };

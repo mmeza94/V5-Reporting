@@ -125,7 +125,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         {
             this.SelectedBundle = SelectedBundle;
             if (SelectedBundle == null)
-                return productionReportHistories = new ObservableCollection<ReportProductionHistory>();
+                return new ObservableCollection<ReportProductionHistory>();
 
             productionReportHistories = ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
                  new Dictionary<string, object>
