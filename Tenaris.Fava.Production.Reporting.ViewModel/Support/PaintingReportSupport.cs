@@ -6,16 +6,12 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
-using Tenaris.Library.UI.Framework.ViewModel;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 {
@@ -59,9 +55,19 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
 
 
-        public static void dgStockParaTPS(int cajon, out ObservableCollection<StockTPS> StockParaTPSRef, out ObservableCollection<BoxLoad> CajasCargadasRef, out ObservableCollection<BoxReport> ReportesDeCajaRef)
+        public static void dgStockParaTPS(int cajon,
+            out ObservableCollection<StockTPS> StockParaTPSRef,
+            out ObservableCollection<BoxLoad> CajasCargadasRef,
+            out ObservableCollection<BoxReport> ReportesDeCajaRef)
         {
-            ObservableCollection<BoxReport> dt = ProductionReportingBusiness.GetBoxesForPainting(cajon);
+
+
+
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict.Add("cajon", 123);
+
+           
+            ObservableCollection <BoxReport> dt = ProductionReportingBusiness.GetBoxesForPainting(dict);
             ObservableCollection<BoxReport> filteredTable = new ObservableCollection<BoxReport>();
             ObservableCollection<BoxReport> reported = new ObservableCollection<BoxReport>();
             ObservableCollection<StockTPS> stockList = new ObservableCollection<StockTPS>();
@@ -282,7 +288,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
                 {
                     PaintingReportConfirmationViewModel reportConfirmation = new PaintingReportConfirmationViewModel(selectedRow, user);
-                    PaintReportConfirmationRequest.Raise(new Notification() {Content = reportConfirmation });
+                    PaintReportConfirmationRequest.Raise(new Notification() { Content = reportConfirmation });
                     if (reportConfirmation.Result)
                     {
                         PaintingReportConfirmationSupport.Report(reportConfirmation.DisponiblesTPS, reportConfirmation.CargadasAnterior,
@@ -303,7 +309,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             }
             else
             {
-               
+
                 PaintingReportConfirmationViewModel reportConfirmation = new PaintingReportConfirmationViewModel(selectedRow, user);
                 PaintReportConfirmationRequest.Raise(new Notification() { Content = reportConfirmation });
                 if (reportConfirmation.Result)
@@ -348,7 +354,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 message = "Error al cargar la caja";
             }
             ShowMessage showMessage = new ShowMessage("Mensaje de Carga", message);
-            ShowMessageRequest.Raise(new Notification() {Content = showMessage });
+            ShowMessageRequest.Raise(new Notification() { Content = showMessage });
 
 
             dgStockParaTPS(cajon, out StockParaTPSRef, out CajasCargadasRef, out ReportesDeCajaRef); //PRUEBADWF falta comprobar

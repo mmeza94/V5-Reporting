@@ -553,11 +553,19 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #region Commands execute
         private void searchCommandExecute()
         {
+            Actions.GeneralMachine
+                .AddFilter("@Orden", Orden)
+                .AddFilter("@Colada", Colada)
+                .AddFilter("@Atado", Atado)
+                .AddFilter("@Machine", Configurations.Instance.MachineFiltre);
 
-            //ProductionReportSupport.PopulateGeneralProduction(Orden, Colada, Atado);
-            Resultados = Actions.Search(Orden, Colada, Atado);
 
-            //ProductionReportSupport.currentGeneraPieces = Resultados;
+
+            Resultados = (ObservableCollection<GeneralPiece>)Actions
+                .Search()
+                .OutPuts["Search"];
+
+
 
             Resultados.ForEach(item =>
             {

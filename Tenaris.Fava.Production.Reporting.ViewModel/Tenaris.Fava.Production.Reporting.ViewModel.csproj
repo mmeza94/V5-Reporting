@@ -125,6 +125,7 @@
     <Compile Include="Stategy\ForjadoraStrategy.cs" />
     <Compile Include="Stategy\GeneralMachine.cs" />
     <Compile Include="Stategy\GranalladoraStrategy.cs" />
+    <Compile Include="Stategy\PintadoStrategy.cs" />
     <Compile Include="Stategy\RProcess\ReportBuilder.cs" />
     <Compile Include="Stategy\RProcess\RPGeneral.cs" />
     <Compile Include="Support\IndBoxReportConfirmationSupport.cs" />

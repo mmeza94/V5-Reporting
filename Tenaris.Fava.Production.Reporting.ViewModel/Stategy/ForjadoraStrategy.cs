@@ -1,14 +1,11 @@
 ﻿using Castle.Core;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
+using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
@@ -23,10 +20,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         private GeneralPiece SelectedBundle;
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
+        public Dictionary<string, object> Filters { get; set; }
+        public Dictionary<string, object> OutPuts { get; set; }
 
         public ForjadoraStrategy()
         {
             reportingProcess = new RPGeneral(this);
+            Filters = Filter;
+            OutPuts = OutPut;
         }
 
         public bool Report(GeneralPiece currentDGRow)
@@ -57,25 +58,32 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return false;
         }
 
-        public ObservableCollection<GeneralPiece> Search(int Orden, int Colada, int Atado)
+        public IActions Search()
         {
             try
             {
-                var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
-                if (generalPieces == null)
-                    return new ObservableCollection<GeneralPiece>();
-
-                CurrentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
-
-
-                if (Configurations.Instance.Machine == "Forjadora 0")
+                CurrentGeneralPieces = ProductionReport.GetProductionGeneral(Filters);
+                if (CurrentGeneralPieces == null)
                 {
-                    CurrentGeneralPieces.ForEach(piece => GeneralPieceProcessor(piece));
+                    AddValues("Search", new ObservableCollection<GeneralPiece>());
+                    return this;
+                }
 
+                if ( Configurations.Instance.Machine.Equals("Forjadora"))
+                {
+                    GetForgeCurrentGeneralPieces();
                 }
 
 
-                return new ObservableCollection<GeneralPiece>(CurrentGeneralPieces);
+                CurrentGeneralPieces = new ObservableCollection<GeneralPiece>(ProductionReport.ClassifyBySendStatus(CurrentGeneralPieces));
+
+
+                if (Configurations.Instance.Machine == "Forjadora 0")
+                    CurrentGeneralPieces.ForEach(piece => GeneralPieceProcessor(piece));
+
+                AddValues("Search", CurrentGeneralPieces);
+                return this;
+        
             }
             catch (Exception)
             {
@@ -91,7 +99,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return reportDto;
         }
 
-
         public string GetOperation(GeneralPiece GeneralPiece, ReportProductionDto reportProductDto)
         {
             string operation = Configurations.Instance.Operacion;
@@ -106,7 +113,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             }
             return operation;
         }
-
 
         public int GetSequenceForDifferentExtreme(GeneralPiece GeneralPiece, ReportProductionDto reportProductDto)
         {
@@ -139,7 +145,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
              });
             return productionReportHistories;
         }
-
 
         private void GeneralPieceProcessor(GeneralPiece currentDGRow)
         {
@@ -182,8 +187,19 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         }
 
 
+        private void GetForgeCurrentGeneralPieces()
+        {
 
+            foreach (GeneralPiece item in CurrentGeneralPieces)
+            {
+                var forgeMode = ProductionReportingBusiness.GetCurrentForgeMode(item.GroupItemNumber);
+                if(forgeMode == Enumerations.ForgeMode.OneEnd)
+                {
+                    item.Extremo = "Extremo 2";
+                }
+            }
 
+        }
 
     }
 }

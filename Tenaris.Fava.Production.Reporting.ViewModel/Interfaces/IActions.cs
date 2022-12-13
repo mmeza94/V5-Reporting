@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
@@ -8,18 +9,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Interfaces
 {
     public interface IActions
     {
+        Dictionary<string, object> Filters { get; set; }
+        Dictionary<string, object> OutPuts{ get; set; }
         ITServiceAdapter Adapter { get; set; }
         GeneralMachine GeneralMachine { get; }
         IReportingProcess reportingProcess { get; set; }
-
-        ObservableCollection<GeneralPiece> Search(int Orden, int Colada, int Atado);
+        IActions Search();
         bool Report(GeneralPiece currentDGRow);
-
         ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle);
-
-        
-
-
-
     }
 }

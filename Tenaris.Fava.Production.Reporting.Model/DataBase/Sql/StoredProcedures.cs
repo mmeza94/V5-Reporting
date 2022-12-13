@@ -15,12 +15,14 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public const string InsReportProductionHistoryTestV5 = "[Production].[InsReportProductionHistoryTestV5]";
         public const string InsRejectionReportDetailTestV5 = "[Production].[InsRejectionReportDetailTestV5]";
         public const string LoginUser = "[Common].[LoginUserTestV5]";
+        public const string GetForgeMode = "Tracking.GetForgeMode";
+        public const string GetLastMachineGoodPieces = "[Production].[GetLastMachineGoodPiecesTestV5]";
 
 
 
 
 
-        
+
         public const string GetProductionGeneralV2Test = "[dbo].[GetProductionGeneralV2Test]";
         
         public const string GetProductionGeneralTestForjasyHornos = "[dbo].[GetProductionGeneralTestForjasyHornos]";

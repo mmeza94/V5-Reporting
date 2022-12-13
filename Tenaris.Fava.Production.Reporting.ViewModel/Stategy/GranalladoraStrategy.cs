@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
@@ -18,6 +17,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
         #region Properties
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
+        public Dictionary<string, object> Filters { get; set; }
+        public Dictionary<string, object> OutPuts { get; set; }
         #endregion
 
         #region Constructor
@@ -25,21 +26,27 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
         public GranalladoraStrategy()
         {
             reportingProcess = new RPGeneral(this);
+            Filters = Filter;
+            OutPuts = OutPut;
         }
 
         #endregion
 
         #region Implements methods
-        public ObservableCollection<GeneralPiece> Search(int Orden, int Colada, int Atado)
+        public IActions Search()
         {
             try
             {
-                var generalPieces = ProductionReport.GetProductionGeneral(Orden, Colada, Atado);
-                if (generalPieces == null)
-                    return new ObservableCollection<GeneralPiece>();
-                CurrentGeneralPieces = ProductionReport.ClassifyBySendStatus(generalPieces).ToList();
+                CurrentGeneralPieces = ProductionReport.GetProductionGeneral(Filters);
 
-                return new ObservableCollection<GeneralPiece>(CurrentGeneralPieces);
+                if (CurrentGeneralPieces == null)
+                    AddValues("Search", new ObservableCollection<GeneralPiece>());
+
+                CurrentGeneralPieces = new ObservableCollection<GeneralPiece>(ProductionReport.ClassifyBySendStatus(CurrentGeneralPieces));
+
+                AddValues("Search", CurrentGeneralPieces);
+
+                return this;
             }
             catch (Exception)
             {

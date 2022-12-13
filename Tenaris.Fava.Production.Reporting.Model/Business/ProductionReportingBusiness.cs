@@ -46,17 +46,29 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
         public static int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
         {
             return DataAccessSQL.Instance.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
-           
+
         }
 
 
 
 
+        public static Enumerations.ForgeMode GetCurrentForgeMode(int GroupitemNumber)
+        {
+            return DataAccessSQL.Instance.GetCurrentForgeMode(GroupitemNumber);
+
+        }
+
+        public static int GetLastMachineGoodPieces(int groupItemNumber, int Sequence)
+        {
+            return DataAccessSQL.Instance.GetLastMachineGoodPieces(groupItemNumber, Sequence);
+
+        }
+
 
 
         public static void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionReportDetail, int IdReportProductionHistoryInserted)
         {
-             DataAccessSQL.Instance.InsRejectionReportDetailTestV5(rejectionReportDetail, IdReportProductionHistoryInserted);
+            DataAccessSQL.Instance.InsRejectionReportDetailTestV5(rejectionReportDetail, IdReportProductionHistoryInserted);
 
         }
 
@@ -111,10 +123,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
         }
 
 
-        public static ObservableCollection<BoxReport> GetBoxesForPainting(int udtBox)
+        public static ObservableCollection<BoxReport> GetBoxesForPainting(Dictionary<string, object> listParams)
         {
-
-            return DataAccessSQL.Instance.GetBoxesForPainting(udtBox);
+            return DataAccessSQL.Instance.GetBoxesForPainting(listParams);
         }
         public static int InsLoadPintado(PaintingReport reportProductionDto)
         {
@@ -148,7 +159,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
 
         public static bool LoginUser(string user, string Password)
         {
-            return DataAccessSQL.Instance.LoginUser( user,  Password);
+            return DataAccessSQL.Instance.LoginUser(user, Password);
 
         }
 

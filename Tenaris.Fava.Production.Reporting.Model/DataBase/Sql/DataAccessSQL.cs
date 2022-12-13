@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
@@ -119,7 +120,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                             SendStatus =
                             Convert.ToInt32(dr["GoodCount"]) + Convert.ToInt32(dr["ScrapCount"]) >= Convert.ToInt32(dr["LoadedCount"])
                             ? Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial,
-                            //ReportSequence = Convert.ToInt32(dr["ReportSequence"])
+                            ReportSequence = dr["ReportSequence"].ToString().ToInteger()
 
 
                         };
@@ -127,8 +128,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
                     }
                 }
-                return result;
                 Trace.Message("StoredProcedure GetProductionGeneral terminado...");
+                return result;
+                
             }
             catch (Exception ex)
             {
@@ -239,6 +241,55 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
             return items;
         }
+
+
+        public Enumerations.ForgeMode GetCurrentForgeMode(int groupItemNumber)
+        {
+
+            var cm = SelectedCommand(StoredProcedures.GetForgeMode, Configurations.Instance.ConnectionString);
+            Dictionary<string, object> listParams = new Dictionary<string, object>();
+            listParams.Add("@GroupItemNumber", groupItemNumber);
+
+            Enumerations.ForgeMode forgeMode = Enumerations.ForgeMode.BothEnds;
+            try
+            {
+                
+              forgeMode = (bool)cm.ExecuteScalar(listParams) ? Enumerations.ForgeMode.BothEnds : Enumerations.ForgeMode.OneEnd;
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return forgeMode;
+        }
+
+        public int GetLastMachineGoodPieces(int groupItemNumber, int Sequence)
+        {
+
+            var cm = SelectedCommand(StoredProcedures.GetLastMachineGoodPieces, Configurations.Instance.ConnectionString);
+            Dictionary<string, object> listParams = new Dictionary<string, object>();
+            
+            listParams.Add("@GroupItemNumber", groupItemNumber);
+            listParams.Add("@Sequence", Sequence);
+            int TotalGoodCount = 0;
+
+
+
+            try
+            {
+
+                TotalGoodCount = cm.ExecuteScalar(listParams).ToString().ToInteger(); 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return TotalGoodCount;
+        }
+
 
 
         public int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
@@ -549,14 +600,14 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         }
 
 
-        public ObservableCollection<BoxReport> GetBoxesForPainting(int udtBox)
+        public ObservableCollection<BoxReport> GetBoxesForPainting(Dictionary<string, object> listParams)
         {
             try
             {
                 var cm = SelectedCommand(StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
-                Trace.Message("DataAccessSQL.GetBoxesForPainting(udtBox= {0}) || SelectedCommand: {1} || ConnectionString: {2}", udtBox, StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
-                Dictionary<string, object> listParams = new Dictionary<string, object>();
-                listParams.Add("@UdtBox", udtBox);
+                //Trace.Message("DataAccessSQL.GetBoxesForPainting(udtBox= {0}) || SelectedCommand: {1} || ConnectionString: {2}", udtBox, StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
+                //Dictionary<string, object> listParams = new Dictionary<string, object>();
+                //listParams.Add("@UdtBox", udtBox);
 
                 ObservableCollection<BoxReport> result = new ObservableCollection<BoxReport>();
 

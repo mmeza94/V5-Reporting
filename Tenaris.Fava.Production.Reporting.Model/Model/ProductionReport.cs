@@ -14,6 +14,7 @@ using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories;
+using Tenaris.Library.Framework.Utility.Conversion;
 
 namespace Tenaris.Fava.Production.Reporting.Model.Support
 {
@@ -22,25 +23,16 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         public static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region PUBLIC METHOS
-        public static ObservableCollection<GeneralPiece> GetProductionGeneral(int Orden, int Colada, int Atado)
+        public static ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<string, object> dictionary)
         {
             try
             {
-                return ProductionReportingBusiness.GetProductionGeneral(
-                new Dictionary<string, object>
-                {
-                    { "@Orden", Orden.ToString() },
-                    { "@Colada", Colada.ToString() },
-                    { "@Atado", Atado.ToString() },
-                    { "@Machine", Configurations.Instance.MachineFiltre }
-                });
+                return ProductionReportingBusiness.GetProductionGeneral(dictionary);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
-
         }
 
         public ObservableCollection<ReportProductionHistory> GetReportProductionHistory(int? orderNumber, int? groupItemNumber, int? heatNumber, int? idMachine, int? machineSequence, int? idHistory, string ConnectionString)
@@ -458,6 +450,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 {
                     item.ReportSequence = 1;
                     return somePieces;
+                }
+
+                if (Configurations.Instance.Machine.Equals("Forjadora"))
+                {
+                    somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber,Configurations.Instance.Secuencia.ToInteger());
                 }
                 //somePieces[0].LoadedCount = new GroupItemProgramFacade().GetProgrammedPieces(somePieces[0].IdBatch);
 

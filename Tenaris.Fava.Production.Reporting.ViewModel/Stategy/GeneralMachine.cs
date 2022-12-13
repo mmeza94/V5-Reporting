@@ -13,19 +13,43 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 {
     public abstract class GeneralMachine
     {
-
+        #region Properties
         public string WhoIsLogged { get; set; }
         public ITServiceAdapter Adapter { get; set; }
         public IList<GeneralPiece> CurrentGeneralPieces { get; set; }
         public InteractionRequest<Notification> Request, IndBoxReportConfirmationRequest,
             ShowErrorMessageRequest, ShowMessageRequest, ShowQuestionRequests;
+        public Dictionary<string, object> Filter, OutPut;
+        #endregion
 
+        #region Constructor
         public GeneralMachine()
         {
             Adapter = new ITServiceAdapter();
+            Filter = new Dictionary<string, object>();
+            OutPut = new Dictionary<string, object>();
+        }
+        #endregion
+
+        #region Methods
+
+        public GeneralMachine AddFilter(string key, object value)
+        {
+            if (!Filter.ContainsKey(key))
+                Filter.Add(key, value);
+
+            Filter[key] = value;
+
+            return this;
         }
 
-
+        public GeneralMachine AddValues(string key, object value)
+        {
+            if (!OutPut.ContainsKey(key))
+                OutPut.Add(key, value);
+            OutPut[key] = value;
+            return this;
+        }
         public bool Login()
         {
 
@@ -111,5 +135,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return FirstReportedLoadedCount;
         }
 
+        #endregion
     }
 }
