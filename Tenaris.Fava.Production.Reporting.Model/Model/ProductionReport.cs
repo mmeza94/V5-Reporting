@@ -23,142 +23,18 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         public static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region PUBLIC METHOS
-        public static ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<string, object> dictionary)
-        {
-            try
-            {
-                return ProductionReportingBusiness.GetProductionGeneral(dictionary);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public ObservableCollection<ReportProductionHistory> GetReportProductionHistory(int? orderNumber, int? groupItemNumber, int? heatNumber, int? idMachine, int? machineSequence, int? idHistory, string ConnectionString)
-        {
-            var resul = new ObservableCollection<ReportProductionHistory>();
-            try
-            {
-
-                Dictionary<string, object> listparams = new Dictionary<string, object>();
-                listparams.Add("@orderNumber", orderNumber);
-                listparams.Add("@groupItemNumber", groupItemNumber);
-                listparams.Add("@heatNumber", heatNumber);
-                listparams.Add("@idMachine", idMachine);
-                listparams.Add("@machineSequence", machineSequence);
-                listparams.Add("@idHistory", idHistory);
 
 
-                var table = ProductionReportingBusiness.GetReportProductionHistory(listparams, ConnectionString);
-
-                resul = table;
-                //foreach (DataRow item in table.Rows)
-                //{
-                //    resul.Add(new ReportProductionHistory
-                //    {
-                //        Id = Convert.ToInt32(item["idReportProductionHistory"]),
-                //        IdHistory = Convert.ToInt32(item["idHistory"]),
-                //        IdOrder = Convert.ToInt32(item["OrderNumber"]),
-                //        HeatNumber = Convert.ToInt32(item["HeatNumber"]),
-                //        GroupItemNumber = Convert.ToInt32(item["GroupItemNumber"]),
-                //        SendStatus = this.CastEnumProductionReportSendStatus(Convert.ToInt32(item["SendStatus"])),
-                //        TotalQuantity = Convert.ToInt32(item["TotalQuantity"]),
-                //        GoodCount = Convert.ToInt32(item["GoodCount"]),
-                //        ScrapCount = Convert.ToInt32(item["ScrapCount"]),
-                //        ReworkedCount = Convert.ToInt32(item["ReworkedCount"]),
-                //        IdMachine = Convert.ToInt32(item["IdMachine"]),
-                //        LotNumberHtr = Convert.ToInt32(item["LotNumberHtr"]),
-                //        InsDateTime = Convert.ToDateTime(item["InsDateTime"]),
-                //        InsertedBy = item["InsertedBy"].ToString(),
-                //        MachineSequence = Convert.ToInt32(item["MachineSequence"]),
-                //        MachineOption = item["MachineOption"].ToString(),
-                //        MachineOperation = item["MachineOperation"].ToString(),
-                //        Observation = item["Observation"].ToString()
-                //    });
-                //}
-            }
-            catch (Exception e) { _ = e; }
-            return resul;
-        }
-
-        public static int GetLastMachineGoodPieces(int order, int heat, int groupItem, string description, string extreme, string ConnectionString)
-        {
-            int resul = 0;
-            int machineSequence = 0;
-            ReportProductionHistoryRepository instancia = new ReportProductionHistoryRepository();
-            if (extreme != string.Empty || true /*Bypass murphy*/)
-                machineSequence = instancia.GetPreviousSequenceByOperation(description + " " + extreme);
-            else
-                machineSequence = instancia.GetPreviousSequence(description);
-
-            Dictionary<string, object> listparams = new Dictionary<string, object>();
-            listparams.Add("@OrderNumber", order);
-            listparams.Add("@GroupItemNumber", groupItem);
-            listparams.Add("@HeatNumber", heat);
-            listparams.Add("@MachineSequence", machineSequence);
-
-            var table = ProductionReportingBusiness.GetReportProductionHistory(listparams, ConnectionString);
-            resul = table.Sum(x => x.GoodCount);
+        /// <summary>
+        /// ClassifyBySendStatus : Ordernamiento Descendete
+        /// 
+        /// </summary>
+        /// <param name="generalPieces"></param>
+        /// <returns></returns>
+        //ClassifyBySendStatus
 
 
-
-            //foreach (var item in table)
-            //{
-            //    resul += Convert.ToInt32(item.GoodCount);
-            //}
-
-            return resul;
-        }
-
-        public static ObservableCollection<GeneralPiece> GetSendStatusForGeneralPieces(IList<GeneralPiece> generalPieces)
-        {
-            var reportProductionHistoryFacade = new ReportProductionHistoryFacade();
-            generalPieces = generalPieces == null ? new List<GeneralPiece>() : generalPieces;
-            if (Configurations.Instance.Machine != "Pintado")
-            {
-                foreach (GeneralPiece generalpiece in generalPieces)
-                {
-                    if (Configurations.Instance.VersionApplication.Equals("V1"))
-                    {
-                        var reportProductionHistory = reportProductionHistoryFacade.GetReportProductionHistoryByIdHistoryV1(generalpiece.IdHistory, generalpiece.OrderNumber, generalpiece.HeatNumber, generalpiece.GroupItemNumber);
-                        generalpiece.Sended = (reportProductionHistory != null) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No;
-                        generalpiece.SendedString = (reportProductionHistory != null) ? "Si" : "No";
-                    }
-                    else
-                    {
-                        var reportProductionHistory = reportProductionHistoryFacade.GetReportProductionHistoryByIdHistory(generalpiece.IdHistory, generalpiece.OrderNumber, generalpiece.HeatNumber, generalpiece.GroupItemNumber);
-                        generalpiece.Sended = (reportProductionHistory != null) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No;
-                        generalpiece.SendedString = (reportProductionHistory != null) ? "Si" : "No";
-                    }
-
-                }
-            }
-            else
-            {
-                foreach (GeneralPiece generalpiece in generalPieces)
-                {
-                    var reportProductionHistory = reportProductionHistoryFacade.GetReportProductionHistoryByParams(generalpiece.OrderNumber, generalpiece.GroupItemNumber, generalpiece.HeatNumber, null, null, null);
-                    //generalpiece.Sended = (reportProductionHistory.Count > 0) ?
-                    generalpiece.Sended = (reportProductionHistory.Cast<ReportProductionHistory>().Count(p => p.MachineOperation == "Pintado") > 0) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No;
-                }
-            }
-
-            return new ObservableCollection<GeneralPiece>(generalPieces);
-        }
-
-        public bool IsForjadoraAndForgeModeIsOnline(int groupItemNumber)
-        {
-            var result = false;
-
-            if (ConfigurationManager.AppSettings["MaquinaInicialZona"].ToString() == "1" && ConfigurationManager.AppSettings["Machine"].ToString() == "Forjadora") // Solo entra si está ubicado en la forja 1. 
-            {
-                var forgeMode = new ProductionReportFacade().GetCurrentForgeMode(groupItemNumber);
-                result = (forgeMode == Enumerations.ForgeMode.OneEnd);
-            }
-
-            return result;
-        }
+        
 
         public static IList<GeneralPiece> ClassifyBySendStatus(IList<GeneralPiece> generalPieces)
         {
@@ -188,9 +64,12 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                         extreme = item.Extremo;
 
                         if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
-                        && (x.HeatNumber == heat)
-                        && (x.GroupItemNumber == groupItem) && (x.Description == description) && x.Extremo == extreme))
-                            generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
+                                                              && (x.HeatNumber == heat)
+                                                              && (x.GroupItemNumber == groupItem) 
+                                                              && (x.Description == description)
+                                                              && x.Extremo == extreme))
+
+                        generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
                     }
                 });
 
@@ -203,26 +82,100 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         }
 
 
-        //yA EXISTE EN EL ADAPTER
-        //public string ReportProduction(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus,
-        //    bool loadMaterial, IList rejectionReportDetails)
-        //{
-        //    ITServiceAdapter iTService = new ITServiceAdapter();
-        //    var respuesta = "";
-        //    try
-        //    {
-        //        if (loadMaterial)
-        //            iTService.TPSLoadMaterial(reportProductionDto);
-        //        respuesta = TPSReportProduction(reportProductionDto, sendStatus, rejectionReportDetails);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        respuesta = ex.Message.ToString();
-        //    }
-        //    return respuesta;
-        //}
+       
 
 
+
+        #endregion
+
+
+
+
+
+        
+        private static IList<GeneralPiece> GetSomePieces(int order, int heat, int groupItem, IList<GeneralPiece> generalPieces, string description, string extreme)
+        {
+            var somePieces = generalPieces
+                .Where(x => (x.OrderNumber == order)
+            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
+            && (x.Description == description) && (x.Extremo == extreme))
+                .OrderBy(x => x.InsDateTime)
+                .ToList();
+            try
+            {
+
+                GeneralPiece item = somePieces.FirstOrDefault(),
+                   endItem = somePieces.LastOrDefault();
+
+                if (somePieces.Count < 2)
+                {
+                    item.ReportSequence = 1;
+                    //return somePieces;
+                    
+                }
+
+
+
+                if (Configurations.Instance.Machine.Equals("Forjadora") 
+                    || Configurations.Instance.Machine.Equals("Horno de Normalizado") 
+                    || Configurations.Instance.Machine.Equals("Horno de Revenido")
+                    || Configurations.Instance.Secuencia == "8")
+                {
+                    somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber,Configurations.Instance.Secuencia.ToInteger()-1);
+                }
+                //somePieces[0].LoadedCount = new GroupItemProgramFacade().GetProgrammedPieces(somePieces[0].IdBatch);
+
+
+
+
+
+                endItem.SendStatus = endItem.GoodCount + endItem.ScrapCount >= endItem.LoadedCount ?
+                     Enumerations.ProductionReportSendStatus.Final
+                            : Enumerations.ProductionReportSendStatus.Parcial;
+                endItem.ReportSequence = (short)somePieces.Count;
+
+
+                somePieces[somePieces.Count - 1].SendStatus =
+                            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
+                            Enumerations.ProductionReportSendStatus.Final
+                            : Enumerations.ProductionReportSendStatus.Parcial;
+                somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+
+
+
+                for (int i = 0; i < somePieces.Count - 1; i++)
+                {
+                    somePieces[i].ScrapCount = 0;
+                    somePieces[i].ReportSequence = (short)(i + 1);
+                    somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+                    if (i > 0)
+                        somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+                }
+
+                //item.SendStatus = (item.GoodCount + item.ScrapCount >= item.LoadedCount) ?
+                //    Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial;
+                item.ReportSequence = 1;
+                return somePieces;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        #region METHOS PRIVATE
 
         public string ReportProductionForPainting(PaintingReport reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus, bool loadMaterial, IList rejectionReportDetails)
         {
@@ -337,221 +290,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             return respuesta;
         }
 
-        #endregion
-
-        #region METHOS TO TPS
-
-
-
-
-
-        /// <summary>
-        /// Método para reportar en revenido
-        /// </summary>
-        /// <param name="reportProductionDto"></param>
-        /// <param name="fava"></param>
-        /// <param name="errores"></param>
-        /// <returns></returns>
-
-
-        /// <summary>
-        /// Método temporal para mostrar las probetas en Revenido, provenientes de IT
-        /// ya no se ocupa
-        /// </summary>
-        /// <param name="reportProductionDto"></param>
-        /// <param name="fava"></param>
-        /// <param name="errores"></param>
-        /// <returns></returns>
-        /// 
-
-
-        /// <summary>
-        /// Reporte en máquina distinta a revenido
-        /// </summary>
-        /// <param name="reportProductionDto"></param>
-        /// <param name="fava"></param>
-        /// <param name="errores"></param>
-        /// <returns></returns>
-
-
-        /// <summary>
-        /// Reporte de Producción en TPS
-        /// </summary>
-        /// <param name="reportProductionDto"></param>
-        /// <param name="sendStatus"></param>
-        /// <param name="rejectionReportDetails"></param>
-        /// <returns></returns>
-        private string TPSReportProduction(ReportProductionDto reportProductionDto,
-            Enumerations.ProductionReportSendStatus sendStatus, IList rejectionReportDetails)
-        {
-            TServiceClient fava = new TServiceClient();
-            ErrorCollection errores = null;
-            Probeta[] samples = null;
-            var respuesta = new StringBuilder();
-            //ITServiceAdapter iTService = new ITServiceAdapter();
-            try
-            {
-                bool sendIT = false;
-                //Solo para horno de revenido
-                if (reportProductionDto.Secuencia == 7)
-                {
-                    #region Forma Adecuada cuando las probetas sean generadas  desde N2
-                    ProbetaAsociada[] probetas = GetTPSProbetas(reportProductionDto);
-                    if (probetas.Where(p => p.Id == 0).ToList().Count == 0)
-                    {
-                        //sendIT = iTService.TPSReportOnRevenido(reportProductionDto, fava, ref errores, rejectionReportDetails);
-                    }
-                    else
-                    {
-                        errores = new ErrorCollection();
-                        errores.List.Add("Probeteo", new ErrorElement() { Code = "Probeteo", Description = "Faltan Números de Probeta" });
-                    }
-                    #endregion
-                }
-                else
-                //sendIT = iTService.TPSReportNotOnRevenido(reportProductionDto, fava, ref errores, rejectionReportDetails);
-
-                if (sendIT)
-                {
-                    if (reportProductionDto.Secuencia == 7 || reportProductionDto.Secuencia == 6)
-                        new ReportProductionHistoryFacade().SaveReportProductionHistoryForRevenido(reportProductionDto, sendStatus, rejectionReportDetails);
-                    else
-                        //Grabamos N2
-                        new ReportProductionHistoryFacade().SaveReportProductionHistory(reportProductionDto, sendStatus, rejectionReportDetails);
-                }
-                respuesta = ProcessTPSErrors(reportProductionDto, errores, samples);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message.ToString());
-                log.Error(string.Format("Petición: {0}", ITServiceAdapter.GetXmlSerialization(reportProductionDto)));
-                throw ex;
-            }
-            return respuesta.ToString();
-        }
-        #endregion
-
-        #region METHOS PRIVATE
-        private static IList<GeneralPiece> GetSomePieces(int order, int heat, int groupItem, IList<GeneralPiece> generalPieces, string description, string extreme)
-        {
-            var somePieces = generalPieces
-                .Where(x => (x.OrderNumber == order)
-            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
-            && (x.Description == description) && (x.Extremo == extreme))
-                .OrderBy(x => x.InsDateTime)
-                .ToList();
-            try
-            {
-
-                GeneralPiece item = somePieces.FirstOrDefault(),
-                   endItem = somePieces.LastOrDefault();
-
-                if (somePieces.Count < 2)
-                {
-                    item.ReportSequence = 1;
-                    return somePieces;
-                }
-
-                if (Configurations.Instance.Machine.Equals("Forjadora"))
-                {
-                    somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber,Configurations.Instance.Secuencia.ToInteger());
-                }
-                //somePieces[0].LoadedCount = new GroupItemProgramFacade().GetProgrammedPieces(somePieces[0].IdBatch);
-
-
-                endItem.SendStatus = endItem.GoodCount + endItem.ScrapCount >= endItem.LoadedCount ?
-                     Enumerations.ProductionReportSendStatus.Final
-                            : Enumerations.ProductionReportSendStatus.Parcial;
-                endItem.ReportSequence = (short)somePieces.Count;
-
-
-                somePieces[somePieces.Count - 1].SendStatus =
-                            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
-                            Enumerations.ProductionReportSendStatus.Final
-                            : Enumerations.ProductionReportSendStatus.Parcial;
-                somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
-                for (int i = 0; i < somePieces.Count - 1; i++)
-                {
-                    somePieces[i].ScrapCount = 0;
-                    somePieces[i].ReportSequence = (short)(i + 1);
-                    somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
-                    if (i > 0)
-                        somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
-                }
-
-                //item.SendStatus = (item.GoodCount + item.ScrapCount >= item.LoadedCount) ?
-                //    Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial;
-                item.ReportSequence = 1;
-                return somePieces;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-        }
-
-        //private Descarte[] GetTPSDescartes(ReportProductionDto reportProductionDto)
-        //{
-        //    Descarte[] descartes = new Descarte[1];
-        //    if (reportProductionDto.CantidadMalas > 0)
-        //    {
-        //        Descarte descarte = new Descarte();
-        //        descarte.Destino = "Decisión de Ingeniería";
-        //        descarte.Motivo = "VVT";
-        //        descarte.Tipo = "1";
-        //        descarte.Cantidad = Convert.ToString(reportProductionDto.CantidadMalas);
-        //        descartes[0] = descarte;
-        //    }
-        //    return descartes;
-        //}
-
-        private Descarte[] GetTPSDescartes(ReportProductionDto reportProductionDto, IList rejectionReportDetails)
-        {
-            IList TEMrejectionReportDetails = GroupByRejectionCode(rejectionReportDetails);
-            Descarte[] descartes = new Descarte[TEMrejectionReportDetails.Count];
-            int cont = 0;
-            foreach (RejectionReportDetail rej in TEMrejectionReportDetails)
-            {
-                Descarte descarte = new Descarte();
-                descarte.Destino = rej.Destino;
-                descarte.Motivo = rej.RejectionCode.Code;//"VVT";
-                descarte.Tipo = (rej.Trabajado == Enumerations.AxlrBit.Si) ? "1" : "0";
-                descarte.Cantidad = rej.ScrapCount.ToString();
-                descartes[cont] = descarte;
-                cont++;
-            }
-            return descartes;
-        }
-
-        private IList GroupByRejectionCode(IList rejectionReportDetails)
-        {
-            IList<RejectionReportDetail> TEMRejectionReportDetail = (IList<RejectionReportDetail>)rejectionReportDetails;
-
-            if (TEMRejectionReportDetail.Count > 1 && TEMRejectionReportDetail.First().Extremo != null)
-            {
-                return TEMRejectionReportDetail.GroupBy(m => m.RejectionCode.Code).Select
-                    (n => new RejectionReportDetail
-                    {
-                        Destino = n.First().Destino,
-                        Observation = n.First().Observation,
-                        ScrapCount = (short)n.Sum(o => o.ScrapCount),
-                        Trabajado = n.First().Trabajado,
-                        Extremo = n.First().Extremo,
-                        RejectionCode = n.First().RejectionCode,
-                        Active = n.First().Active,
-                        Id = n.First().Id,
-                        InsDateTime = n.First().InsDateTime,
-                        ReportProductionHistory = n.First().ReportProductionHistory,
-                        UpdDateTime = n.First().UpdDateTime
-                    }).ToList();
-            }
-            else
-            {
-                return rejectionReportDetails;
-            }
-        }
-
         private ProbetaAsociada[] GetTPSProbetas(ReportProductionDto reportProductionDto)
         {
             DataTable tblProbetas = new SampleCuttingFacade().GetCuttingNumbers(
@@ -606,30 +344,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
 
 
-        private Enumerations.ProductionReportSendStatus CastEnumProductionReportSendStatus(int value)
-        {
-            switch (value)
-            {
-                case 0:
-                    return Enumerations.ProductionReportSendStatus.ForSend;
-                case 1:
-                    return Enumerations.ProductionReportSendStatus.Parcial;
-                case 2:
-                    return Enumerations.ProductionReportSendStatus.Final;
-                case 3:
-                    return Enumerations.ProductionReportSendStatus.Completo;
-                default:
-                    return Enumerations.ProductionReportSendStatus.Completo;
-            }
-        }
-
-        public static string GetCurrentUser()
-        {
-            //Comentado para pruebas
-            return ProductionReportingBusiness.GetCurrentUser();
-            //return "Admin";
-
-        }
+       
         #endregion
 
 

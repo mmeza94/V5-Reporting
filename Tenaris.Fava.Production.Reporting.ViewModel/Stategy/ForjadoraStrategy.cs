@@ -1,5 +1,6 @@
 ﻿using Castle.Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         {
             try
             {
-                CurrentGeneralPieces = ProductionReport.GetProductionGeneral(Filters);
+                CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
                 if (CurrentGeneralPieces == null)
                 {
                     AddValues("Search", new ObservableCollection<GeneralPiece>());

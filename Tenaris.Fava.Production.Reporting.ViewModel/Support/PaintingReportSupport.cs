@@ -277,7 +277,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
             //security
             ////Las Demas Estaciones
-            string user = ProductionReport.GetCurrentUser();
+            string user = ProductionReportingBusiness.GetCurrentUser();
             ////Security.GetCurrentUser().UserID;
 
             if (selectedRow.LoadQuantity == 0)

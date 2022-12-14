@@ -146,12 +146,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
             return DataAccessSQL.Instance.GetNextOpChildrenActive(OrdenNumberMother);
         }
 
-        //public static bool SecurityLogin(string user, string password)
-        //{
-        //    return DataAccessSQL.Instance.SecurityLogin(user, password);
-        //}
+      
 
-        internal static string GetCurrentUser()
+        public static string GetCurrentUser()
         {
             return DataAccessSQL.Instance.GetCurrentUser();
         }

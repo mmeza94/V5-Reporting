@@ -133,7 +133,7 @@
 		<ExtremoFiltre></ExtremoFiltre>
 		<MachineFiltre>Horno de Normalizado</MachineFiltre>
 		<Workstation>VM-NORMALIZADO</Workstation>
-		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornos]</GetProductionGeneral>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornosNuevo]</GetProductionGeneral>
 
 
 
@@ -156,7 +156,7 @@
 		<ExtremoFiltre></ExtremoFiltre>
 		<MachineFiltre>Horno de Revenido</MachineFiltre>
 		<Workstation>VM-REVENIDO</Workstation>
-		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornos]</GetProductionGeneral>
+		<GetProductionGeneral>[dbo].[GetProductionGeneralTestForjasyHornosNuevo]</GetProductionGeneral>
 
 
 
@@ -179,7 +179,7 @@
 		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
 		<ExtremoFiltre></ExtremoFiltre>
 		<Workstation>VM-GRA-02</Workstation>
-
+		<GetProductionGeneral>[dbo].[GetProductionGeneralProgrammedTestV5]</GetProductionGeneral>
 
 
 	</configsection>

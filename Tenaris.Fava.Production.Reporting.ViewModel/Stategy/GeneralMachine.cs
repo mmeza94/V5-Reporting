@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Support;
@@ -59,7 +60,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 return true;
             }
 
-            WhoIsLogged = ProductionReport.GetCurrentUser();
+            WhoIsLogged = ProductionReportingBusiness.GetCurrentUser();
 
             if (string.IsNullOrEmpty(WhoIsLogged))
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Tenaris.Fava.Production.Reporting.Model.Business;
@@ -37,7 +38,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
         {
             try
             {
-                CurrentGeneralPieces = ProductionReport.GetProductionGeneral(Filters);
+                CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
 
                 if (CurrentGeneralPieces == null)
                     AddValues("Search", new ObservableCollection<GeneralPiece>());
