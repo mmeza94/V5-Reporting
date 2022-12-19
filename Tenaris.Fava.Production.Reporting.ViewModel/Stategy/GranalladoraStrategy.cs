@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Tenaris.Fava.Production.Reporting.Model.Business;
@@ -16,6 +15,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
     {
 
         #region Properties
+        private IFormatterPiece formatterPiece;
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
         public Dictionary<string, object> Filters { get; set; }
@@ -29,6 +29,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
             reportingProcess = new RPGeneral(this);
             Filters = Filter;
             OutPuts = OutPut;
+            formatterPiece = new ProcessorPieces.ProcessorByGranalladora();
         }
 
         #endregion
@@ -38,15 +39,14 @@ namespace Tenaris.Fava.Production.Reporting.Model.Stategy
         {
             try
             {
-                CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
-
-                if (CurrentGeneralPieces == null)
-                    AddValues("Search", new ObservableCollection<GeneralPiece>());
-
-                CurrentGeneralPieces = new ObservableCollection<GeneralPiece>(ProductionReport.ClassifyBySendStatus(CurrentGeneralPieces));
+                CurrentGeneralPieces = ProductionReportingBusiness
+                    .GetProductionGeneral(Filters)
+                    .FormatterPieces(formatterPiece);
 
                 AddValues("Search", CurrentGeneralPieces);
 
+
+                //AddValues("Search", CurrentGeneralPieces);
                 return this;
             }
             catch (Exception)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
@@ -72,11 +71,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public ObservableCollection<GeneralPiece> GetProductionGeneral(Dictionary<String, object> listParams)
         {
             Library.DbClient.IDbCommand cm;
+            ObservableCollection<GeneralPiece> result = new ObservableCollection<GeneralPiece>();
             try
             {
                 //Greana1, enderezado, CND,   
                 cm = SelectedCommand(StoredProcedures.GetProductionGeneralTest, Configurations.Instance.ConnectionString);
-                ObservableCollection<GeneralPiece> result = new ObservableCollection<GeneralPiece>();
                 using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
                 {
                     Trace.Message("listParams: {0},{1},{2}", listParams["@Orden"], listParams["@Colada"], listParams["@Atado"]);
@@ -129,19 +128,17 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                     }
                 }
                 Trace.Message("StoredProcedure GetProductionGeneral terminado...");
-                return result;
-                
             }
             catch (Exception ex)
             {
                 Trace.Exception(ex);
-                return null;
-
+                throw ex;
             }
             finally
             {
                 this.dbClient.Dispose();
             }
+            return result;
         }
 
         public ObservableCollection<int> GetPreviousCountersByMachineTest(Dictionary<string, object> listParams)
@@ -253,9 +250,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             Enumerations.ForgeMode forgeMode = Enumerations.ForgeMode.BothEnds;
             try
             {
-                
-              forgeMode = (bool)cm.ExecuteScalar(listParams) ? Enumerations.ForgeMode.BothEnds : Enumerations.ForgeMode.OneEnd;
-                
+
+                forgeMode = (bool)cm.ExecuteScalar(listParams) ? Enumerations.ForgeMode.BothEnds : Enumerations.ForgeMode.OneEnd;
+
             }
             catch (Exception ex)
             {
@@ -270,7 +267,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
             var cm = SelectedCommand(StoredProcedures.GetLastMachineGoodPieces, Configurations.Instance.ConnectionString);
             Dictionary<string, object> listParams = new Dictionary<string, object>();
-            
+
             listParams.Add("@GroupItemNumber", groupItemNumber);
             listParams.Add("@Sequence", Sequence);
             int TotalGoodCount = 0;
@@ -280,7 +277,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             try
             {
 
-                TotalGoodCount = cm.ExecuteScalar(listParams).ToString().ToInteger(); 
+                TotalGoodCount = cm.ExecuteScalar(listParams).ToString().ToInteger();
             }
             catch (Exception ex)
             {

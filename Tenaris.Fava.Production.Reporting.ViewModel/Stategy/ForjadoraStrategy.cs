@@ -19,6 +19,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
     {
         private ObservableCollection<ReportProductionHistory> productionReportHistories;
         private GeneralPiece SelectedBundle;
+        private IFormatterPiece formatterPiece;
         public GeneralMachine GeneralMachine { get => this; }
         public IReportingProcess reportingProcess { get; set; }
         public Dictionary<string, object> Filters { get; set; }
@@ -29,7 +30,38 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             reportingProcess = new RPGeneral(this);
             Filters = Filter;
             OutPuts = OutPut;
+            formatterPiece = new ProcessorPieces.ProcessorByForjas();
+
         }
+
+
+        public IActions Search()
+        {
+            try
+            {
+                CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
+               
+
+                if (Configurations.Instance.Machine.Equals("Forjadora"))
+                    GetForgeCurrentGeneralPieces();
+                
+                CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece);
+
+
+                if (Configurations.Instance.Machine == "Forjadora 0")
+                    CurrentGeneralPieces.ForEach(piece => GeneralPieceProcessor(piece));
+
+                AddValues("Search", CurrentGeneralPieces);
+                return this;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
 
         public bool Report(GeneralPiece currentDGRow)
         {
@@ -59,38 +91,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return false;
         }
 
-        public IActions Search()
-        {
-            try
-            {
-                CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
-                if (CurrentGeneralPieces == null)
-                {
-                    AddValues("Search", new ObservableCollection<GeneralPiece>());
-                    return this;
-                }
-
-                if ( Configurations.Instance.Machine.Equals("Forjadora"))
-                {
-                    GetForgeCurrentGeneralPieces();
-                }
-
-
-                CurrentGeneralPieces = new ObservableCollection<GeneralPiece>(ProductionReport.ClassifyBySendStatus(CurrentGeneralPieces));
-
-
-                if (Configurations.Instance.Machine == "Forjadora 0")
-                    CurrentGeneralPieces.ForEach(piece => GeneralPieceProcessor(piece));
-
-                AddValues("Search", CurrentGeneralPieces);
-                return this;
         
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
         public ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
         {

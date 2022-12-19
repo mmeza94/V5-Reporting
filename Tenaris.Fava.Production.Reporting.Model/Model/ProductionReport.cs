@@ -3,10 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Web.UI.WebControls;
 using Tenaris.Fava.Production.Reporting.ITConnection.ITService;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
@@ -14,6 +14,7 @@ using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories;
+using Tenaris.Library.Framework;
 using Tenaris.Library.Framework.Utility.Conversion;
 
 namespace Tenaris.Fava.Production.Reporting.Model.Support
@@ -24,23 +25,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
         #region PUBLIC METHOS
 
-
-        /// <summary>
-        /// ClassifyBySendStatus : Ordernamiento Descendete
-        /// 
-        /// </summary>
-        /// <param name="generalPieces"></param>
-        /// <returns></returns>
-        //ClassifyBySendStatus
-
-
-        
-
         public static IList<GeneralPiece> ClassifyBySendStatus(IList<GeneralPiece> generalPieces)
         {
-
             var generalPiecesClassified = new List<GeneralPiece>();
-
             int order = 0;
             int heat = 0;
             int groupItem = 0;
@@ -65,11 +52,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
                         if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
                                                               && (x.HeatNumber == heat)
-                                                              && (x.GroupItemNumber == groupItem) 
+                                                              && (x.GroupItemNumber == groupItem)
                                                               && (x.Description == description)
                                                               && x.Extremo == extreme))
 
-                        generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
+                            generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
                     }
                 });
 
@@ -81,19 +68,14 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             }
         }
 
-
-       
-
-
-
         #endregion
 
-
-
-
-
-        
-        private static IList<GeneralPiece> GetSomePieces(int order, int heat, int groupItem, IList<GeneralPiece> generalPieces, string description, string extreme)
+        private static IList<GeneralPiece> GetSomePieces(int order,
+            int heat,
+            int groupItem,
+            IList<GeneralPiece> generalPieces,
+            string description,
+            string extreme)
         {
             var somePieces = generalPieces
                 .Where(x => (x.OrderNumber == order)
@@ -111,17 +93,17 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 {
                     item.ReportSequence = 1;
                     //return somePieces;
-                    
+
                 }
 
 
 
-                if (Configurations.Instance.Machine.Equals("Forjadora") 
-                    || Configurations.Instance.Machine.Equals("Horno de Normalizado") 
+                if (Configurations.Instance.Machine.Equals("Forjadora")
+                    || Configurations.Instance.Machine.Equals("Horno de Normalizado")
                     || Configurations.Instance.Machine.Equals("Horno de Revenido")
                     || Configurations.Instance.Secuencia == "8")
                 {
-                    somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber,Configurations.Instance.Secuencia.ToInteger()-1);
+                    somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber, Configurations.Instance.Secuencia.ToInteger() - 1);
                 }
                 //somePieces[0].LoadedCount = new GroupItemProgramFacade().GetProgrammedPieces(somePieces[0].IdBatch);
 
@@ -135,11 +117,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 endItem.ReportSequence = (short)somePieces.Count;
 
 
-                somePieces[somePieces.Count - 1].SendStatus =
-                            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
-                            Enumerations.ProductionReportSendStatus.Final
-                            : Enumerations.ProductionReportSendStatus.Parcial;
-                somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+                //somePieces[somePieces.Count - 1].SendStatus =
+                //            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
+                //            Enumerations.ProductionReportSendStatus.Final
+                //            : Enumerations.ProductionReportSendStatus.Parcial;
+                //somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
 
 
 
@@ -163,17 +145,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             }
 
         }
-
-
-
-
-
-
-
-
-
-
-
 
         #region METHOS PRIVATE
 
@@ -344,11 +315,199 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
 
 
-       
+
         #endregion
 
+    }
 
+    public interface IFormatterPiece
+    {
+        IList<GeneralPiece> FormatterPiece(int order,
+            int heat,
+            int groupItem,
+            IList<GeneralPiece> generalPieces,
+            string description,
+            string extremo);
+    }
+
+    public static class CollectionsUtil
+    {
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            return new ObservableCollection<T>(source);
+        }
+        public static ObservableCollection<T> ToObservableCollection<T>(this IList<T> source)
+        {
+            return new ObservableCollection<T>(source);
+        }
+    }
+
+    public static class FormatterByPieces
+    {
+        public static ObservableCollection<GeneralPiece> FormatterPieces(
+            this IEnumerable<GeneralPiece> source,
+            IFormatterPiece formatterPiece)
+        {
+            if (source == null || formatterPiece == null)
+                throw new ArgumentNullException();
+
+            var generalPiecesClassified = new List<GeneralPiece>();
+            int order = 0;
+            int heat = 0;
+            int groupItem = 0;
+            string description = "";
+            string extreme = "";
+            source.OrderByDescending(Piece => Piece.InsDateTime).ForEach(Piece =>
+            {
+                if (order != Piece.OrderNumber || heat != Piece.HeatNumber ||
+                        groupItem != Piece.GroupItemNumber || description != Piece.Description
+                        || extreme != Piece.Extremo)
+                {
+                    order = Piece.OrderNumber;
+                    heat = Piece.HeatNumber;
+                    groupItem = Piece.GroupItemNumber;
+                    description = Piece.Description;
+                    extreme = Piece.Extremo;
+                    if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
+                                                          && (x.HeatNumber == heat)
+                                                          && (x.GroupItemNumber == groupItem)
+                                                          && (x.Description == description)
+                                                          && x.Extremo == extreme))
+                        generalPiecesClassified.AddRange(formatterPiece.FormatterPiece(order, heat, groupItem, source.ToList(), description, extreme));
+                }
+            });
+            return generalPiecesClassified.ToObservableCollection();
+        }
+
+        public static ObservableCollection<GeneralPiece> FormatterPieces(
+            this IList<GeneralPiece> source,
+           IFormatterPiece formatterPiece)
+        {
+            if (source == null)
+                return source.ToObservableCollection();
+
+            if (formatterPiece == null)
+                throw new ArgumentNullException();
+
+            var generalPiecesClassified = new List<GeneralPiece>();
+            int order = 0;
+            int heat = 0;
+            int groupItem = 0;
+            string description = "";
+            string extreme = "";
+            source.OrderByDescending(Piece => Piece.InsDateTime).ForEach(Piece =>
+            {
+                if (order != Piece.OrderNumber || heat != Piece.HeatNumber ||
+                        groupItem != Piece.GroupItemNumber || description != Piece.Description
+                        || extreme != Piece.Extremo)
+                {
+                    order = Piece.OrderNumber;
+                    heat = Piece.HeatNumber;
+                    groupItem = Piece.GroupItemNumber;
+                    description = Piece.Description;
+                    extreme = Piece.Extremo;
+                    if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
+                                                          && (x.HeatNumber == heat)
+                                                          && (x.GroupItemNumber == groupItem)
+                                                          && (x.Description == description)
+                                                          && x.Extremo == extreme))
+                        generalPiecesClassified.AddRange(formatterPiece.FormatterPiece(order, heat, groupItem, source.ToList(), description, extreme));
+                }
+            });
+            return generalPiecesClassified.ToObservableCollection();
+        }
 
 
     }
+
+    public class ProcessorPieces
+    {
+
+        private ProcessorPieces() { }
+
+        public class ProcessorByForjas : IFormatterPiece
+        {
+            public IList<GeneralPiece> FormatterPiece(int order,
+                int heat,
+                int groupItem,
+                IList<GeneralPiece> generalPieces,
+                string description,
+                string extremo)
+            {
+                var somePieces = generalPieces
+                .Where(x => (x.OrderNumber == order)
+            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
+            && (x.Description == description) && (x.Extremo == extremo))
+                .OrderBy(x => x.InsDateTime)
+                .ToList();
+
+                GeneralPiece Firstitem = somePieces.FirstOrDefault(),
+                   LastItem = somePieces.LastOrDefault();
+
+                if(Configurations.Instance.Machine!= "Forjadora 0")
+                {
+                    int FoundLoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber, Configurations.Instance.Secuencia.ToInteger() - 1);
+                    Firstitem.LoadedCount = FoundLoadedCount == 0 ? Firstitem.LoadedCount : FoundLoadedCount;
+
+                }
+
+
+
+                if (somePieces.Count > 1)
+                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                    ? Enumerations.ProductionReportSendStatus.Final
+                        : Enumerations.ProductionReportSendStatus.Parcial;
+                else
+                {
+                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                    ? Enumerations.ProductionReportSendStatus.Completo
+                    : Enumerations.ProductionReportSendStatus.Parcial;
+                }
+
+                return somePieces;
+            }
+        }
+
+        public class ProcessorByGranalladora : IFormatterPiece
+        {
+            public IList<GeneralPiece> FormatterPiece(int order,
+                int heat,
+                int groupItem,
+                IList<GeneralPiece> generalPieces,
+                string description,
+                string extremo)
+            {
+                var somePieces = generalPieces
+                .Where(x => (x.OrderNumber == order)
+            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
+            && (x.Description == description) && (x.Extremo == extremo))
+                .OrderBy(x => x.InsDateTime)
+                .ToList();
+
+
+
+                GeneralPiece Firstitem = somePieces.FirstOrDefault(),
+                             LastItem = somePieces.LastOrDefault();
+
+                
+                if (somePieces.Count > 1)
+                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                        ? Enumerations.ProductionReportSendStatus.Final
+                        : Enumerations.ProductionReportSendStatus.Parcial;
+                else
+                {
+                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                        ? Enumerations.ProductionReportSendStatus.Completo
+                        : Enumerations.ProductionReportSendStatus.Parcial;
+                }
+
+
+
+                return somePieces;
+            }
+        }
+
+
+    }
+
 }
