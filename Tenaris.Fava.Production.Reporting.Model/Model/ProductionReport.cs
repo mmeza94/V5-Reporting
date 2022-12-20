@@ -25,126 +25,126 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
         #region PUBLIC METHOS
 
-        public static IList<GeneralPiece> ClassifyBySendStatus(IList<GeneralPiece> generalPieces)
-        {
-            var generalPiecesClassified = new List<GeneralPiece>();
-            int order = 0;
-            int heat = 0;
-            int groupItem = 0;
-            string description = "";
-            string extreme = "";
+        //public static IList<GeneralPiece> ClassifyBySendStatus(IList<GeneralPiece> generalPieces)
+        //{
+        //    var generalPiecesClassified = new List<GeneralPiece>();
+        //    int order = 0;
+        //    int heat = 0;
+        //    int groupItem = 0;
+        //    string description = "";
+        //    string extreme = "";
 
-            try
-            {
-                var orderedGeneralPieces = generalPieces.OrderByDescending(item => item.InsDateTime).ToList();
-                orderedGeneralPieces.ForEach(item =>
-                {
-                    if (order != item.OrderNumber || heat != item.HeatNumber ||
-                        groupItem != item.GroupItemNumber || description != item.Description
-                        || extreme != item.Extremo)
-                    {
+        //    try
+        //    {
+        //        var orderedGeneralPieces = generalPieces.OrderByDescending(item => item.InsDateTime).ToList();
+        //        orderedGeneralPieces.ForEach(item =>
+        //        {
+        //            if (order != item.OrderNumber || heat != item.HeatNumber ||
+        //                groupItem != item.GroupItemNumber || description != item.Description
+        //                || extreme != item.Extremo)
+        //            {
 
-                        order = item.OrderNumber;
-                        heat = item.HeatNumber;
-                        groupItem = item.GroupItemNumber;
-                        description = item.Description;
-                        extreme = item.Extremo;
+        //                order = item.OrderNumber;
+        //                heat = item.HeatNumber;
+        //                groupItem = item.GroupItemNumber;
+        //                description = item.Description;
+        //                extreme = item.Extremo;
 
-                        if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
-                                                              && (x.HeatNumber == heat)
-                                                              && (x.GroupItemNumber == groupItem)
-                                                              && (x.Description == description)
-                                                              && x.Extremo == extreme))
+        //                if (!generalPiecesClassified.Exists(x => (x.OrderNumber == order)
+        //                                                      && (x.HeatNumber == heat)
+        //                                                      && (x.GroupItemNumber == groupItem)
+        //                                                      && (x.Description == description)
+        //                                                      && x.Extremo == extreme))
 
-                            generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
-                    }
-                });
+        //                    generalPiecesClassified.AddRange(GetSomePieces(order, heat, groupItem, orderedGeneralPieces, description, extreme));
+        //            }
+        //        });
 
-                return generalPiecesClassified;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return generalPiecesClassified;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         #endregion
 
-        private static IList<GeneralPiece> GetSomePieces(int order,
-            int heat,
-            int groupItem,
-            IList<GeneralPiece> generalPieces,
-            string description,
-            string extreme)
-        {
-            var somePieces = generalPieces
-                .Where(x => (x.OrderNumber == order)
-            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
-            && (x.Description == description) && (x.Extremo == extreme))
-                .OrderBy(x => x.InsDateTime)
-                .ToList();
-            try
-            {
+        //private static IList<GeneralPiece> GetSomePieces(int order,
+        //    int heat,
+        //    int groupItem,
+        //    IList<GeneralPiece> generalPieces,
+        //    string description,
+        //    string extreme)
+        //{
+        //    var somePieces = generalPieces
+        //        .Where(x => (x.OrderNumber == order)
+        //    && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
+        //    && (x.Description == description) && (x.Extremo == extreme))
+        //        .OrderBy(x => x.InsDateTime)
+        //        .ToList();
+        //    try
+        //    {
 
-                GeneralPiece item = somePieces.FirstOrDefault(),
-                   endItem = somePieces.LastOrDefault();
+        //        GeneralPiece item = somePieces.FirstOrDefault(),
+        //           endItem = somePieces.LastOrDefault();
 
-                if (somePieces.Count < 2)
-                {
-                    item.ReportSequence = 1;
-                    //return somePieces;
+        //        if (somePieces.Count < 2)
+        //        {
+        //            item.ReportSequence = 1;
+        //            //return somePieces;
 
-                }
-
-
-
-                if (Configurations.Instance.Machine.Equals("Forjadora")
-                    || Configurations.Instance.Machine.Equals("Horno de Normalizado")
-                    || Configurations.Instance.Machine.Equals("Horno de Revenido")
-                    || Configurations.Instance.Secuencia == "8")
-                {
-                    somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber, Configurations.Instance.Secuencia.ToInteger() - 1);
-                }
-                //somePieces[0].LoadedCount = new GroupItemProgramFacade().GetProgrammedPieces(somePieces[0].IdBatch);
+        //        }
 
 
 
-
-
-                endItem.SendStatus = endItem.GoodCount + endItem.ScrapCount >= endItem.LoadedCount ?
-                     Enumerations.ProductionReportSendStatus.Final
-                            : Enumerations.ProductionReportSendStatus.Parcial;
-                endItem.ReportSequence = (short)somePieces.Count;
-
-
-                //somePieces[somePieces.Count - 1].SendStatus =
-                //            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
-                //            Enumerations.ProductionReportSendStatus.Final
-                //            : Enumerations.ProductionReportSendStatus.Parcial;
-                //somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+        //        if (Configurations.Instance.Machine.Equals("Forjadora")
+        //            || Configurations.Instance.Machine.Equals("Horno de Normalizado")
+        //            || Configurations.Instance.Machine.Equals("Horno de Revenido")
+        //            || Configurations.Instance.Secuencia == "8")
+        //        {
+        //            somePieces[0].LoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber, Configurations.Instance.Secuencia.ToInteger() - 1);
+        //        }
+        //        //somePieces[0].LoadedCount = new GroupItemProgramFacade().GetProgrammedPieces(somePieces[0].IdBatch);
 
 
 
-                for (int i = 0; i < somePieces.Count - 1; i++)
-                {
-                    somePieces[i].ScrapCount = 0;
-                    somePieces[i].ReportSequence = (short)(i + 1);
-                    somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
-                    if (i > 0)
-                        somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
-                }
 
-                //item.SendStatus = (item.GoodCount + item.ScrapCount >= item.LoadedCount) ?
-                //    Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial;
-                item.ReportSequence = 1;
-                return somePieces;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
 
-        }
+        //        endItem.SendStatus = endItem.GoodCount + endItem.ScrapCount >= endItem.LoadedCount ?
+        //             Enumerations.ProductionReportSendStatus.Final
+        //                    : Enumerations.ProductionReportSendStatus.Parcial;
+        //        endItem.ReportSequence = (short)somePieces.Count;
+
+
+        //        //somePieces[somePieces.Count - 1].SendStatus =
+        //        //            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
+        //        //            Enumerations.ProductionReportSendStatus.Final
+        //        //            : Enumerations.ProductionReportSendStatus.Parcial;
+        //        //somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+
+
+
+        //        for (int i = 0; i < somePieces.Count - 1; i++)
+        //        {
+        //            somePieces[i].ScrapCount = 0;
+        //            somePieces[i].ReportSequence = (short)(i + 1);
+        //            somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+        //            if (i > 0)
+        //                somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+        //        }
+
+        //        //item.SendStatus = (item.GoodCount + item.ScrapCount >= item.LoadedCount) ?
+        //        //    Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial;
+        //        item.ReportSequence = 1;
+        //        return somePieces;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+
+        //}
 
         #region METHOS PRIVATE
 
@@ -320,6 +320,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
     }
 
+
+
     public interface IFormatterPiece
     {
         IList<GeneralPiece> FormatterPiece(int order,
@@ -489,17 +491,44 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 GeneralPiece Firstitem = somePieces.FirstOrDefault(),
                              LastItem = somePieces.LastOrDefault();
 
-                
+
+
                 if (somePieces.Count > 1)
-                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
-                        ? Enumerations.ProductionReportSendStatus.Final
-                        : Enumerations.ProductionReportSendStatus.Parcial;
+                {
+                    somePieces[somePieces.Count - 1].SendStatus =
+                            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount)
+                            ? Enumerations.ProductionReportSendStatus.Final
+                            : Enumerations.ProductionReportSendStatus.Parcial;
+
+
+                    somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+                    for (int i = 0; i < somePieces.Count - 1; i++)
+                    {
+                        somePieces[i].ScrapCount = 0;
+                        somePieces[i].ReportSequence = (short)(i + 1);
+                        somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+                        if (i > 0)
+                            somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+                    }
+                }
                 else
                 {
                     LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
                         ? Enumerations.ProductionReportSendStatus.Completo
-                        : Enumerations.ProductionReportSendStatus.Parcial;
+                      : Enumerations.ProductionReportSendStatus.Parcial;
                 }
+
+
+                //if (somePieces.Count > 1)
+                //    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                //        ? Enumerations.ProductionReportSendStatus.Final
+                //        : Enumerations.ProductionReportSendStatus.Parcial;
+                //else
+                //{
+                //    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                //        ? Enumerations.ProductionReportSendStatus.Completo
+                //        : Enumerations.ProductionReportSendStatus.Parcial;
+                //}
 
 
 
