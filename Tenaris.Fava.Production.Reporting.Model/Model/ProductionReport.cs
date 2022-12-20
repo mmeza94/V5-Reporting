@@ -519,18 +519,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 }
 
 
-                //if (somePieces.Count > 1)
-                //    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
-                //        ? Enumerations.ProductionReportSendStatus.Final
-                //        : Enumerations.ProductionReportSendStatus.Parcial;
-                //else
-                //{
-                //    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
-                //        ? Enumerations.ProductionReportSendStatus.Completo
-                //        : Enumerations.ProductionReportSendStatus.Parcial;
-                //}
-
-
+               
 
                 return somePieces;
             }

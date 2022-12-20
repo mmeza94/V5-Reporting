@@ -81,6 +81,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
                 Secuencia = Convert.ToInt32(Configurations.Instance.Secuencia),
                 Operacion = Configurations.Instance.Operacion,
                 Opcion = Configurations.Instance.Opcion,
+              
                 
             };
             

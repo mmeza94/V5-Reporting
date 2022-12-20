@@ -73,6 +73,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
                 return false;
 
+
+
+            ValidateExtreme(ReportPRoduction, currentDGRow);
+
+
+
             ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
                                                                              .ValidateReportStructure()
                                                                              .PrepareDtoForProductionReport();
@@ -201,6 +207,18 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 }
             }
 
+        }
+
+        private ReportProductionDto ValidateExtreme(ReportProductionDto rp,GeneralPiece currentDGRow)
+        {
+            
+
+            if (currentDGRow.Extremo.Contains("2"))
+            {
+                rp.Operacion = "Forjadora Extremo 2";
+                rp.Secuencia = 5;
+            }
+            return rp;
         }
 
     }

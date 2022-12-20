@@ -67,19 +67,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
         public IReportingProcess BuildReport()
         {
-
             ReportProductionDto = reportConfirmation.CurrentReportProduction;
             ReportProductionDto.IdUDT = reportConfirmation.Atado;
             ReportProductionDto.Orden = reportConfirmation.Orden;
             ReportProductionDto.Colada = reportConfirmation.Colada;
-
             dgRejectionReportDetails = reportConfirmation.RejectionReportDetails;
-
             tbScrapCountL2 = reportConfirmation.MalasActual;
             tbReworkedCountL2 = reportConfirmation.ReprocesosActual;
             tbLoadedCountL2 = reportConfirmation.CargadasActual;
             tbGoodCountL2 = reportConfirmation.BuenasActual;
-
             lbITLoadHelper = reportConfirmation.ITLoadHelper;
             tbTotalLoaded = reportConfirmation.CargadasTotal;
             tbPreviousLoaded = reportConfirmation.CargadasAnterior;

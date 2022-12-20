@@ -808,7 +808,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private void acceptCommandExecute()
         {
-            Extremo = Extremo1 == true ? "Extremo 1" : "Extremo 2";
+            Extremo = Extremo1 ? "Extremo 1" : "Extremo 2";
+            CurrentGeneralPiece.Extremo = Extremo;
+
             Result = true;
             GC.Collect();
             CloseWindow();
@@ -954,8 +956,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private ReportConfirmationViewModel GetPreviousCounters()
         {
-           
-         
+
+
             ObservableCollection<int> items = ProductionReportingBusiness.GetPreviousCountersByMachineTest(
                 new Dictionary<string, object>
                 {
@@ -979,14 +981,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private string GetMachineDescription()
         {
-            
+
             if (CurrentGeneralPiece.Description.Contains("Forja"))
-                return  "Forjado";
+                return "Forjado";
 
             else if (CurrentGeneralPiece.Description == "Roscadora")
                 return "Mecanizado";
 
-            return  Configurations.Instance.Operacion;
+            return Configurations.Instance.Operacion;
         }
 
 

@@ -45,7 +45,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
         public ProductionReportViewModel()
         {
-            Actions = new GranalladoraStrategy();
+            Actions = new ForjadoraStrategy();
             Actions.GeneralMachine
                 .SetRequest(ReportConfirmationWindowRequest)
                 .SetIndBoxReportConfirmationRequest(IndBoxReportConfirmationWindowRequest)
