@@ -9,7 +9,7 @@ using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
 
-namespace Tenaris.Fava.Production.Reporting.Model.Stategy
+namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 {
     public class GranalladoraStrategy : GeneralMachine, IActions
     {

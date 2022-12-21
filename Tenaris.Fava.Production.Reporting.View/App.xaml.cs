@@ -4,10 +4,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
-using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.Model.Stategy;
 using Tenaris.Fava.Production.Reporting.View.Properties;
+using Tenaris.Fava.Production.Reporting.ViewModel.Reflection;
 
 namespace Tenaris.Fava.Production.Reporting.View
 {
@@ -17,7 +16,6 @@ namespace Tenaris.Fava.Production.Reporting.View
 
     public partial class App : Application
     {
-
 
         public App()
         {
@@ -30,42 +28,25 @@ namespace Tenaris.Fava.Production.Reporting.View
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(Settings.Default.Culture);
             }
-
             if (!string.IsNullOrEmpty(Settings.Default.UICulture))
             {
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(Settings.Default.UICulture);
             }
-
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
             XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
         }
+
         public void ApplicationStartup(Object sender, StartupEventArgs e)
         {
-
-            IActions action = new GranalladoraStrategy();
-
-
             Configurations.Instance.GetConfigutation();
-
+            ReflectionStrategy.LoaderReflection();
             if (Configurations.Instance.Machine == "Pintado")
             {
                 StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/PaintingReportView.xaml", UriKind.Relative);
+                return;
             }
-            else
-            {
-                StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/ProductionReport.xaml", UriKind.Relative);
-            }
+            StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/ProductionReport.xaml", UriKind.Relative);
         }
 
-        public void InitializeMainWindow()
-        {
-
-        }
-
-        private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            //e.Exception.Trace();
-            e.Handled = true;
-        }
     }
 }

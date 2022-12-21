@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -15,16 +11,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
     public class Configurations
     {
 
-
-
-        #region "Singleton"
-
-        // Solo permitimos una instacia unica del modelo
-        // el acceso debe realizarse a traves de la propiedad Instance
-
+        #region Singleton
         static Configurations classInstance = null;
         static object classLock = new object();
-
         public static Configurations Instance
         {
             get
@@ -39,10 +28,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
                 return classInstance;
             }
         }
-
-
         #endregion
 
+        #region Childrens
 
         [XmlElement("MachineFiltre")]
         public string MachineFiltre { get; set; }
@@ -77,7 +65,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
         public bool isPintado { get; set; }
 
         [XmlElement("ConnectionString")]
-
         public string ConnectionString { get; set; }
 
         [XmlElement("VersionApplication")]
@@ -98,33 +85,21 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
         [XmlElement("GetProductionGeneral")]
         public string GetProductionGeneral { get; set; }
 
+        [XmlElement("StrategyWork")]
+        public string StrategyWork { get; set; }
 
-        public Configurations()
+        public string PathStrategy { get => "Tenaris.Fava.Production.Reporting.ViewModel"; }
+
+        #endregion
+
+        #region Constructors
+
+        private Configurations()
         {
 
         }
 
-        public Configurations(string machineFiltre, string machine, string secuencia, string operacion, string opcion, string maquinaInicialZona, string extremo, string maquinaInicialZonaFiltre, string machineToReport, string extremoFiltre, bool isPintado, string connectionString, string versionApplication, string n1CounterTag, string n2CounterTag, string flagITNOReportBox, string workstation, string getProductionGeneral)
-        {
-            MachineFiltre = machineFiltre;
-            Machine = machine;
-            Secuencia = secuencia;
-            Operacion = operacion;
-            Opcion = opcion;
-            MaquinaInicialZona = maquinaInicialZona;
-            Extremo = extremo;
-            MaquinaInicialZonaFiltre = maquinaInicialZonaFiltre;
-            MachineToReport = machineToReport;
-            ExtremoFiltre = extremoFiltre;
-            this.isPintado = isPintado;
-            ConnectionString = connectionString;
-            VersionApplication = versionApplication;
-            N1CounterTag = n1CounterTag;
-            N2CounterTag = n2CounterTag;
-            FlagITNOReportBox = flagITNOReportBox;
-            Workstation = workstation;
-            GetProductionGeneral = getProductionGeneral;
-        }
+        #endregion
 
         public void SetConfigMachine(Configurations configurations)
         {
@@ -146,34 +121,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
             FlagITNOReportBox = configurations.FlagITNOReportBox;
             Workstation = configurations.Workstation;
             GetProductionGeneral = configurations.GetProductionGeneral;
+            StrategyWork = $"Tenaris.Fava.Production.Reporting.ViewModel.Stategy.{configurations.StrategyWork}";
         }
-
-        public Configurations GetConfigMachine()
-        {
-            Configurations configurations = new Configurations();
-
-            configurations.MachineFiltre = MachineFiltre;
-            configurations.Machine = Machine;
-            configurations.Secuencia = Secuencia;
-            configurations.Operacion = Operacion;
-            configurations.Opcion = Opcion;
-            configurations.MaquinaInicialZona = MaquinaInicialZona;
-            configurations.Extremo = Extremo;
-            configurations.MaquinaInicialZonaFiltre = MaquinaInicialZonaFiltre;
-            configurations.MachineToReport = MachineToReport;
-            configurations.ExtremoFiltre = ExtremoFiltre;
-            configurations.isPintado = isPintado;
-            configurations.ConnectionString = ConnectionString;
-            configurations.VersionApplication = VersionApplication;
-            configurations.N1CounterTag = N1CounterTag;
-            configurations.N2CounterTag = N2CounterTag;
-            configurations.FlagITNOReportBox = FlagITNOReportBox;
-            configurations.Workstation = Workstation;
-            configurations.GetProductionGeneral = GetProductionGeneral;
-            return configurations;
-        }
-
-
 
         public void GetConfigutation()
         {
@@ -182,22 +131,20 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
 
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(urlConfiguration);
-            //xmldoc.Load("../../../Tenaris.Fava.Production.Reporting.Model/Configurations/Configurations.Xml");
 
-            XElement element = XElement.Parse(xmldoc.InnerXml);
-            XElement machinConfig = element.Elements("configsection").ToList().FirstOrDefault(x => x.Attribute("name").Value.Equals(config));
+            XElement machinConfig = XElement.Parse(xmldoc.InnerXml)
+                .Elements("configsection")
+                .ToList()
+                .FirstOrDefault(x => x.Attribute("name")
+                .Value.Equals(config));
 
             StringReader reader = new StringReader(machinConfig.ToString());
             XmlSerializer xml = new XmlSerializer(typeof(Configurations));
             Configurations configurations = (Configurations)xml.Deserialize(reader);
-
             Configurations.Instance.SetConfigMachine(configurations);
+
         }
 
-
-
-
     }
-
 
 }

@@ -9,9 +9,8 @@ using System.Windows.Input;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.Model.Stategy;
-using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
+using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Library.Log;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.View
@@ -45,6 +44,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
         public ProductionReportViewModel()
         {
+
+            var a = Configurations.Instance.StrategyWork;
+
+
             Actions = new ForjadoraStrategy();
             Actions.GeneralMachine
                 .SetRequest(ReportConfirmationWindowRequest)

@@ -52,6 +52,7 @@
 		<VersionApplication>V1</VersionApplication>
 		<Workstation>VM-CND</Workstation>
 		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5Nuevo]</GetProductionGeneral>
+		<StrategyWork>GranalladoraStrategy</StrategyWork>
 
 	</configsection>
 
