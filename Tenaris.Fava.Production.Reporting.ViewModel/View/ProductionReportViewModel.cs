@@ -9,8 +9,8 @@ using System.Windows.Input;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
+using Tenaris.Fava.Production.Reporting.ViewModel.Reflection;
 using Tenaris.Library.Log;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.View
@@ -18,8 +18,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
     public class ProductionReportViewModel : ViewModelBase
     {
-
-        public IActions Actions { get; set; }
 
         #region Singleton
         static ProductionReportViewModel classInstance = null;
@@ -44,11 +42,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
         public ProductionReportViewModel()
         {
-
-            var a = Configurations.Instance.StrategyWork;
-
-
-            Actions = new ForjadoraStrategy();
             Actions.GeneralMachine
                 .SetRequest(ReportConfirmationWindowRequest)
                 .SetIndBoxReportConfirmationRequest(IndBoxReportConfirmationWindowRequest)
@@ -150,6 +143,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         #region Properties
 
         #region Private properties
+        private IActions Actions = ReflectionStrategy.MyStrategy;
         private int orden;
         private int colada;
         private int atado;
@@ -562,13 +556,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 .AddFilter("@Atado", Atado)
                 .AddFilter("@Machine", Configurations.Instance.MachineFiltre);
 
-
-
             Resultados = (ObservableCollection<GeneralPiece>)Actions
                 .Search()
                 .OutPuts["Search"];
-
-
 
             Resultados.ForEach(item =>
             {

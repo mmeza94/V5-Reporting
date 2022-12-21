@@ -1,9 +1,7 @@
 ﻿using Castle.Core;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
@@ -40,11 +38,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             try
             {
                 CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
-               
+
 
                 if (Configurations.Instance.Machine.Equals("Forjadora"))
                     GetForgeCurrentGeneralPieces();
-                
+
                 CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece);
 
 
@@ -65,39 +63,44 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public bool Report(GeneralPiece currentDGRow)
         {
-            var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
+            try
+            {
+                var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
 
-            if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
-                return false;
+                if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
+                    return false;
 
-            if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
-                return false;
-
-
-
-            ValidateExtreme(ReportPRoduction, currentDGRow);
+                if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
+                    return false;
 
 
 
-            ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
-                                                                             .ValidateReportStructure()
-                                                                             .PrepareDtoForProductionReport();
-
-            var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
-                true, reportingProcess.dgRejectionReportDetails);
-
-
-            reportingProcess.ShowITMessage(response);
+                ValidateExtreme(ReportPRoduction, currentDGRow);
 
 
 
-            reportingProcess.CheckReportProductionForNextOperation(response);
+                ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
+                                                                                 .ValidateReportStructure()
+                                                                                 .PrepareDtoForProductionReport();
+
+                var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
+                    true, reportingProcess.dgRejectionReportDetails);
 
 
+                reportingProcess.ShowITMessage(response);
+
+
+
+                reportingProcess.CheckReportProductionForNextOperation(response);
+            }
+            catch (Exception)
+            {
+             
+            }
             return false;
         }
 
-        
+
 
         public ReportProductionDto GetCurrentGroupItemToReport(GeneralPiece currentDGRow)
         {
@@ -201,7 +204,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             foreach (GeneralPiece item in CurrentGeneralPieces)
             {
                 var forgeMode = ProductionReportingBusiness.GetCurrentForgeMode(item.GroupItemNumber);
-                if(forgeMode == Enumerations.ForgeMode.OneEnd)
+                if (forgeMode == Enumerations.ForgeMode.OneEnd)
                 {
                     item.Extremo = "Extremo 2";
                 }
@@ -209,9 +212,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         }
 
-        private ReportProductionDto ValidateExtreme(ReportProductionDto rp,GeneralPiece currentDGRow)
+        private ReportProductionDto ValidateExtreme(ReportProductionDto rp, GeneralPiece currentDGRow)
         {
-            
+
 
             if (currentDGRow.Extremo.Contains("2"))
             {

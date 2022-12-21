@@ -956,7 +956,18 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel
 
         private ReportConfirmationViewModel GetPreviousCounters()
         {
-
+            //if (Extremo2)
+            //{
+            //    BuenasAnterior = 0;
+            //    MalasAnterior = 0;
+            //    ReprocesosAnterior = 0;
+            //    CargadasAnterior = 0;
+            //    BuenasTotal = 0;
+            //    MalasTotal = 0;
+            //    CargadasTotal = 0;
+            //    ReprocesosTotal = 0;
+            //    return this;
+            //}
 
             ObservableCollection<int> items = ProductionReportingBusiness.GetPreviousCountersByMachineTest(
                 new Dictionary<string, object>

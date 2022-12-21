@@ -488,8 +488,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
 
 
-                GeneralPiece Firstitem = somePieces.FirstOrDefault(),
-                             LastItem = somePieces.LastOrDefault();
+                //GeneralPiece Firstitem = somePieces.FirstOrDefault(),
+                //             LastItem = somePieces.LastOrDefault();
 
 
 
@@ -513,7 +513,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 }
                 else
                 {
-                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
+                    somePieces[0].SendStatus = (somePieces[0].GoodCount + somePieces[0].ScrapCount >= somePieces[0].LoadedCount)
                         ? Enumerations.ProductionReportSendStatus.Completo
                       : Enumerations.ProductionReportSendStatus.Parcial;
                 }
