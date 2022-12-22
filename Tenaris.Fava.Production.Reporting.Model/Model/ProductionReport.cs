@@ -443,28 +443,53 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 .OrderBy(x => x.InsDateTime)
                 .ToList();
 
-                GeneralPiece Firstitem = somePieces.FirstOrDefault(),
-                   LastItem = somePieces.LastOrDefault();
+                //GeneralPiece Firstitem = somePieces.FirstOrDefault(),
+                //   LastItem = somePieces.LastOrDefault();
 
                 if(Configurations.Instance.Machine!= "Forjadora 0")
                 {
+
                     int FoundLoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber, Configurations.Instance.Secuencia.ToInteger() - 1);
-                    Firstitem.LoadedCount = FoundLoadedCount == 0 ? Firstitem.LoadedCount : FoundLoadedCount;
+                    somePieces[0].LoadedCount = FoundLoadedCount == 0 ? somePieces[0].LoadedCount : FoundLoadedCount;
 
                 }
-
 
 
                 if (somePieces.Count > 1)
-                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
-                    ? Enumerations.ProductionReportSendStatus.Final
-                        : Enumerations.ProductionReportSendStatus.Parcial;
+                {
+                    somePieces[somePieces.Count - 1].SendStatus =
+                           (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount)
+                           ? Enumerations.ProductionReportSendStatus.Final
+                           : Enumerations.ProductionReportSendStatus.Parcial;
+
+
+                    somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+                    for (int i = 0; i < somePieces.Count - 1; i++)
+                    {
+                        somePieces[i].ScrapCount = 0;
+                        somePieces[i].ReportSequence = (short)(i + 1);
+                        somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+                        if (i > 0)
+                            somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+                    }
+                }
                 else
                 {
-                    LastItem.SendStatus = (LastItem.GoodCount + LastItem.ScrapCount >= LastItem.LoadedCount)
-                    ? Enumerations.ProductionReportSendStatus.Completo
-                    : Enumerations.ProductionReportSendStatus.Parcial;
+                    //somePieces[0].LoadedCount = somePieces[0].LoadedCount - somePieces[0].ReworkedCount; // Editamos la cantidad para que nos de las piezas programadas
+                    somePieces[0].SendStatus = (somePieces[0].GoodCount + somePieces[0].ScrapCount >= somePieces[0].LoadedCount) ?
+                        Enumerations.ProductionReportSendStatus.Completo : Enumerations.ProductionReportSendStatus.Parcial;
+                    somePieces[0].ReportSequence = 1;
                 }
+
+                
+
+                  
+
+
+
+
+
+
 
                 return somePieces;
             }
