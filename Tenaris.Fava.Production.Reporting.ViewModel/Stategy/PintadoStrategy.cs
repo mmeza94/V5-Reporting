@@ -44,6 +44,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         public ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
         {
             throw new NotImplementedException();
+            
+            // comentario de prueba
         }
 
         public bool Report(GeneralPiece currentDGRow)
