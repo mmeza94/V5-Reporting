@@ -3,8 +3,8 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
-using System.Windows.Threading;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.View.Dialog;
 using Tenaris.Fava.Production.Reporting.View.Properties;
 using Tenaris.Fava.Production.Reporting.ViewModel.Reflection;
 
@@ -39,13 +39,32 @@ namespace Tenaris.Fava.Production.Reporting.View
         public void ApplicationStartup(Object sender, StartupEventArgs e)
         {
             Configurations.Instance.GetConfigutation();
-            ReflectionStrategy.LoaderReflection();
-            if (Configurations.Instance.Machine == "Pintado")
+
+          
+
+
+            try
             {
-                StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/PaintingReportView.xaml", UriKind.Relative);
-                return;
+                ReflectionStrategy.LoaderReflection();
+                if (Configurations.Instance.Machine == "Pintado")
+                {
+                    StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/PaintingReportView.xaml", UriKind.Relative);
+                    return;
+                }
+                StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/ProductionReport.xaml", UriKind.Relative);
             }
-            StartupUri = new Uri("/Tenaris.Fava.Production.Reporting.View;component/ProductionReport.xaml", UriKind.Relative);
+            catch (Exception)
+            {
+
+                MessageBox.Show("Estrategia no cargada");
+                Environment.Exit(0);
+
+            }
+
+            
+
+
+           
         }
 
     }

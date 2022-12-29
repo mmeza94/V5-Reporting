@@ -26,12 +26,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Reflection
                                             .GetFiles("*.dll", SearchOption.AllDirectories)
                                             .ToList<FileInfo>()
                                             .FirstOrDefault(f => AssemblyName.GetAssemblyName(f.FullName).Name == Configurations.Instance.PathStrategy);
-
                 if (foundAssembly == null)
-                    return null;
-
+                    throw new Exception("DLL no encontrado");
                 return Assembly.LoadFrom(foundAssembly.FullName);
-
             }
             catch (Exception ex)
             {
@@ -50,7 +47,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Reflection
                 if (foundType == null
                     || !(typeof(IActions).IsAssignableFrom(foundType)
                     && foundType.IsAbstract == false))
-                    return null;
+                    throw new Exception("Fallo al generar la instancia de la strategy");
                 return foundType.InvokeMember(null, BindingFlags.CreateInstance, null, null, null) as IActions;
             }
             catch (Exception ex)

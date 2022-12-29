@@ -560,22 +560,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
                 SelectedBox = DgBoxes.FirstOrDefault(x=>x.Id.Equals(idActiveBox.ToString()));
 
-                //if(idBoxSelect == null || String.IsNullOrEmpty(idBoxSelect))
-                //{
-                //    SelectedBox = DgBoxes.FirstOrDefault();
-                //}
-                //else
-                //{
-                //    SelectedBox = DgBoxes.FirstOrDefault(x => x.Id.Equals(idBoxSelect));
-                //}
 
-                //foreach (DataGridViewRow row in dgBoxes.Rows)
-                //{
-                //    if (row.Cells[0].Value.ToString().Equals(idBoxSelect))
-                //    {
-                //        indiceTablaBox = row.Index;
-                //    }
-                //}
             }
 
             OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
@@ -602,6 +587,22 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             currentProductionReport.CantidadTotal = total;
 
             TotalActualAtado = total;
+        }
+
+
+        public IndBoxReportConfirmationViewModel GetOpSpecification()
+        {
+            OPChildrens opHijaespecificacion = null;
+            opHijaespecificacion = ProductionReportingBusiness.GetNextOpChildrenActive(this.currentGeneralPiece.OrderNumber);
+
+            OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
+            Cabezal = opHijaespecificacion != null ? opHijaespecificacion.Cabezal : string.Empty;
+            Centralizado = opHijaespecificacion != null ? opHijaespecificacion.Centralizado : string.Empty;
+            Cople = opHijaespecificacion != null ? opHijaespecificacion.Cople : string.Empty;
+
+
+            return this;
+
         }
 
         private void PopulateRejectionCodeByMachineDescription()
