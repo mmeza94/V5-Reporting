@@ -35,6 +35,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
         }
 
 
+
+
         public static ObservableCollection<ReportProductionHistory> GetReportProductionHistoryByParamsTest(Dictionary<string, object> listParams)
         {
             return DataAccessSQL.Instance.GetReportProductionHistoryByParamsTest(listParams);
@@ -49,7 +51,10 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
 
         }
 
-
+        public static List<int> GetCuttingNumbers(Dictionary<String, object> listParams)
+        {
+            return DataAccessSQL.Instance.GetCuttingNumbers(listParams);
+        }
 
 
         public static Enumerations.ForgeMode GetCurrentForgeMode(int GroupitemNumber)

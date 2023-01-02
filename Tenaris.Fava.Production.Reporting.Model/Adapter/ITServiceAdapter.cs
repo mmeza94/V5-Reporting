@@ -587,7 +587,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
 
         private bool TPSReportOnRevenido(string user, ReportProductionDto reportProductionDto, ref ErrorCollection errores, //usada en Business/ProductionReport -> WIN/ReportConfirmation
-             IList rejectionReportDetails, int Version)
+             IList rejectionReportDetails)
         {
             //Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errores = null;
             bool result = false;
@@ -612,8 +612,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                                              reportProductionDto.LoteSalida,
                                              "Observaciones",
                                              reportProductionDto.TipoUDTSalida,
-                                             GetTPSDescartes(reportProductionDto, rejectionReportDetails, Version),
-                                             GetTPSProbetas(reportProductionDto),
+                                             GetTPSDescartes(reportProductionDto, rejectionReportDetails),
+                                             GetTPSProbetasTest(reportProductionDto),
                                              out errores);
             }
             catch (Exception ex)
@@ -636,6 +636,39 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             }
             return probetas;
         }
+
+
+        private ProbetaAsociada[] GetTPSProbetasTest(ReportProductionDto reportProductionDto)
+        {
+            var listParams = GetDictionary(reportProductionDto);
+            var tblProbetas = ProductionReportingBusiness.GetCuttingNumbers(listParams);
+            ProbetaAsociada[] probetas = new ProbetaAsociada[tblProbetas.Count()];
+
+
+            int cont = 0;
+            foreach (int id in tblProbetas)
+            {
+                ProbetaAsociada probetaAsociada = new ProbetaAsociada() { Id = id };
+                probetas[cont] = probetaAsociada;
+                cont++;
+            }
+
+            return probetas;
+
+        }
+
+
+
+        private Dictionary<string, object> GetDictionary(ReportProductionDto reportProductionDto)
+        {
+            Dictionary<string, object> listparams = new Dictionary<string, object>();
+            listparams.Add("@OP", reportProductionDto.Orden);
+            listparams.Add("@Colada", reportProductionDto.Colada);
+            listparams.Add("@Atado", reportProductionDto.IdUDT);
+
+            return listparams;
+        }
+
 
 
         private bool TPSReportNotOnRevenido(string user, ReportProductionDto reportProductionDto, ref ErrorCollection errores, 
@@ -746,15 +779,26 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
         {
             Trace.Message("----------------------ITServiceAdapter----------------------");
             Trace.Message($"USER recived in Adapter: {user}");
-            Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errores = null;
+            ErrorCollection errores = null;
 
-            Tenaris.Fava.Production.Reporting.ITConnection.ITService.Probeta[] samples = null;
+            Probeta[] samples = null;
             var respuesta = new StringBuilder();
 
             try
             {
                 bool sendIT = false;
                
+                if(Configurations.Instance.Machine.Equals("Horno de Revenido"))
+                {
+                    
+                    if (ProbetasValidation(reportProductionDto))
+                        sendIT = TPSReportOnRevenido(user, reportProductionDto, ref errores, rejectionReportDetails);
+                    else
+                    {
+                        AddListErrors(errores);
+                    }
+                }
+
                 sendIT = TPSReportNotOnRevenido(user, reportProductionDto, ref errores, rejectionReportDetails);
 
                 if (sendIT)
@@ -774,6 +818,19 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             return respuesta.ToString();
         }
 
+
+        private bool ProbetasValidation(ReportProductionDto reportProductionDto)
+        {
+            ProbetaAsociada[] probetas = GetTPSProbetasTest(reportProductionDto);
+            bool validation = probetas.Where(p => p.Id == 0).ToList().Count == 0 ? true : false;
+            return validation;
+        }
+
+        private void AddListErrors(ErrorCollection errores)
+        {
+            errores = new ErrorCollection();
+            errores.List.Add("Probeteo", new ErrorElement() { Code = "Probeteo", Description = "Faltan Números de Probeta" });
+        }
 
 
 
@@ -796,7 +853,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                     #region Forma Adecuada cuando las probetas sean generadas  desde N2
                     Tenaris.Fava.Production.Reporting.ITConnection.ITService.ProbetaAsociada[] probetas = GetTPSProbetas(reportProductionDto);
                     if (probetas.Where(p => p.Id == 0).ToList().Count == 0)
-                        sendIT = TPSReportOnRevenido(user, reportProductionDto, ref errores, rejectionReportDetails, Version);
+                        sendIT = TPSReportOnRevenido(user, reportProductionDto, ref errores, rejectionReportDetails);
                     else
                     {
                         errores = new Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection();

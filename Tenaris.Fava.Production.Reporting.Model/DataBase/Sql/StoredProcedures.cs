@@ -17,6 +17,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public const string LoginUser = "[Common].[LoginUserTestV5]";
         public const string GetForgeMode = "Tracking.GetForgeMode";
         public const string GetLastMachineGoodPieces = "[Production].[GetLastMachineGoodPiecesTestV5]";
+        public const string GetCuttingNumber = "[Sample].[GetCuttingNumbers]";
 
 
 

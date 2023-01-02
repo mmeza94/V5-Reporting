@@ -123,7 +123,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             {
                 ShowError showError = new ShowError("Error", string.Format("Debe reportar el parcial anterior. Operación cancelada"));
                 ShowErrorMessageRequest.Raise(new Notification() { Content = showError });
-                return false;
+                throw new System.Exception();
             }
             return true;
         }
