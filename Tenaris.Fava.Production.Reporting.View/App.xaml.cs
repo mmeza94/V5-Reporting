@@ -39,10 +39,6 @@ namespace Tenaris.Fava.Production.Reporting.View
         public void ApplicationStartup(Object sender, StartupEventArgs e)
         {
             Configurations.Instance.GetConfigutation();
-
-          
-
-
             try
             {
                 ReflectionStrategy.LoaderReflection();
@@ -61,10 +57,6 @@ namespace Tenaris.Fava.Production.Reporting.View
 
             }
 
-            
-
-
-           
         }
 
     }

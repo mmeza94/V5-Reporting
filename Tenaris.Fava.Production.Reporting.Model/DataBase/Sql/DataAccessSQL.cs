@@ -302,7 +302,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                     {"@HeatNumber",reportProductionDto.Colada },
                     {"@idHistory" ,reportProductionDto.IdHistory },
                     {"@IdMachine" , DataAccessSQL.Instance.GetRejectionCodeByMachineDescriptionTestV5(
-                            new Dictionary<string, object> { { "@MachineDescription", "Granalladora" } }
+                            new Dictionary<string, object> { { "@MachineDescription", reportProductionDto.DescripcionMaquina } }
                             ).FirstOrDefault().Machine.Id },
                     {"@OrderNumber" , reportProductionDto.Orden },
                     {"@InsDateTime" , DateTime.Now },
@@ -342,7 +342,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 Dictionary<string, object> listParams = new Dictionary<string, object>
                 {
                     { "@ScrapCount", rejectionDetail.ScrapCount },
-                    {"@Observation" , rejectionDetail.Observation },
+                    {"@Observation" , rejectionDetail.Observation != null?rejectionDetail.Observation:" "},
                     {"@InsDateTime",rejectionDetail.InsDateTime },
                     {"@Active" ,(int)rejectionDetail.Active },
                     {"@idReportProductionHistory" , idRportProductionHistoryInserted },

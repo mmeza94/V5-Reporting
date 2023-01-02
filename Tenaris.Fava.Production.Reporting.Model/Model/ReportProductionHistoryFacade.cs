@@ -118,19 +118,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 
 
 
-                    //if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
-                    //{
-                    //    List<RejectionReportDetailV1> mappedlist = RejectionMapper(
-                    //        new List<RejectionReportDetail>(rejectionReportDetails.OfType<RejectionReportDetail>()));
-                    //    foreach (RejectionReportDetailV1 rrd in mappedlist)
-                    //        rrd.ReportProductionHistory = reportProductionHistory;
-                    //    new ReportProductionHistoryV1Repository().Save(reportProductionHistory, mappedlist);
-                    //}
-                    //else
-                    //    new ReportProductionHistoryV1Repository().Save(reportProductionHistory);
-                
-
-
             }
             catch (Exception ex)
             {
