@@ -10,7 +10,6 @@ using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
@@ -18,42 +17,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
     public class PaintingReportSupport
     {
 
-
-
-
         public static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static int reportedPieces;
-        public PaintingReportSupport()
-        {
-            //InitializeComponent();
-
-            log4net.Config.XmlConfigurator.Configure();
-            System.Runtime.Remoting.RemotingConfiguration.Configure(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile, false);
-            log.Debug("Starting...");
-            //this.Text = String.Format("Reporte de Producción - {0} {1}", ConfigurationManager.AppSettings["Machine"].ToString(), "");
-            //ToolTips();
-        }
-
-        //private void ToolTips()
-        //{
-        //    try
-        //    {
-        //        ToolTip tToolTip = new ToolTip();
-        //        tToolTip.ShowAlways = true;
-        //        tToolTip.SetToolTip(this.btnSearch, "Busqueda de cajones que fueron reportados en el extremo 2 de la linea actual");
-        //        tToolTip.SetToolTip(this.dgCajones, "Muestra los cajones que ya fueron reportados en el extremo 2 de la linea y estan en stock para pintado");
-        //        tToolTip.SetToolTip(this.btnLoad, "Carga de cajón a Pintado (TPS -> Nivel 2)");
-        //        tToolTip.SetToolTip(this.dgLoaded, "Muestra los cajones ya cargados en Nivel 2 ya sea a través del Entrance (OffLine) o cargados por esta aplicación (onLine)");
-        //        tToolTip.SetToolTip(this.btnReportPintado, "Reporte de cajones de Pintado (Nivel 2 -> TPS)");
-        //        tToolTip.SetToolTip(this.dgReported, "Resumen de reportes de caja");
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //}
-
-
 
         public static void dgStockParaTPS(int cajon,
             out ObservableCollection<StockTPS> StockParaTPSRef,
@@ -66,8 +31,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             Dictionary<string, object> dict = new Dictionary<string, object>();
             dict.Add("cajon", 123);
 
-           
-            ObservableCollection <BoxReport> dt = ProductionReportingBusiness.GetBoxesForPainting(dict);
+
+            ObservableCollection<BoxReport> dt = ProductionReportingBusiness.GetBoxesForPainting(dict);
             ObservableCollection<BoxReport> filteredTable = new ObservableCollection<BoxReport>();
             ObservableCollection<BoxReport> reported = new ObservableCollection<BoxReport>();
             ObservableCollection<StockTPS> stockList = new ObservableCollection<StockTPS>();
@@ -162,13 +127,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
         }
 
-
-
-
-
-
-
-        private static PaintingReport GetCurrentGroupItemToReport(int option, StockTPS SelectedTPS, BoxLoad SelectedLoaded)
+        private static PaintingReport GetCurrentGroupItemToReport(
+            int option, 
+            StockTPS SelectedTPS, 
+            BoxLoad SelectedLoaded)
         {
 
             PaintingReport reportProductionDto = null;
@@ -236,6 +198,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 reportProductionDto = new PaintingReport()
                 {
                     ChildOrden = Convert.ToInt32(currentDGRow2.Order),
+
                     ParentOrden = Convert.ToInt32(currentDGRow2.Order),
                     HeatNumber = Convert.ToInt32(currentDGRow2.Colada),
                     HeatNumberCode = currentDGRow2.CodigoColada,
@@ -256,16 +219,22 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             }
 
 
-
             else
             {
                 return null;
             }
+
+
+
             return reportProductionDto;
         }
 
-        public static void btnReportPintado_Click(int cajon, out ObservableCollection<StockTPS> StockParaTPSRef, out ObservableCollection<BoxLoad> CajasCargadasRef,
-            out ObservableCollection<BoxReport> ReportesDeCajaRef, BoxLoad SelectedLoaded,
+        public static void btnReportPintado_Click(
+            int cajon,
+            out ObservableCollection<StockTPS> StockParaTPSRef,
+            out ObservableCollection<BoxLoad> CajasCargadasRef,
+            out ObservableCollection<BoxReport> ReportesDeCajaRef,
+            BoxLoad SelectedLoaded,
             InteractionRequest<Notification> PaintReportConfirmationRequest,
             InteractionRequest<Notification> ShowErrorMessageRequest,
             InteractionRequest<Notification> ShowMessageRequest,
@@ -280,9 +249,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             string user = ProductionReportingBusiness.GetCurrentUser();
             ////Security.GetCurrentUser().UserID;
 
+
             if (selectedRow.LoadQuantity == 0)
             {
-                ShowQuestion question = new ShowQuestion("Mensaje de Carga", "La caja ya tiene reportado por Nivel 2 todas las piezas cargadas a Pintado, desea continuar con el envio? ");
+                ShowQuestion question = new ShowQuestion(
+                    "Mensaje de Carga", 
+                    "La caja ya tiene reportado por Nivel 2 todas las piezas cargadas a Pintado, desea continuar con el envio? ");
                 ShowQuestionRequest.Raise(new Notification() { Content = question });
                 if (question.Result)
 
@@ -331,36 +303,32 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
             }
         }
 
-        public static void btnLoad_Click(int cajon, out ObservableCollection<StockTPS> StockParaTPSRef, out ObservableCollection<BoxLoad> CajasCargadasRef,
-            out ObservableCollection<BoxReport> ReportesDeCajaRef, StockTPS SelectedTPS, InteractionRequest<Notification> ShowMessageRequest)
+        public static void btnLoad_Click(int cajon, 
+            out ObservableCollection<StockTPS> StockParaTPSRef, 
+            out ObservableCollection<BoxLoad> CajasCargadasRef,
+            out ObservableCollection<BoxReport> ReportesDeCajaRef, 
+            StockTPS SelectedTPS, 
+            InteractionRequest<Notification> ShowMessageRequest)
         {
             PaintingReport selectedRow = new PaintingReport();
             selectedRow = GetCurrentGroupItemToReport(1, SelectedTPS, null);
-
-
-
 
             bool isLoaded = false;
             string message = string.Empty;
             isLoaded = new ITServiceAdapter().TPSLoadMaterialForPainting(selectedRow);
 
-            if (isLoaded)
-            {
-                message = "Caja Cargada correctamente";
 
-            }
+            if (isLoaded)
+                message = "Caja Cargada correctamente";
             else
-            {
                 message = "Error al cargar la caja";
-            }
+
+
             ShowMessage showMessage = new ShowMessage("Mensaje de Carga", message);
             ShowMessageRequest.Raise(new Notification() { Content = showMessage });
 
 
             dgStockParaTPS(cajon, out StockParaTPSRef, out CajasCargadasRef, out ReportesDeCajaRef); //PRUEBADWF falta comprobar
         }
-
-
-
     }
 }

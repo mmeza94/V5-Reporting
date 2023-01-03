@@ -55,31 +55,22 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             }
         }
 
-        public bool Report(GeneralPiece currentDGRow)
+        public IActions Report()
         {
+            GeneralPiece currentDGRow = (GeneralPiece)Filters["Selected_Bundle"];
             var ReportPRoduction = currentDGRow.BuildReportProductionDTO();
-
             if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
-                return false;
-
+                return this;
             if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
-                return false;
-
+                return this;
             ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
                                                                              .ValidateReportStructure()
                                                                              .PrepareDtoForProductionReport();
-
             var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
                 true, reportingProcess.dgRejectionReportDetails);
-
-
             reportingProcess.ShowITMessage(response);
-
-
-
             reportingProcess.CheckReportProductionForNextOperation(response);
-
-            return false;
+            return this;
         }
 
         public ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)

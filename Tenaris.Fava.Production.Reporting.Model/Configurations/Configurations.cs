@@ -121,8 +121,12 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
             FlagITNOReportBox = configurations.FlagITNOReportBox;
             Workstation = configurations.Workstation;
             GetProductionGeneral = configurations.GetProductionGeneral;
+<<<<<<< HEAD
 
             StrategyWork = configurations.StrategyWork == null ?null: $"Tenaris.Fava.Production.Reporting.ViewModel.Stategy.{configurations.StrategyWork}";
+=======
+            StrategyWork = configurations.StrategyWork == null ? null : $"Tenaris.Fava.Production.Reporting.ViewModel.Stategy.{configurations.StrategyWork}";
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
         }
 
         public void GetConfigutation()

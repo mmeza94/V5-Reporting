@@ -1,13 +1,11 @@
 ﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.ViewModel;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
-using Tenaris.Fava.Production.Reporting.ViewModel.Stategy;
+using Tenaris.Fava.Production.Reporting.ViewModel.Reflection;
 using Tenaris.Fava.Production.Reporting.ViewModel.Support;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.View
@@ -15,17 +13,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
     public class PaintingReportViewModel : NotificationObject
     {
 
-        public IActions Actions { get; set; }
-
-        #region Constructor
-        public PaintingReportViewModel()
-        {
-
-
-            Actions = new PintadoStrategy();
-
-        }
-        #endregion
+        private readonly IActions Actions = ReflectionStrategy.MyStrategy;
 
         #region Private Properties
         private ObservableCollection<StockTPS> stockParaTPS;
@@ -174,24 +162,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             Actions.GeneralMachine
                 .AddFilter("@UdtBox", cajon);
 
-
-            StockParaTPS = new ObservableCollection<StockTPS>();
-
-
-
-            PaintingReportSupport.dgStockParaTPS(cajon,
-                out ObservableCollection<StockTPS> StockParaTPSRef,
-                out ObservableCollection<BoxLoad> CajasCargadasRef,
-                out ObservableCollection<BoxReport> ReportesDeCajaRef);
-
-
-
-
-            StockParaTPS = (ObservableCollection<StockTPS>)Actions.Search().OutPuts["CajasParaPintado"];
-            CajasCargadas = (ObservableCollection<BoxLoad>)Actions.OutPuts["CargadasParaPintado"];
-            ReportesDeCaja = (ObservableCollection<BoxReport>)Actions.OutPuts["BusqueadaRealizada3"];
-
-
+            StockParaTPS = (ObservableCollection<StockTPS>)Actions.Search().OutPuts["StockParaTPSRef"];
+            CajasCargadas = (ObservableCollection<BoxLoad>)Actions.OutPuts["CajasCargadasRef"];
+            ReportesDeCaja = (ObservableCollection<BoxReport>)Actions.OutPuts["ReportesDeCajaRef"];
 
             SelectedTPS = StockParaTPS.FirstOrDefault();
             SelectedLoaded = CajasCargadas.FirstOrDefault();
@@ -199,9 +172,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         }
         private void loadCommandExecute()
         {
-
-
-
             PaintingReportSupport.btnLoad_Click(cajon,
                 out ObservableCollection<StockTPS> StockParaTPSRef,
                 out ObservableCollection<BoxLoad> CajasCargadasRef,
@@ -216,6 +186,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         {
             //PaintingReportBusiness.Instance.Report(SelectedLoaded);
             //searchCommandExecute();
+
+
+            Actions.GeneralMachine
+                .AddFilter("cajonSelected", cajon)
+                .AddFilter("selectedLoaded", selectedLoaded);
+
+            Actions.Report();
+
             PaintingReportSupport.btnReportPintado_Click(
                 cajon,
                 out ObservableCollection<StockTPS> StockParaTPSRef,

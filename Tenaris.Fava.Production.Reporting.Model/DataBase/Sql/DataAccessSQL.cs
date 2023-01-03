@@ -41,13 +41,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
         #endregion
 
-
         #region "Variables"
 
         DbClient dbClient { get; set; }
         StoredProcedures procedures { get; set; }
         #endregion
-
 
         #region "Constructor"
 
@@ -57,7 +55,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         }
 
         #endregion
-
 
         public Library.DbClient.IDbCommand SelectedCommand(string store, string ConnectionString)
         {
@@ -276,7 +273,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             return IDlist;
         }
 
+<<<<<<< HEAD
             public int GetLastMachineGoodPieces(int groupItemNumber, int Sequence)
+=======
+        public int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
+        {
+            try
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
             {
 
                 var cm = SelectedCommand(StoredProcedures.GetLastMachineGoodPieces, Configurations.Instance.ConnectionString);
@@ -345,7 +348,15 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
             }
 
+<<<<<<< HEAD
             public void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionDetail, int idRportProductionHistoryInserted)
+=======
+        }
+
+        public void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionDetail, int idRportProductionHistoryInserted)
+        {
+            try
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
             {
                 try
                 {
@@ -369,8 +380,32 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                     Console.WriteLine(a);
 
 
+<<<<<<< HEAD
                 }
                 catch (Exception ex)
+=======
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                throw ex;
+
+            }
+
+        }
+
+        internal string GetCurrentUser()
+        {
+
+            var cm = SelectedCommand(StoredProcedures.GetCurrentUserByWorkstation, Configurations.Instance.ConnectionString);
+            Dictionary<string, object> listParams = new Dictionary<string, object>();
+            listParams.Add("@Workstation", Configurations.Instance.Workstation);
+
+            string result = "";
+            try
+            {
+                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
                 {
                     Trace.Exception(ex);
                     throw ex;
@@ -405,7 +440,26 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 }
             }
 
+<<<<<<< HEAD
             public bool LoginUser(string User, string Password)
+=======
+        public bool LoginUser(string User, string Password)
+        {
+
+            var cm = SelectedCommand(StoredProcedures.LoginUser, Configurations.Instance.ConnectionString);
+            Dictionary<string, object> listParams = new Dictionary<string, object>();
+            listParams.Add("@UserName", User);
+            listParams.Add("@Password", Password);
+
+
+            return cm.ExecuteScalar(listParams.ToReadOnlyDictionary()) != null;
+        }
+
+        public ObservableCollection<ReportProductionHistory> GetReportProductionHistory(Dictionary<String, object> listParams, string ConnectionString)
+        {
+
+            try
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
             {
 
                 var cm = SelectedCommand(StoredProcedures.LoginUser, Configurations.Instance.ConnectionString);
@@ -466,7 +520,125 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
                     return result;
                 }
+<<<<<<< HEAD
                 catch (Exception)
+=======
+
+                result = string.IsNullOrEmpty(result) ? "" : result;
+                Trace.Message("DBCommand executed succesfuly");
+
+                resul = result.Equals(idBox, StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
+
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+            }
+
+            return resul;
+        }
+
+        public int GetActiveBox()
+        {
+            var command = SelectedCommand(StoredProcedures.GetActiveBox, Configurations.Instance.ConnectionString);
+
+            var idBox = command.ExecuteScalar();
+
+            return Convert.ToInt32(idBox);
+        }
+
+        public string BoxSelect(int numberOrderMotehr)
+        {
+            string resul = string.Empty;
+            try
+            {
+
+
+                var command = SelectedCommand(StoredProcedures.IsBoxSelect, Configurations.Instance.ConnectionString);
+                Trace.Message("Selected Command: {0} ||| Connection string: {1}", StoredProcedures.IsBoxSelect, Configurations.Instance.ConnectionString);
+                //var machineConfig = ConfigurationManager.AppSettings["Machine"].ToString();
+                //command.Parameters["@IdBox"].Value = idBox;
+                command.Parameters["@NumerOrderMother"].Value = numberOrderMotehr;
+                //command.Parameters["@Resul"].Value = 0;
+                command.Parameters["@Resul"].Direction = ParameterDirection.Output;
+
+                Trace.Message("Parameters values: (NumerOrderMother = {0}) (@Resul = {1})", numberOrderMotehr, ParameterDirection.Output);
+                command.ExecuteTable();
+
+
+                resul = command.Parameters["@Resul"].Value.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+            }
+
+            return resul;
+        }
+
+        public void UpdBoxReportada(string idBox)
+        {
+            try
+            {
+                var command = SelectedCommand(StoredProcedures.UpdBoxReportada, Configurations.Instance.ConnectionString);
+                Trace.Message("DataAccesSQL.UpdBoxReportada(idBox={0}) || SelectedCommand: {1} || ConnectionString: {2}", idBox, StoredProcedures.UpdBoxReportada, Configurations.Instance.ConnectionString);
+                command.Parameters["@IdBox"].Value = idBox;
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+            }
+        }
+
+        public int GetPreviousSequence(string description)
+        {
+            try
+            {
+
+
+                var command = SelectedCommand(StoredProcedures.GetPreviousSequence, Configurations.Instance.ConnectionString);
+                Trace.Message("DataAccessSQL.GetPreviousSequence(description {0}) || SelectedCommand: {1} || ConnectionString: {2}", description, StoredProcedures.GetPreviousSequence, Configurations.Instance.ConnectionString);
+                command.Parameters["@Description"].Value = description;
+
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                return 8;
+            }
+        }
+
+        public int GetPreviousSequenceByOperation(string operation)
+        {
+            try
+            {
+                var command = SelectedCommand(StoredProcedures.GetPreviousSequenceByOperation, Configurations.Instance.ConnectionString);
+                Trace.Message("DataAccessSQL.GetPreviousSequenceByOperation(operation= {0}) || SelectedCommand: {1} || ConnectionString: {2}", operation, StoredProcedures.GetPreviousSequenceByOperation, Configurations.Instance.ConnectionString);
+                command.Parameters["@MachineOperation"].Value = operation.Trim();
+
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                return 0;
+            }
+        }
+
+        public ObservableCollection<BoxReport> GetBoxesForPainting(Dictionary<string, object> listParams)
+        {
+            ObservableCollection<BoxReport> result = new ObservableCollection<BoxReport>();
+            try
+            {
+                var cm = SelectedCommand(StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
+                //Trace.Message("DataAccessSQL.GetBoxesForPainting(udtBox= {0}) || SelectedCommand: {1} || ConnectionString: {2}", udtBox, StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
+                //Dictionary<string, object> listParams = new Dictionary<string, object>();
+                //listParams.Add("@UdtBox", udtBox);
+                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
                 {
 
                     throw;
@@ -497,7 +669,26 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                     string result = "";
                     while (dr.Read())
                     {
+<<<<<<< HEAD
                         result = (string)dr["IdBox"];
+=======
+                        row = new BoxReport()
+                        {
+                            Caja = dr["Caja"].ToString(),
+                            Colada = dr["Colada"].ToString(),
+                            OrdenHija = dr["OrdenHija"].ToString(),
+                            OrdenOrigen = dr["OrdenOrigen"].ToString(),
+                            TipoUdt = dr["TipoUDT"].ToString(),
+                            MaquinaAnterior = dr["MaquinaAnterior"].ToString(),
+                            MachineOperation = dr["MachineOperation"].ToString(),
+                            CantidadTotal = dr["CantidadTotal"].ToString(),
+                            PiezasBuenas = dr["PiezasBuenas"].ToString(),
+                            PiezasMalas = dr["PiezasMalas"].ToString(),
+                            IdMachine = dr["idMachine"].ToString(),
+
+                        };
+                        result.Add(row);
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
                     }
 
                     result = string.IsNullOrEmpty(result) ? "" : result;
@@ -506,16 +697,104 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                     resul = result.Equals(idBox, StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
 
                 }
+<<<<<<< HEAD
                 catch (Exception ex)
                 {
                     Trace.Exception(ex);
                 }
 
                 return resul;
+=======
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+            }
+                return result;
+        }
+
+        public int InsLoadPintado(PaintingReport reportProductionDto)
+        {
+            try
+            {
+                var command = SelectedCommand(StoredProcedures.InsLoadPintado, Configurations.Instance.ConnectionString);
+                Trace.Message("DataAccessSQL.InsLoadPintado(reportProductionDto.HeatNumberCode= {0}) || SelectedCommand: {1} || ConnectionString: {2}", reportProductionDto.HeatNumberCode, StoredProcedures.InsLoadPintado, Configurations.Instance.ConnectionString);
+                command.Parameters["@BoxUdt"].Value = reportProductionDto.BoxUdt;
+                command.Parameters["@ParentUdt"].Value = reportProductionDto.ParentUdt;
+                command.Parameters["@ChildOrder"].Value = reportProductionDto.ChildOrden;
+                command.Parameters["@ParentOrder"].Value = reportProductionDto.ParentOrden;
+                command.Parameters["@HeatNumber"].Value = reportProductionDto.HeatNumber;
+                command.Parameters["@HeatNumberCode"].Value = reportProductionDto.HeatNumberCode;
+                command.Parameters["@LoadQuantity"].Value = reportProductionDto.LoadQuantity;
+                command.Parameters["@SendedQuantity"].Value = reportProductionDto.SendedQuantiry;
+                command.Parameters["@Storage"].Value = reportProductionDto.Storage;
+                command.Parameters["@NextSequence"].Value = reportProductionDto.NextSequence;
+                command.Parameters["@NextOperation"].Value = reportProductionDto.NextOperation;
+                command.Parameters["@NextOption"].Value = reportProductionDto.NextOption;
+                command.Parameters["@LotId"].Value = reportProductionDto.LotId;
+                command.Parameters["@UdtType"].Value = reportProductionDto.UdtType;
+                command.Parameters["@UdcType"].Value = reportProductionDto.UdcType;
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                return 0;
+            }
+        }
+
+        public ObservableCollection<BoxLoad> GetLoadPainting(Dictionary<string, object> listparams)
+        {
+            ObservableCollection<BoxLoad> result = new ObservableCollection<BoxLoad>();
+            try
+            {
+                var cm = SelectedCommand(StoredProcedures.GetLoadPainting, Configurations.Instance.ConnectionString);
+                Dictionary<string, object> listParams = new Dictionary<string, object>
+                {
+                    { "@ChildOrder", null },
+                    { "@HeatNumber", null },
+                    { "@BoxUdt", listparams["@UdtBox"] }
+                };
+                Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}",
+                   listParams["@ChildOrder"] + " " + listParams["@HeatNumber"] + " " + listParams["@BoxUdt"],
+                   StoredProcedures.GetLoadPainting,
+                   Configurations.Instance.ConnectionString);
+                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+                {
+                    BoxLoad row;
+                    Trace.Message("(DataAccessSQL.GetLoadPainting): ExecuteReader Completed");
+                    while (dr.Read())
+                    {
+                        row = new BoxLoad()
+                        {
+                            IdLoadPainting = dr["idLoadPainting"].ToString(),
+                            Order = dr["Order"].ToString(),
+                            Colada = dr["Colada"].ToString(),
+                            CodigoColada = dr["Codigo Colada"].ToString(),
+                            TipoUdt = dr["TipoUdt"].ToString(),
+                            IdUdt = dr["IdUdt"].ToString(),
+                            TipoUdc = dr["TipoUdc"].ToString(),
+                            Lote = dr["Lote"].ToString(),
+                            Cantidad = dr["Cantidad"].ToString(),
+                            Almacen = dr["Almacen"].ToString(),
+                            Extremo = dr["Extremo"].ToString(),
+                            SecuenciaSiguiente = dr["SecuenciaSiguiente"].ToString(),
+                            OperacionSiguiente = dr["OperacionSiguiente"].ToString(),
+                            OpcionSiguiente = dr["OpcionSiguiente"].ToString(),
+                            Lot4 = dr["Lot4"].ToString(),
+                            LotId = dr["LotId"].ToString(),
+                            ProductReportBox = dr["ProductReportBox"].ToString(),
+                            Active = dr["Active"].ToString()
+                        };
+                        result.Add(row);
+                    }
+                }
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
             }
 
             public int GetActiveBox()
             {
+<<<<<<< HEAD
                 var command = SelectedCommand(StoredProcedures.GetActiveBox, Configurations.Instance.ConnectionString);
 
                 var idBox = command.ExecuteScalar();
@@ -524,6 +803,20 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
 
             public string BoxSelect(int numberOrderMotehr)
+=======
+                Trace.Exception(ex);
+                throw ex;
+            }
+            return result;
+        }
+
+        public OPChildrens GetNextOpChildrenActive(int OrdenNumberMother)
+        {
+            OPChildrens opHija = null;
+            var cm = SelectedCommand(StoredProcedures.GetNextOpChildrenActive, Configurations.Instance.ConnectionString);
+            Trace.Message("DataAccessSQL.GetNextOpChildrenActive(OrdenNumberMother= {0}) || SelectedCommand: {1} || ConnectionString: {2}", OrdenNumberMother, StoredProcedures.GetNextOpChildrenActive, Configurations.Instance.ConnectionString);
+            try
+>>>>>>> 8f78c3a2d292ba2bcde027cff6ed7c0ddb52aad3
             {
                 string resul = string.Empty;
                 try
@@ -789,6 +1082,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 return opHija;
             }
         }
+
     }
 
 

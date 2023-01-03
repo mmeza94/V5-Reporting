@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tenaris.Fava.Production.Reporting.Model.Model
+﻿namespace Tenaris.Fava.Production.Reporting.Model.Model
 {
+
     public class BoxLoad
     {
         private string idLoadPainting;
+        private string active;
+
         private string order;
         private string colada;
         private string codigoColada;
@@ -25,7 +22,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
         private string lot4;
         private string lotId;
         private string productReportBox;
-        private string active;
+
 
         public string IdLoadPainting { get => idLoadPainting; set => idLoadPainting = value; }
         public string Order { get => order; set => order = value; }
@@ -82,4 +79,5 @@ namespace Tenaris.Fava.Production.Reporting.Model.Model
 
         }
     }
+
 }
