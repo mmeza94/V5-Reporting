@@ -41,13 +41,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
         #endregion
 
-
         #region "Variables"
 
         DbClient dbClient { get; set; }
         StoredProcedures procedures { get; set; }
         #endregion
-
 
         #region "Constructor"
 
@@ -57,7 +55,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         }
 
         #endregion
-
 
         public Library.DbClient.IDbCommand SelectedCommand(string store, string ConnectionString)
         {
@@ -157,7 +154,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             return items;
         }
 
-
         public ObservableCollection<ReportProductionHistory> GetReportProductionHistoryByParamsTest(Dictionary<string, object> listParams)
         {
             var cm = SelectedCommand(StoredProcedures.GetReportProductionHistoryByParamsTest, Configurations.Instance.ConnectionString);
@@ -206,7 +202,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             return items;
         }
 
-
         public ObservableCollection<RejectionCode> GetRejectionCodeByMachineDescriptionTestV5(Dictionary<string, object> listParams)
         {
             var cm = SelectedCommand(StoredProcedures.GetRejectionCodeByMachineDescriptionTestV5, Configurations.Instance.ConnectionString);
@@ -238,7 +233,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
             return items;
         }
-
 
         public Enumerations.ForgeMode GetCurrentForgeMode(int groupItemNumber)
         {
@@ -287,8 +281,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             return TotalGoodCount;
         }
 
-
-
         public int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
         {
             try
@@ -333,7 +325,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
         }
 
-
         public void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionDetail, int idRportProductionHistoryInserted)
         {
             try
@@ -368,7 +359,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
         }
 
-
         internal string GetCurrentUser()
         {
 
@@ -394,7 +384,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 return result;
             }
         }
-
 
         public bool LoginUser(string User, string Password)
         {
@@ -514,7 +503,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             return Convert.ToInt32(idBox);
         }
 
-
         public string BoxSelect(int numberOrderMotehr)
         {
             string resul = string.Empty;
@@ -596,18 +584,15 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
         }
 
-
         public ObservableCollection<BoxReport> GetBoxesForPainting(Dictionary<string, object> listParams)
         {
+            ObservableCollection<BoxReport> result = new ObservableCollection<BoxReport>();
             try
             {
                 var cm = SelectedCommand(StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
                 //Trace.Message("DataAccessSQL.GetBoxesForPainting(udtBox= {0}) || SelectedCommand: {1} || ConnectionString: {2}", udtBox, StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
                 //Dictionary<string, object> listParams = new Dictionary<string, object>();
                 //listParams.Add("@UdtBox", udtBox);
-
-                ObservableCollection<BoxReport> result = new ObservableCollection<BoxReport>();
-
                 using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
                 {
                     BoxReport row;
@@ -629,27 +614,21 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                             IdMachine = dr["idMachine"].ToString(),
 
                         };
-
                         result.Add(row);
                     }
                 }
-
-                return result;
             }
             catch (Exception ex)
             {
                 Trace.Exception(ex);
-                return null;
             }
+                return result;
         }
-
 
         public int InsLoadPintado(PaintingReport reportProductionDto)
         {
             try
             {
-
-
                 var command = SelectedCommand(StoredProcedures.InsLoadPintado, Configurations.Instance.ConnectionString);
                 Trace.Message("DataAccessSQL.InsLoadPintado(reportProductionDto.HeatNumberCode= {0}) || SelectedCommand: {1} || ConnectionString: {2}", reportProductionDto.HeatNumberCode, StoredProcedures.InsLoadPintado, Configurations.Instance.ConnectionString);
                 command.Parameters["@BoxUdt"].Value = reportProductionDto.BoxUdt;
@@ -667,7 +646,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 command.Parameters["@LotId"].Value = reportProductionDto.LotId;
                 command.Parameters["@UdtType"].Value = reportProductionDto.UdtType;
                 command.Parameters["@UdcType"].Value = reportProductionDto.UdcType;
-
                 return Convert.ToInt32(command.ExecuteScalar());
             }
             catch (Exception ex)
@@ -677,25 +655,22 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
         }
 
-
         public ObservableCollection<BoxLoad> GetLoadPainting(Dictionary<string, object> listparams)
         {
+            ObservableCollection<BoxLoad> result = new ObservableCollection<BoxLoad>();
             try
             {
-
                 var cm = SelectedCommand(StoredProcedures.GetLoadPainting, Configurations.Instance.ConnectionString);
-
-                //listParams.Add("@ChildOrder", null);
-                //listParams.Add("@HeatNumber", null);
-                //listParams.Add("@UdtBox", cajon);
-                Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}", listparams["@ChildOrder"] + " " + listparams["@HeatNumber"] + " " + listparams["@UdtBox"], StoredProcedures.GetLoadPainting, Configurations.Instance.ConnectionString);
-                Dictionary<string, object> listParams = new Dictionary<string, object>();
-                listParams.Add("@ChildOrder", listparams["@ChildOrder"]);
-                listParams.Add("@HeatNumber", listparams["@HeatNumber"]);
-                listParams.Add("@BoxUdt", listparams["@UdtBox"]);
-
-                ObservableCollection<BoxLoad> result = new ObservableCollection<BoxLoad>();
-
+                Dictionary<string, object> listParams = new Dictionary<string, object>
+                {
+                    { "@ChildOrder", null },
+                    { "@HeatNumber", null },
+                    { "@BoxUdt", listparams["@UdtBox"] }
+                };
+                Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}",
+                   listParams["@ChildOrder"] + " " + listParams["@HeatNumber"] + " " + listParams["@BoxUdt"],
+                   StoredProcedures.GetLoadPainting,
+                   Configurations.Instance.ConnectionString);
                 using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
                 {
                     BoxLoad row;
@@ -722,30 +697,18 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                             LotId = dr["LotId"].ToString(),
                             ProductReportBox = dr["ProductReportBox"].ToString(),
                             Active = dr["Active"].ToString()
-
-
                         };
-
                         result.Add(row);
                     }
                 }
-
-                return result;
-
-
-                //command.Parameters["@ChildOrder"].Value = childOrder;
-                //command.Parameters["@HeatNumber"].Value = heatNumber;
-                //command.Parameters["@BoxUdt"].Value = string.IsNullOrEmpty(boxUdt) ? null : boxUdt;
-
-                //return command.ExecuteTable();
             }
             catch (Exception ex)
             {
                 Trace.Exception(ex);
-                return null;
+                throw ex;
             }
+            return result;
         }
-
 
         public OPChildrens GetNextOpChildrenActive(int OrdenNumberMother)
         {
@@ -780,6 +743,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
 
             return opHija;
         }
+
     }
 }
 

@@ -581,8 +581,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
             if (Selected_Bundle != null)
             {
                 //GeneralPiece generalPiece = Selected_Bundle;
-
-                Actions.Report(Selected_Bundle);
+                Actions.GeneralMachine.AddFilter("Selected_Bundle", Selected_Bundle);
+                Actions.Report();
 
                 //ReportConfirmationViewModel.RejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
 

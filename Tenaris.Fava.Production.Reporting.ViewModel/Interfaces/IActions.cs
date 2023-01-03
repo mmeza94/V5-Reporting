@@ -15,7 +15,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Interfaces
         GeneralMachine GeneralMachine { get; }
         IReportingProcess reportingProcess { get; set; }
         IActions Search();
-        bool Report(GeneralPiece currentDGRow);
+        IActions Report();
         ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle);
     }
 }
