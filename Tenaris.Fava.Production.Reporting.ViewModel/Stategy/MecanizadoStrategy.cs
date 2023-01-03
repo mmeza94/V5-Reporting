@@ -61,17 +61,20 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
 
-        public bool Report(GeneralPiece currentDGRow)
+        public IActions Report()
         {
             try
             {
+                GeneralPiece currentDGRow = (GeneralPiece)Filters["Selected_Bundle"];
+
+
                 var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
 
                 if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
-                    return false;
+                    return this;
 
                 if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
-                    return false;
+                    return this;
 
 
 
@@ -97,7 +100,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             {
 
             }
-            return false;
+            return this;
         }
 
 
