@@ -614,7 +614,12 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 //Trace.Message("DataAccessSQL.GetBoxesForPainting(udtBox= {0}) || SelectedCommand: {1} || ConnectionString: {2}", udtBox, StoredProcedures.GetBoxesForPainting, Configurations.Instance.ConnectionString);
                 //Dictionary<string, object> listParams = new Dictionary<string, object>();
                 //listParams.Add("@UdtBox", udtBox);
-                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+                using (var dr = cm.ExecuteReader(
+                    listParams
+                    .Where(KeyValuePair => KeyValuePair.Key.Equals("@UdtBox"))
+                    .ToDictionary(KeyValuePair => KeyValuePair.Key, KeyValuePair => KeyValuePair.Value)
+                    .ToReadOnlyDictionary()
+                    ))
                 {
                     BoxReport row;
                     Trace.Message("(DataAccessSQL.GetBoxesForPainting): ExecuteReader completed");

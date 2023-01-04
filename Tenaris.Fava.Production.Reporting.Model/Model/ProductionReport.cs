@@ -418,8 +418,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             });
             return generalPiecesClassified.ToObservableCollection();
         }
-
-
     }
 
     public class ProcessorPieces

@@ -1,5 +1,6 @@
 ﻿namespace Tenaris.Fava.Production.Reporting.Model.Model
 {
+
     public class StockTPS
     {
 

@@ -15,6 +15,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
 
         private readonly IActions Actions = ReflectionStrategy.MyStrategy;
 
+        public PaintingReportViewModel()
+        {
+            Actions.GeneralMachine
+                .SetRequest(PaintReportConfirmationWindowRequest)
+                .SetShowErrorMessageRequest(ShowErrorWindowRequest)
+                .SetShowMessageRequest(ShowMessageWindowRequest)
+                .SetShowQuestionRequests(ShowQuestionWindowRequest);
+        }
+
         #region Private Properties
         private ObservableCollection<StockTPS> stockParaTPS;
         private ObservableCollection<BoxLoad> cajasCargadas;
@@ -186,27 +195,25 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         {
             //PaintingReportBusiness.Instance.Report(SelectedLoaded);
             //searchCommandExecute();
-
-
             Actions.GeneralMachine
                 .AddFilter("cajonSelected", cajon)
-                .AddFilter("selectedLoaded", selectedLoaded);
-
+                .AddFilter("selectedLoaded", selectedLoaded)
+                .AddFilter("type_action", 2);
             Actions.Report();
 
-            PaintingReportSupport.btnReportPintado_Click(
-                cajon,
-                out ObservableCollection<StockTPS> StockParaTPSRef,
-                out ObservableCollection<BoxLoad> CajasCargadasRef,
-                out ObservableCollection<BoxReport> ReportesDeCajaRef,
-                selectedLoaded,
-                PaintReportConfirmationWindowRequest,
-                ShowErrorWindowRequest,
-                ShowMessageWindowRequest,
-                ShowQuestionWindowRequest);
-            StockParaTPS = StockParaTPSRef;
-            CajasCargadas = CajasCargadasRef;
-            ReportesDeCaja = ReportesDeCajaRef;
+            //PaintingReportSupport.btnReportPintado_Click(
+            //    cajon,
+            //    out ObservableCollection<StockTPS> StockParaTPSRef,
+            //    out ObservableCollection<BoxLoad> CajasCargadasRef,
+            //    out ObservableCollection<BoxReport> ReportesDeCajaRef,
+            //    selectedLoaded,
+            //    PaintReportConfirmationWindowRequest,
+            //    ShowErrorWindowRequest,
+            //    ShowMessageWindowRequest,
+            //    ShowQuestionWindowRequest);
+            //StockParaTPS = StockParaTPSRef;
+            //CajasCargadas = CajasCargadasRef;
+            //ReportesDeCaja = ReportesDeCajaRef;
         }
         #endregion
 
