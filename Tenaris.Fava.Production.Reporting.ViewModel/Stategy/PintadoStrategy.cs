@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -9,6 +10,7 @@ using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
+using Tenaris.Fava.Production.Reporting.ViewModel.Dialog;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
 using Tenaris.Library.Framework.Utility.Conversion;
@@ -17,12 +19,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 {
     public class PintadoStrategy : GeneralMachine, IActions
     {
+
         #region Properties
         public Dictionary<string, object> Filters { get; set; }
         public Dictionary<string, object> OutPuts { get; set; }
         public GeneralMachine GeneralMachine => this;
         public IReportingProcess reportingProcess { get; set; }
+        private ShowQuestion question;
         private int reportedPieces;
+        private PaintingReportConfirmationViewModel reportConfirmation;
         #endregion
 
         #region Constructor
@@ -63,16 +68,87 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public IActions Report()
         {
-            PaintingReportBuilder
-                .Create()
-                .ConvertByBoxLoad((BoxLoad)Filters["selectedLoaded"]);
-            Search();
+            if (Filters["type_action"].ToString().ToInteger() == 2)
+            {
+                reporting();
+                return this;
+            }
+            loadReport();
             return this;
         }
 
         public ObservableCollection<ReportProductionHistory> dgReporteProduccion_SelectionChanged(GeneralPiece SelectedBundle)
         {
             throw new NotImplementedException();
+        }
+
+        private void reporting()
+        {
+            BoxLoad box = BoxLoadBuilder
+                .ManipulateObject(Filters["selectedLoaded"])
+                .Build();
+
+            int totals = box.Cantidad.ToInteger() - reportedPieces;
+
+            PaintingReport paintingReport = PaintingReportBuilder
+                .Create()
+                .ConvertByBoxLoad(box)
+                .WithLoadQuantity(totals)
+                .WithGoodCount(totals)
+                .Build();
+
+            reportConfirmation =
+               new PaintingReportConfirmationViewModel(paintingReport, "TestUser");
+
+            if (paintingReport.LoadQuantity == 0)
+            {
+                question = new ShowQuestion("Mensaje de Carga", "La caja ya tiene reportado por Nivel 2 todas las piezas cargadas a Pintado, desea continuar con el envio? ");
+                ShowQuestionRequests.Raise(new Notification() { Content = question });
+            }
+
+            if (paintingReport.LoadQuantity == 0 && !question.Result)
+            {
+                Search();
+                return;
+            }
+
+            Request.Raise(new Notification() { Content = reportConfirmation });
+
+            if (!reportConfirmation.Result)
+            {
+                Search();
+                return;
+            }
+
+            //PaintingReportConfirmationSupport.Report(reportConfirmation.DisponiblesTPS,
+            //                                         reportConfirmation.CargadasAnterior,
+            //                                         reportConfirmation.BuenasActual,
+            //                                         reportConfirmation.MalasActual,
+            //                                         reportConfirmation.ReprocesosActual,
+            //                                         reportConfirmation.CargadasActual,
+            //                                         reportConfirmation.currentProductionReportDto,
+            //                                         reportConfirmation.rejectionReportDetails,
+            //                                         reportConfirmation.UserReport,
+            //                                         ShowQuestionRequests, ShowMessageRequest,
+            //                                         ShowErrorMessageRequest);
+
+            question = new ShowQuestion("Confirmar Reporte",
+                string.Format("Resumen de lo Reportado: \n\n Buenas:{0} \n" + " Malas:{1} \n Reprocesos:{2} \n Total:{3} \n\n ¿Desea reportar estas cantidades?"
+                                            , reportConfirmation.BuenasActual
+                                            , reportConfirmation.MalasActual
+                                            , reportConfirmation.ReprocesosActual
+                                            , reportConfirmation.CargadasActual));
+
+            ShowQuestionRequests.Raise(new Notification() { Content = question });
+
+
+
+        }
+
+        private void loadReport()
+        {
+
+            Search();
         }
 
         private static StockTPS stockTPS(DataRow row)

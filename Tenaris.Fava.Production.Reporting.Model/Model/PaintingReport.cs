@@ -33,6 +33,29 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
 
     public interface IPaintingReportBuilder
     {
+
+        IPaintingReportBuilder WithIdPainting(int? value);
+        IPaintingReportBuilder WithBoxUdt(string value);
+        IPaintingReportBuilder WithParentUdt(string value);
+        IPaintingReportBuilder WithChildOrden(int value);
+        IPaintingReportBuilder WithParentOrden(int value);
+        IPaintingReportBuilder WithHeatNumber(int value);
+        IPaintingReportBuilder WithHeatNumberCode(string value);
+        IPaintingReportBuilder WithLoadQuantity(int value);
+        IPaintingReportBuilder WithSendedQuantiry(int value);
+        IPaintingReportBuilder WithStorage(string value);
+        IPaintingReportBuilder WithNextSequence(int value);
+        IPaintingReportBuilder WithNextOperation(string value);
+        IPaintingReportBuilder WithNextOption(string value);
+        IPaintingReportBuilder WithLotId(string value);
+        IPaintingReportBuilder WithUdtType(string value);
+        IPaintingReportBuilder WithUdcType(string value);
+        IPaintingReportBuilder WithGoodCount(int value);
+        IPaintingReportBuilder WithScrapCount(int value);
+        IPaintingReportBuilder WithIdUser(string value);
+        IPaintingReportBuilder WithIdHistory(string value);
+        IPaintingReportBuilder WithInsDatetIme(DateTimeOffset value);
+        IPaintingReportBuilder WithUpdDatetIme(DateTimeOffset value);
         IPaintingReportBuilder ConvertByBoxLoad(BoxLoad boxLoad);
         IPaintingReportBuilder ConvertByStockTPS(StockTPS stockTPS);
         PaintingReport Build();
@@ -75,6 +98,138 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
 
         public IPaintingReportBuilder ConvertByStockTPS(StockTPS stockTPS)
         {
+            return this;
+        }
+
+        public IPaintingReportBuilder WithIdPainting(int? value)
+        {
+            paintingReport.IdPainting = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithBoxUdt(string value)
+        {
+            paintingReport.BoxUdt = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithParentUdt(string value)
+        {
+            paintingReport.ParentUdt = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithChildOrden(int value)
+        {
+            paintingReport.ChildOrden = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithParentOrden(int value)
+        {
+            paintingReport.ParentOrden = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithHeatNumber(int value)
+        {
+            paintingReport.HeatNumber = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithHeatNumberCode(string value)
+        {
+            paintingReport.HeatNumberCode = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithLoadQuantity(int value)
+        {
+            paintingReport.LoadQuantity = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithSendedQuantiry(int value)
+        {
+            paintingReport.SendedQuantiry = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithStorage(string value)
+        {
+            paintingReport.Storage = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithNextSequence(int value)
+        {
+            paintingReport.NextSequence = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithNextOperation(string value)
+        {
+            paintingReport.NextOperation = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithNextOption(string value)
+        {
+            paintingReport.NextOption = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithLotId(string value)
+        {
+            paintingReport.LotId = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithUdtType(string value)
+        {
+            paintingReport.UdtType = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithUdcType(string value)
+        {
+            paintingReport.UdcType = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithGoodCount(int value)
+        {
+            paintingReport.GoodCount = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithScrapCount(int value)
+        {
+            paintingReport.ScrapCount = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithIdUser(string value)
+        {
+            paintingReport.IdUser = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithIdHistory(string value)
+        {
+            paintingReport.IdHistory = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithInsDatetIme(DateTimeOffset value)
+        {
+            paintingReport.InsDatetIme = value;
+            return this;
+        }
+
+        public IPaintingReportBuilder WithUpdDatetIme(DateTimeOffset value)
+        {
+            paintingReport.UpdDatetIme = value;
             return this;
         }
 

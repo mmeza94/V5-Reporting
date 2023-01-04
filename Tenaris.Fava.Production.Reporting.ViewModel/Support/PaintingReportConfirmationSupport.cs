@@ -1,12 +1,8 @@
 ﻿using log4net;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Configuration;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Support;
@@ -35,10 +31,18 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
 
 
         static PaintingReport currentProductionReportDto;
-        public static void Report(int DisponiblesTPS, int CargadasAnterior, int BuenasActual, int MalasActual,
-            int ReprocesosActual, int CargadasActual, PaintingReport currentProductionReportDto2, 
-            ObservableCollection<RejectionReportDetail> rejectionReportDetails, string UserReport,
-            InteractionRequest<Notification> QuestionRequest, InteractionRequest<Notification> MessageRequest, InteractionRequest<Notification> ErroRequest)
+        public static void Report(int DisponiblesTPS,
+            int CargadasAnterior,
+            int BuenasActual,
+            int MalasActual,
+            int ReprocesosActual,
+            int CargadasActual,
+            PaintingReport currentProductionReportDto2,
+            ObservableCollection<RejectionReportDetail> rejectionReportDetails,
+            string UserReport,
+            InteractionRequest<Notification> QuestionRequest,
+            InteractionRequest<Notification> MessageRequest,
+            InteractionRequest<Notification> ErroRequest)
         {
             currentProductionReportDto = currentProductionReportDto2;
 
@@ -47,14 +51,28 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 var confirmMessage = string.Format("Resumen de lo Reportado: \n\n Buenas:{0} \n" + " Malas:{1} \n Reprocesos:{2} \n Total:{3} \n\n ¿Desea reportar estas cantidades?"
                                             , BuenasActual, MalasActual, ReprocesosActual, CargadasActual);
                 ShowQuestion showQuestion = new ShowQuestion("Confirmar Reporte", confirmMessage);
-                QuestionRequest.Raise(new Notification() {Content = showQuestion });
+                QuestionRequest.Raise(new Notification() { Content = showQuestion });
                 if (showQuestion.Result)
                 {
+                    if (ConfigurationManager.AppSettings["UserByPass"].Equals("TestUser"))
+                    { throw new Exception("Estas en modo de pruebas"); }
+
+                    throw new Exception("Error test");
                     ////if (chBEdit.Checked)
-                    currentProductionReportDto2=PrepareDtoForProductionReport(currentProductionReportDto2, DisponiblesTPS, CargadasAnterior, BuenasActual, MalasActual, CargadasActual, UserReport);
-                    var response = new ProductionReport().ReportProductionForPainting(currentProductionReportDto, Enumerations.ProductionReportSendStatus.Parcial, true, rejectionReportDetails);
+                    currentProductionReportDto2 = PrepareDtoForProductionReport(currentProductionReportDto2,
+                        DisponiblesTPS,
+                        CargadasAnterior,
+                        BuenasActual,
+                        MalasActual,
+                        CargadasActual,
+                        UserReport);
+                    var response = new ProductionReport()
+                        .ReportProductionForPainting(currentProductionReportDto,
+                        Enumerations.ProductionReportSendStatus.Parcial,
+                        true,
+                        rejectionReportDetails);
                     ShowMessage showMessage = new ShowMessage("Reporte de Producción", response);
-                    MessageRequest.Raise(new Notification() {Content = showMessage });
+                    MessageRequest.Raise(new Notification() { Content = showMessage });
 
                     ////CheckReportProductionForNextOperation(response);
                     //this.Close();
@@ -67,7 +85,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         }
 
 
-        public static PaintingReport PrepareDtoForProductionReport(PaintingReport currentReportProduction,int DisponiblesTPS, int CargadasAnterior, int BuenasActual, int MalasActual, int CargadasActual, string UserReport)
+        public static PaintingReport PrepareDtoForProductionReport(PaintingReport currentReportProduction, int DisponiblesTPS, int CargadasAnterior, int BuenasActual, int MalasActual, int CargadasActual, string UserReport)
         {
             //currentProductionReportDto.CantidadTotal = int.Parse(tbLoadedCountL2.Text);// Corrección para prevenir cantidad a cargar por parciales y reporte a IT
             var cantidadTotal = DisponiblesTPS - ((CargadasAnterior == 0) ? 0 : CargadasAnterior);
