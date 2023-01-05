@@ -86,10 +86,16 @@
         private readonly StockTPS stockTPS;
 
         private StockTPSBuilder() { stockTPS = new StockTPS(); }
+        private StockTPSBuilder(object obj) { stockTPS = (StockTPS)obj; }
 
         public static IStockTPSBuilder Create()
         {
             return new StockTPSBuilder();
+        }
+
+        public static IStockTPSBuilder ManipulateObject(object obj)
+        {
+            return new StockTPSBuilder(obj);
         }
 
         public IStockTPSBuilder WithAlmacen(string value)

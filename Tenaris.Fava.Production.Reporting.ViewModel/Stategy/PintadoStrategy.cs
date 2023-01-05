@@ -7,6 +7,7 @@ using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
+using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Support;
@@ -28,6 +29,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         private ShowQuestion question;
         private int reportedPieces;
         private PaintingReportConfirmationViewModel reportConfirmation;
+        private ITServiceAdapter serviceAdapter = new ITServiceAdapter();
         #endregion
 
         #region Constructor
@@ -43,37 +45,45 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public IActions Search()
         {
-            ObservableCollection<BoxReport> BoxesForPainting = ProductionReportingBusiness.GetBoxesForPainting(Filters),
+            try
+            {
+                ObservableCollection<BoxReport> BoxesForPainting = ProductionReportingBusiness.GetBoxesForPainting(Filters),
                 filteredTable = BoxesForPainting.Where(Box => Box.MachineOperation.Equals("Mecanizado Extremo 2")).ToObservableCollection(),
                 reported = BoxesForPainting.Where(Box => Box.MachineOperation.Equals("Pintado")).ToObservableCollection();
-            ObservableCollection<StockTPS> stockTPs = new ObservableCollection<StockTPS>();
-            ObservableCollection<BoxLoad> LoadPainting = ProductionReportingBusiness.GetLoadPainting(Filters);
+                ObservableCollection<StockTPS> stockTPs = new ObservableCollection<StockTPS>();
+                ObservableCollection<BoxLoad> LoadPainting = ProductionReportingBusiness.GetLoadPainting(Filters);
 
-            if (filteredTable.Count > 0)
-                stockTPs = new ITServiceAdapter()
-                    .GetAvailableStock(filteredTable.FirstOrDefault().OrdenHija, 11)
-                    .Select($"IdUdt = '{int.Parse(Filters["@UdtBox"].ToString())}'")
-                    .Select(stockTPS)
-                    .ToObservableCollection();
+                if (filteredTable.Count > 0)
+                    stockTPs = new ITServiceAdapter()
+                        .GetAvailableStock(filteredTable.FirstOrDefault().OrdenHija, 11)
+                        .Select($"IdUdt = '{int.Parse(Filters["@UdtBox"].ToString())}'")
+                        .Select(stockTPS)
+                        .ToObservableCollection();
 
-            if (reported.Count > 0)
-                reportedPieces = reported.Sum(Box => Box.PiezasBuenas.ToInteger());
+                if (reported.Count > 0)
+                    reportedPieces = reported.Sum(Box => Box.PiezasBuenas.ToInteger());
 
-            AddValues("ReportesDeCajaRef", BoxesForPainting)
-                .AddValues("CajasCargadasRef", LoadPainting)
-                .AddValues("StockParaTPSRef", stockTPs);
-
+                AddValues("ReportesDeCajaRef", BoxesForPainting)
+                    .AddValues("CajasCargadasRef", LoadPainting)
+                    .AddValues("StockParaTPSRef", stockTPs);
+            }
+            catch (Exception) { }
             return this;
         }
 
         public IActions Report()
         {
-            if (Filters["type_action"].ToString().ToInteger() == 2)
+            try
             {
-                reporting();
-                return this;
+                if (Filters["type_action"].ToString().ToInteger() == 2)
+                {
+                    reporting();
+                    return this;
+                }
+                loadReport();
             }
-            loadReport();
+            catch (Exception) { }
+
             return this;
         }
 
@@ -98,7 +108,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 .Build();
 
             reportConfirmation =
-               new PaintingReportConfirmationViewModel(paintingReport, "TestUser");
+               new PaintingReportConfirmationViewModel(paintingReport, ProductionReportingBusiness.GetCurrentUser());
 
             if (paintingReport.LoadQuantity == 0)
             {
@@ -120,18 +130,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 return;
             }
 
-            //PaintingReportConfirmationSupport.Report(reportConfirmation.DisponiblesTPS,
-            //                                         reportConfirmation.CargadasAnterior,
-            //                                         reportConfirmation.BuenasActual,
-            //                                         reportConfirmation.MalasActual,
-            //                                         reportConfirmation.ReprocesosActual,
-            //                                         reportConfirmation.CargadasActual,
-            //                                         reportConfirmation.currentProductionReportDto,
-            //                                         reportConfirmation.rejectionReportDetails,
-            //                                         reportConfirmation.UserReport,
-            //                                         ShowQuestionRequests, ShowMessageRequest,
-            //                                         ShowErrorMessageRequest);
-
             question = new ShowQuestion("Confirmar Reporte",
                 string.Format("Resumen de lo Reportado: \n\n Buenas:{0} \n" + " Malas:{1} \n Reprocesos:{2} \n Total:{3} \n\n ¿Desea reportar estas cantidades?"
                                             , reportConfirmation.BuenasActual
@@ -141,13 +139,56 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             ShowQuestionRequests.Raise(new Notification() { Content = question });
 
+            if (!question.Result)
+            {
+                Search();
+                return;
+            }
 
 
+
+            int cantidadTotal = reportConfirmation.DisponiblesTPS - (reportConfirmation.CargadasAnterior == 0 ? 0 : reportConfirmation.CargadasAnterior);
+
+            ShowMessage showMessage = new ShowMessage("Reporte de Producción",
+                new ProductionReport()
+                .ReportProductionForPainting(
+                    PaintingReportBuilder
+                        .ManipulatePaintingReport(paintingReport)
+                        .WithLoadQuantity(cantidadTotal == 0 ? reportConfirmation.CargadasActual : cantidadTotal)
+                        .WithGoodCount(reportConfirmation.BuenasActual)
+                        .WithScrapCount(reportConfirmation.MalasActual)
+                        .WithIdUser(reportConfirmation.UserReport)
+                      .Build(),
+                    Enumerations.ProductionReportSendStatus.Parcial,
+                    true,
+                    reportConfirmation.rejectionReportDetails));
+
+            ShowMessageRequest.Raise(new Notification() { Content = showMessage });
+            Search();
         }
 
         private void loadReport()
         {
+            try
+            {
+                StockTPS stockTPS = StockTPSBuilder
+                                .ManipulateObject(Filters["selectedTPS"])
+                                .Build();
 
+                int totals = stockTPS.Cantidad.ToInteger();
+
+                PaintingReport paintingReport = PaintingReportBuilder
+                    .Create()
+                    .ConvertByStockTPS(stockTPS)
+                    .WithLoadQuantity(totals)
+                    .WithGoodCount(totals)
+                    .Build();
+
+                bool response = serviceAdapter.TPSLoadMaterialForPainting(paintingReport);
+                string message = response ? "Caja Cargada correctamente" : "Error al cargar la caja";
+                ShowMessageRequest.Raise(new Notification() { Content = new ShowMessage("Mensaje de Carga", message) });
+            }
+            catch (Exception) { }
             Search();
         }
 

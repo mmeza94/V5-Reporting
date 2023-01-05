@@ -181,15 +181,23 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
         }
         private void loadCommandExecute()
         {
-            PaintingReportSupport.btnLoad_Click(cajon,
-                out ObservableCollection<StockTPS> StockParaTPSRef,
-                out ObservableCollection<BoxLoad> CajasCargadasRef,
-                out ObservableCollection<BoxReport> ReportesDeCajaRef,
-                selectedTPS,
-                showMessageWindowRequest);
-            StockParaTPS = StockParaTPSRef;
-            CajasCargadas = CajasCargadasRef;
-            ReportesDeCaja = ReportesDeCajaRef;
+
+            Actions.GeneralMachine
+                .AddFilter("cajonSelected", cajon)
+                .AddFilter("selectedTPS", selectedTPS)
+                .AddFilter("type_action", 1);
+            Actions
+               .Report();
+
+            //PaintingReportSupport.btnLoad_Click(cajon,
+            //    out ObservableCollection<StockTPS> StockParaTPSRef,
+            //    out ObservableCollection<BoxLoad> CajasCargadasRef,
+            //    out ObservableCollection<BoxReport> ReportesDeCajaRef,
+            //    selectedTPS,
+            //    showMessageWindowRequest);
+            //StockParaTPS = StockParaTPSRef;
+            //CajasCargadas = CajasCargadasRef;
+            //ReportesDeCaja = ReportesDeCajaRef;
         }
         private void ReportCommandExecute()
         {
@@ -199,7 +207,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 .AddFilter("cajonSelected", cajon)
                 .AddFilter("selectedLoaded", selectedLoaded)
                 .AddFilter("type_action", 2);
-            Actions.Report();
+            Actions
+                .Report();
 
             //PaintingReportSupport.btnReportPintado_Click(
             //    cajon,

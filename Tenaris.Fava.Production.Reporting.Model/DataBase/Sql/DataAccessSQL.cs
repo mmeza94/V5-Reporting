@@ -689,20 +689,32 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public ObservableCollection<BoxLoad> GetLoadPainting(Dictionary<string, object> listparams)
         {
             ObservableCollection<BoxLoad> result = new ObservableCollection<BoxLoad>();
+
+
+            //using (var dr = cm.ExecuteReader(
+            //        listParams
+            //        .Where(KeyValuePair => KeyValuePair.Key.Equals("@UdtBox"))
+            //        .ToDictionary(KeyValuePair => KeyValuePair.Key, KeyValuePair => KeyValuePair.Value)
+            //        .ToReadOnlyDictionary()
+            //        ))
+
             try
             {
                 var cm = SelectedCommand(StoredProcedures.GetLoadPainting, Configurations.Instance.ConnectionString);
-                Dictionary<string, object> listParams = new Dictionary<string, object>
-                {
-                    { "@ChildOrder", null },
-                    { "@HeatNumber", null },
-                    { "@BoxUdt", listparams["@UdtBox"] }
-                };
-                Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}",
-                   listParams["@ChildOrder"] + " " + listParams["@HeatNumber"] + " " + listParams["@BoxUdt"],
-                   StoredProcedures.GetLoadPainting,
-                   Configurations.Instance.ConnectionString);
-                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+                //Dictionary<string, object> listParams = new Dictionary<string, object>
+                //{
+                //    { "@ChildOrder", null },
+                //    { "@HeatNumber", null },
+                //    { "@BoxUdt", listparams["@UdtBox"] }
+                //};
+                //Trace.Message("DataAccessSQL.GetLoadPainting(listparams= {0}) || SelectedCommand: {1} || ConnectionString: {2}",
+                //   listParams["@ChildOrder"] + " " + listParams["@HeatNumber"] + " " + listParams["@BoxUdt"],
+                //   StoredProcedures.GetLoadPainting,
+                //   Configurations.Instance.ConnectionString);
+                using (var dr = cm.ExecuteReader(listparams
+                    .Where(KeyValuePair => KeyValuePair.Key.Equals("@UdtBox"))
+                    .ToDictionary(KeyValuePair => "@BoxUdt", KeyValuePair => KeyValuePair.Value)
+                    .ToReadOnlyDictionary()))
                 {
                     BoxLoad row;
                     Trace.Message("(DataAccessSQL.GetLoadPainting): ExecuteReader Completed");

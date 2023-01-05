@@ -3,10 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Web.UI.WebControls;
 using Tenaris.Fava.Production.Reporting.ITConnection.ITService;
 using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
@@ -148,11 +148,16 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
 
         #region METHOS PRIVATE
 
-        public string ReportProductionForPainting(PaintingReport reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus, bool loadMaterial, IList rejectionReportDetails)
+        public string ReportProductionForPainting(
+            PaintingReport reportProductionDto,
+            Enumerations.ProductionReportSendStatus sendStatus,
+            bool loadMaterial,
+            IList rejectionReportDetails)
         {
             var respuesta = "";
             try
             {
+                if (ConfigurationManager.AppSettings["Bypass"].Equals("true")) return "OK";
                 //if (loadMaterial)
                 //    TPSLoadMaterialForPainting(reportProductionDto);
 
@@ -444,7 +449,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 //GeneralPiece Firstitem = somePieces.FirstOrDefault(),
                 //   LastItem = somePieces.LastOrDefault();
 
-                if(Configurations.Instance.Machine!= "Forjadora 0")
+                if (Configurations.Instance.Machine != "Forjadora 0")
                 {
 
                     int FoundLoadedCount = ProductionReportingBusiness.GetLastMachineGoodPieces(somePieces[0].GroupItemNumber, Configurations.Instance.Secuencia.ToInteger() - 1);
@@ -479,9 +484,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                     somePieces[0].ReportSequence = 1;
                 }
 
-                
 
-                  
+
+
 
 
 
@@ -542,7 +547,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                 }
 
 
-               
+
 
                 return somePieces;
             }

@@ -65,39 +65,63 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
     {
         private readonly PaintingReport paintingReport;
 
+        #region Constructor
         private PaintingReportBuilder()
         {
             paintingReport = new PaintingReport();
         }
 
+        private PaintingReportBuilder(PaintingReport paintingReport)
+        {
+            this.paintingReport = paintingReport;
+        }
+        #endregion
+
+        #region Cases
         public static IPaintingReportBuilder Create()
         {
             return new PaintingReportBuilder();
         }
+        public static IPaintingReportBuilder ManipulatePaintingReport(PaintingReport paintingReport)
+        {
+            return new PaintingReportBuilder(paintingReport);
+        }
+        #endregion
 
+        #region Implements
         public IPaintingReportBuilder ConvertByBoxLoad(BoxLoad boxLoad)
         {
-            paintingReport.ChildOrden = Convert.ToInt32(boxLoad.Order);
-            paintingReport.ParentOrden = Convert.ToInt32(boxLoad.Order);
-            paintingReport.HeatNumber = Convert.ToInt32(boxLoad.Colada);
-            paintingReport.HeatNumberCode = boxLoad.CodigoColada;
-            paintingReport.UdtType = boxLoad.TipoUdt;
-            paintingReport.BoxUdt = boxLoad.IdUdt;
-            paintingReport.ParentUdt = boxLoad.IdUdt;
-            paintingReport.UdcType = boxLoad.TipoUdc;
-            paintingReport.LotId = boxLoad.Lote;
-            paintingReport.LoadQuantity = 1;
-            //Convert.ToInt32(currentDGRow.Cells["Cantidad"].Value.ToString());
-            paintingReport.Storage = boxLoad.Almacen;
-            paintingReport.NextSequence = Convert.ToInt32(boxLoad.SecuenciaSiguiente);
-            paintingReport.NextOperation = ConfigurationManager.AppSettings["Operation_" + Configurations.Instance.Secuencia].ToString();//currentDGRow.Cells["OperacionSiguiente"].Value.ToString();
-            paintingReport.NextOption = ConfigurationManager.AppSettings["Option_" + Configurations.Instance.Secuencia].ToString(); //currentDGRow.Cells["OpcionSiguiente"].Value.ToString()
-            paintingReport.GoodCount = 1;
+            WithChildOrden(Convert.ToInt32(boxLoad.Order))
+                .WithParentOrden(Convert.ToInt32(boxLoad.Order))
+                .WithHeatNumber(Convert.ToInt32(boxLoad.Colada))
+                .WithHeatNumberCode(boxLoad.CodigoColada)
+                .WithUdtType(boxLoad.TipoUdt)
+                .WithBoxUdt(boxLoad.IdUdt)
+                .WithParentUdt(boxLoad.IdUdt)
+                .WithUdcType(boxLoad.TipoUdc)
+                .WithLotId(boxLoad.Lote)
+                .WithStorage(boxLoad.Almacen)
+                .WithNextSequence(Convert.ToInt32(boxLoad.SecuenciaSiguiente))
+                .WithNextOperation(ConfigurationManager.AppSettings["Operation_" + Configurations.Instance.Secuencia].ToString())
+                .WithNextOption(ConfigurationManager.AppSettings["Option_" + Configurations.Instance.Secuencia].ToString());
             return this;
         }
 
         public IPaintingReportBuilder ConvertByStockTPS(StockTPS stockTPS)
         {
+            WithChildOrden(Convert.ToInt32(stockTPS.Order))
+                .WithParentOrden(Convert.ToInt32(stockTPS.Order))
+                .WithHeatNumber(Convert.ToInt32(stockTPS.Colada))
+                .WithHeatNumberCode(stockTPS.CodigoColada)
+                .WithUdtType(stockTPS.TipoUdt)
+                .WithBoxUdt(stockTPS.IdUdt)
+                .WithParentUdt(stockTPS.IdUdt)
+                .WithUdcType(stockTPS.TipoUdc)
+                .WithLotId(stockTPS.Lote)
+                .WithStorage(stockTPS.Almacen)
+                .WithNextSequence(Convert.ToInt32(stockTPS.SecuenciaSiguiente))
+                .WithNextOperation(ConfigurationManager.AppSettings["Operation_" + Configurations.Instance.Secuencia].ToString())
+                .WithNextOption(ConfigurationManager.AppSettings["Option_" + Configurations.Instance.Secuencia].ToString());
             return this;
         }
 
@@ -237,6 +261,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.DTO
         {
             return paintingReport;
         }
+
+        #endregion
 
     }
 
