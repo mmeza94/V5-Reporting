@@ -47,7 +47,15 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
 
         public static int InsReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
         {
+            //todas las maquinas
+
             return DataAccessSQL.Instance.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
+
+        }
+        public static int InsBundleReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
+        {
+            //PINTADO, CAJAS Y MECANIZADO EXTREMO 1
+            return DataAccessSQL.Instance.InsBundleReportProductionHistoryTestV5(reportProductionDto, sendStatus);
 
         }
 
@@ -69,6 +77,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Business
 
         }
 
+      
 
 
         public static void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionReportDetail, int IdReportProductionHistoryInserted)

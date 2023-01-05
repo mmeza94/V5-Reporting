@@ -157,24 +157,29 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             var respuesta = "";
             try
             {
-                if (ConfigurationManager.AppSettings["Bypass"].Equals("true")) return "OK";
-                //if (loadMaterial)
-                //    TPSLoadMaterialForPainting(reportProductionDto);
 
+                Dictionary<string, object> param = new Dictionary<string, object>() 
+                {
+                    { "@Order", reportProductionDto.ChildOrden},
+                    { "@GroupItemNumber", Convert.ToInt32(reportProductionDto.BoxUdt)},
+                    { "@HeatNumber", reportProductionDto.HeatNumber },
+                    { "@idHistory", null},
+                    { "@SendStatus", null },
+                    { "@MachineSequence", 20 },
+                };
 
-                //ReportProductionDto reportProductionDtoToSend = new ReportProductionDto();
+                //Dictionary<string,object> params = new Dictionary<string, object>()
+                //{
+                //    {"2",1 },
 
-                //reportProductionDtoToSend = new ReportProductionDto();
-
-
-                IList reportItems = new ReportProductionHistoryRepository().GetReportProductionHistoryByParams(reportProductionDto.ChildOrden, Convert.ToInt32(reportProductionDto.BoxUdt), reportProductionDto.HeatNumber, null, null, 20);
-
-                //IEnumerable<ReportProductionHistory> range = reportItems;
-
-
+                //};
+                IList reportItems = ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(param);
+                //IList reportItems = new ReportProductionHistoryRepository()
+                //    .GetReportProductionHistoryByParams(
+                //    reportProductionDto.ChildOrden, 
+                //    Convert.ToInt32(reportProductionDto.BoxUdt), 
+                //    reportProductionDto.HeatNumber, null, null, 20);
                 int MaxIdHistory = 0;
-
-
                 foreach (ReportProductionHistory item in reportItems)
                 {
                     if (item.IdHistory > MaxIdHistory)
@@ -182,10 +187,6 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                         MaxIdHistory = item.IdHistory;
                     }
                 }
-
-                //reportItems.AsQueryable().Fin
-
-
                 ReportProductionDto reportProductionDtoToSend = new ReportProductionDto
                 {
 
@@ -195,69 +196,19 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
                     Lote = Convert.ToInt32(reportProductionDto.LotId),
                     Aprietes = 0,
                     Secuencia = reportProductionDto.NextSequence,
-                    //Se modifica para que no tome la operación y la opción basada en la secuencia, por que la secuencia no es un id de los procesos ejemplo pintado e Inyectado
-                    //Operacion = ConfigurationManager.AppSettings["Operation_" + reportProductionDto.NextSequence.ToString()].ToString(),
-                    //Opcion = ConfigurationManager.AppSettings["Option_" + reportProductionDto.NextSequence.ToString()].ToString(),
                     Operacion = reportProductionDto.NextOperation,
                     Opcion = reportProductionDto.NextOption,
                     CantidadBuenas = reportProductionDto.GoodCount,
                     CantidadMalas = reportProductionDto.ScrapCount,
-                    //CantidadProcesadas = reportProductionDto.GoodCount;
                     CantidadReprocesadas = 0,
                     CantidadTotal = reportProductionDto.LoadQuantity,
-                    //ColadaSalida = reportProductionDto.HeatNumber,
-                    //IdUDTSalida = Convert.ToInt32(reportProductionDto.BoxUdt),
-                    //LoteSalida = Convert.ToInt32(reportProductionDto.LotId),
-                    //                            "Observaciones",
-                    //                            reportProductionDto.TipoUDTSalida,
                     IdHistory = MaxIdHistory,
                     DescripcionMaquina = "Pintado",
                     Orden = reportProductionDto.ChildOrden,
                     IdUser = reportProductionDto.IdUser,
                     Observaciones = ""
-
-                    //GoodCount = reportProductionDto.LoadQuantity,
-                    //GroupItemNumber = Convert.ToInt32(reportProductionDto.BoxUdt),
-                    //HeatNumber = reportProductionDto.HeatNumber,
-                    //IdHistory = MaxIdHistory,
-                    //IdMachine = (new CommonMachineRepository().GetMachineByDescription("Pintado")).Id,
-                    //IdOrder = reportProductionDto.ChildOrden,
-                    //InsDateTime = DateTime.Now,
-                    //InsertedBy = reportProductionDto.IdUser,
-                    //TotalQuantity = reportProductionDto.LoadQuantity,
-                    //LotNumberHtr = Convert.ToInt32(reportProductionDto.LotId),
-                    //ReworkedCount = 0,//reportProductionDto.CantidadReprocesadas,
-                    //ScrapCount = reportProductionDto.ScrapCount,
-                    //SendStatus = sendStatus,
-                    //MachineSequence = reportProductionDto.NextSequence,
-                    //MachineOperation = ConfigurationManager.AppSettings["Operation_" + reportProductionDto.NextSequence.ToString()].ToString(),
-                    //MachineOption = ConfigurationManager.AppSettings["Option_" + reportProductionDto.NextSequence.ToString()].ToString(),
-                    //Observation = "",
-                    //GroupItemType = reportProductionDto.UdtType,
-                    //ChildOrder = reportProductionDto.ChildOrden,
-                    //ChildGroupItemNumber = Convert.ToInt32(reportProductionDto.BoxUdt),
-                    //ChildGroupItemType = reportProductionDto.UdtType
-
-                    //LoadedCount = reportProductionDto.l
-
                 };
-
-
-                //reportProductionDtoToSend.CantidadTotal = reportProductionDto.LoadQuantity;
-                //reportProductionDtoToSend.CantidadBuenas = reportProductionDto.GoodCount;
-                //reportProductionDtoToSend.CantidadMalas = reportProductionDto.ScrapCount;
-                //reportProductionDtoToSend.CantidadReprocesadas = 0;
-                //reportProductionDtoToSend.IdUser = reportProductionDto.IdUser;
-                //reportProductionDtoToSend.Secuencia = reportProductionDto.NextSequence;
-
-                //reportProductionDtoToSend.Orden = reportProductionDto.ChildOrden;
-                //reportProductionDtoToSend.Colada = reportProductionDto.HeatNumber;
-                //reportProductionDtoToSend.IdUDT = Convert.ToInt32(reportProductionDto.BoxUdt);
-                //reportProductionDtoToSend.DescripcionMaquina = "Pintado";
-
-
-
-                respuesta = new ITServiceAdapter().TPSReportProduction(reportProductionDto.IdUser, reportProductionDtoToSend, sendStatus, rejectionReportDetails, 3);
+                respuesta = new ITServiceAdapter().TPSReportProduction(reportProductionDto.IdUser, reportProductionDtoToSend, sendStatus, rejectionReportDetails);
             }
             catch (Exception ex)
             {

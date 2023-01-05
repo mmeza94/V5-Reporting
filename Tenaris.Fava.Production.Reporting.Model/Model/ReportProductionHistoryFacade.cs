@@ -33,8 +33,18 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
         {
             try
             {
-                    int idReportProductionHistoryInserted = ProductionReportingBusiness.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
-                    if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
+                int idReportProductionHistoryInserted = 0;
+                if (IsTinas())
+                    idReportProductionHistoryInserted = ProductionReportingBusiness.InsBundleReportProductionHistoryTestV5(reportProductionDto, sendStatus);
+                else
+                    idReportProductionHistoryInserted = ProductionReportingBusiness.InsReportProductionHistoryTestV5(reportProductionDto, sendStatus);
+
+
+
+
+                   
+                
+                if (rejectionReportDetails != null && rejectionReportDetails.Count > 0)
                         foreach (RejectionReportDetail rrd in rejectionReportDetails)
                             ProductionReportingBusiness.InsRejectionReportDetailTestV5(rrd, idReportProductionHistoryInserted);
                 
@@ -45,6 +55,11 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             {
                 throw ex;
             }
+        }
+
+        private bool IsTinas()
+        {
+            return Configurations.Instance.Machine.ToUpper().Contains("ROSCADORA") || Configurations.Instance.Machine.ToUpper().Contains("PINTADO");
         }
 
         public void SaveReportProductionHistoryForRevenido(ReportProductionDto reportProductionDto,

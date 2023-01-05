@@ -13,6 +13,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
         public const string GetReportProductionHistoryByParamsTest = "[Production].[GetReportProductionHistoryByParamsTest]";
         public const string GetPreviousCountersByMachineTest = "[Production].[GetPreviousCountersByMachineTest]";
         public const string InsReportProductionHistoryTestV5 = "[Production].[InsReportProductionHistoryTestV5]";
+        public const string InsBundleReportProductionHistoryTestV5 = "[Production].[InsBundleReportProductionHistoryTestV5]";
         public const string InsRejectionReportDetailTestV5 = "[Production].[InsRejectionReportDetailTestV5]";
         public const string LoginUser = "[Common].[LoginUserTestV5]";
         public const string GetForgeMode = "Tracking.GetForgeMode";

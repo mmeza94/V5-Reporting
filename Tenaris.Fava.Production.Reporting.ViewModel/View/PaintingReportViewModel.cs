@@ -188,6 +188,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 .AddFilter("type_action", 1);
             Actions
                .Report();
+            searchCommandExecute();
 
             //PaintingReportSupport.btnLoad_Click(cajon,
             //    out ObservableCollection<StockTPS> StockParaTPSRef,
@@ -209,6 +210,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.View
                 .AddFilter("type_action", 2);
             Actions
                 .Report();
+            searchCommandExecute();
 
             //PaintingReportSupport.btnReportPintado_Click(
             //    cajon,

@@ -58,8 +58,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                 QuestionRequest.Raise(new Notification() { Content = showQuestion });
                 if (showQuestion.Result)
                 {
-                    if (ConfigurationManager.AppSettings["UserByPass"].Equals("TestUser"))
-                        throw new Exception("Estas en modo de pruebas");
+                    //if (ConfigurationManager.AppSettings["UserByPass"].Equals("TestUser"))
+                    //    throw new Exception("Estas en modo de pruebas");
 
                     ////if (chBEdit.Checked)
                     currentProductionReportDto2 = 

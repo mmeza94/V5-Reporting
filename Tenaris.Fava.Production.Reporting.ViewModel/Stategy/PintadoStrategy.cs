@@ -60,6 +60,28 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                         .Select(stockTPS)
                         .ToObservableCollection();
 
+                #region FILAS HARDCODE
+                //FILAS STOCK HARDCODE
+                //StockTPS s = new StockTPS()
+                //{
+                //    Order = "9997",
+                //    Colada = "1",
+                //    CodigoColada = "2",
+                //    TipoUdt = "3",
+                //    IdUdt = "4",
+                //    TipoUdc = "C",
+                //    Lote = "1236",
+                //    Cantidad = "80",
+                //    Almacen = "MECAS2",
+                //    SecuenciaSiguiente = "11",
+                //    OperacionSiguiente = "Pintado",
+                //    OpcionSiguiente = "Pintado 1",
+                //};
+                //stockTPs.Add(s);
+                //END
+                #endregion
+
+
                 if (reported.Count > 0)
                     reportedPieces = reported.Sum(Box => Box.PiezasBuenas.ToInteger());
 
@@ -78,12 +100,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 if (Filters["type_action"].ToString().ToInteger() == 2)
                 {
                     reporting();
+                    Search();
                     return this;
                 }
                 loadReport();
             }
             catch (Exception) { }
-
+            Search();
             return this;
         }
 
@@ -118,7 +141,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             if (paintingReport.LoadQuantity == 0 && !question.Result)
             {
-                Search();
                 return;
             }
 
@@ -126,7 +148,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             if (!reportConfirmation.Result)
             {
-                Search();
                 return;
             }
 
@@ -141,7 +162,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             if (!question.Result)
             {
-                Search();
                 return;
             }
 
@@ -164,13 +184,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                     reportConfirmation.rejectionReportDetails));
 
             ShowMessageRequest.Raise(new Notification() { Content = showMessage });
-            Search();
         }
 
         private void loadReport()
         {
-            try
-            {
+
                 StockTPS stockTPS = StockTPSBuilder
                                 .ManipulateObject(Filters["selectedTPS"])
                                 .Build();
@@ -187,9 +205,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 bool response = serviceAdapter.TPSLoadMaterialForPainting(paintingReport);
                 string message = response ? "Caja Cargada correctamente" : "Error al cargar la caja";
                 ShowMessageRequest.Raise(new Notification() { Content = new ShowMessage("Mensaje de Carga", message) });
-            }
-            catch (Exception) { }
-            Search();
+
         }
 
         private static StockTPS stockTPS(DataRow row)

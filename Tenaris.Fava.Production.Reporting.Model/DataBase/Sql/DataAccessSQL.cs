@@ -344,6 +344,55 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             }
 
         }
+        
+         public int InsBundleReportProductionHistoryTestV5(ReportProductionDto reportProductionDto, Enumerations.ProductionReportSendStatus sendStatus)
+        {
+            try
+            {
+
+                Dictionary<string, object> listParams = new Dictionary<string, object>
+                {
+                    { "@GoodCount", reportProductionDto.CantidadBuenas },
+                    {"@TipoUdt" ,reportProductionDto.TipoUDT },
+                    {"@GroupItemNumber" , reportProductionDto.IdUDT },
+                    {"@HeatNumber",reportProductionDto.Colada },
+                    {"@idHistory" ,reportProductionDto.IdHistory },
+                    {"@IdMachine" , DataAccessSQL.Instance.GetRejectionCodeByMachineDescriptionTestV5(
+                            new Dictionary<string, object> { { "@MachineDescription", reportProductionDto.DescripcionMaquina } }
+                            ).FirstOrDefault().Machine.Id },
+                    {"@OrderNumber" , reportProductionDto.Orden },
+                    {"@InsDateTime" , DateTime.Now },
+                    {"@InsertedBy" , reportProductionDto.IdUser },
+                    {"@TotalQuantity" , reportProductionDto.CantidadTotal },
+                    {"@LotNumberHtr" , reportProductionDto.Lote },
+                    {"@ReworkedCount" , reportProductionDto.CantidadReprocesadas },
+                    {"@ScrapCount" , reportProductionDto.CantidadMalas },
+                    {"@SendStatus" ,  sendStatus },
+                    {"@MachineSequence" , reportProductionDto.Secuencia },
+                    {"@MachineOperation" , reportProductionDto.Operacion },
+                    {"@MachineOption" , reportProductionDto.Opcion },
+                    {"@Observation" , reportProductionDto.Observaciones },
+
+                    {"@GroupItemType" , reportProductionDto.TipoUDT },
+                    {"@ChildOrder" , reportProductionDto.Orden },
+                    {"@ChildGroupItemNumber" , reportProductionDto.IdUDT },
+                    {"@ChildGroupItemType" , reportProductionDto.TipoUDT }
+                };
+
+                var cm = SelectedCommand(StoredProcedures.InsBundleReportProductionHistoryTestV5, Configurations.Instance.ConnectionString);
+                var idReportProductionHistory = cm.ExecuteScalar(listParams.ToReadOnlyDictionary());
+
+                return (int)idReportProductionHistory;
+
+            }
+            catch (Exception ex)
+            {
+                Trace.Exception(ex);
+                throw ex;
+
+            }
+
+        }
 
         public void InsRejectionReportDetailTestV5(RejectionReportDetail rejectionDetail, int idRportProductionHistoryInserted)
         {

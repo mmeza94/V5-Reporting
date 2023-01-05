@@ -92,8 +92,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories
         }
 
 
-        public ObservableCollection<ReportProductionHistory> GetReportProductionHistoryByParams(int? orderNumber, int? groupItemNumber, int? heatNumber,
-            int? idHistory, Enumerations.ProductionReportSendStatus? sendStatus, int? machineSequence)
+        public ObservableCollection<ReportProductionHistory> GetReportProductionHistoryByParams(
+            int? orderNumber, 
+            int? groupItemNumber, 
+            int? heatNumber,
+            int? idHistory, 
+            Enumerations.ProductionReportSendStatus? sendStatus,
+            int? machineSequence)
         {
             IList items = null;
             ObservableCollection < ReportProductionHistory > reportPorductionHistory = new ObservableCollection<ReportProductionHistory>();
