@@ -480,16 +480,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         public IndBoxReportConfirmationViewModel()
         {
-
-        }
-
-        public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user)
-        {
             Extremo1 = false;
-
             Destination = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
             DestinationSelected = Destination.FirstOrDefault();
 
+        }
+
+        public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) : this()
+        {
+            
             this.currentGeneralPiece = generalPieceDto;
             this.currentProductionReport = productionReportDto;
             this.user = user;
@@ -515,7 +514,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             ExtremeDiscardVisibility = ConfigurationManager.AppSettings["VisibleExtremeRadioButton"] == "1" ? Visibility.Visible : Visibility.Collapsed;
 
 
-            ITServiceAdapter business = new ITServiceAdapter();
+            ITServiceAdapter itAdapter = new ITServiceAdapter();
 
             IndBoxReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
 
@@ -523,7 +522,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             {
                 string errorMessage;
 
-                listBoxes = business.GetProductionBoxes(this.currentGeneralPiece.OrderNumber, productionReportDto.Opcion, productionReportDto.Operacion, out errorMessage);
+                listBoxes = itAdapter.GetProductionBoxes(
+                    this.currentGeneralPiece.OrderNumber, 
+                    currentProductionReport.Opcion, 
+                    currentProductionReport.Operacion, 
+                    out errorMessage);
             }
             catch (Exception ex)
             {

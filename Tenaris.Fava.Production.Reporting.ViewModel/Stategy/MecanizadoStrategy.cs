@@ -39,15 +39,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             {
                 CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
 
-
-                if (Configurations.Instance.Machine.Equals("Forjadora"))
-                    GetForgeCurrentGeneralPieces();
-
                 CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece);
-
-
-                if (Configurations.Instance.Machine == "Forjadora 0")
-                    CurrentGeneralPieces.ForEach(piece => GeneralPieceProcessor(piece));
 
                 AddValues("Search", CurrentGeneralPieces);
                 return this;

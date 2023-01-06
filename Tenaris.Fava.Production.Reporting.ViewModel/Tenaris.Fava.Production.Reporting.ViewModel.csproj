@@ -131,6 +131,7 @@
     <Compile Include="Stategy\PintadoStrategy.cs" />
     <Compile Include="Stategy\RProcess\ReportBuilder.cs" />
     <Compile Include="Stategy\RProcess\RPGeneral.cs" />
+    <Compile Include="Stategy\RProcess\RPMecanizado.cs" />
     <Compile Include="Support\IndBoxReportConfirmationSupport.cs" />
     <Compile Include="Support\ManagerConfigurations.cs" />
     <Compile Include="Support\PaintingReportConfirmationSupport.cs" />
