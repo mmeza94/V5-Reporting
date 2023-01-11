@@ -18,6 +18,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         public ObservableCollection<RejectionReportDetail> dgRejectionReportDetails { get; set; }
         private ReportProductionDto ReportProductionDto { get; set; }
         private ReportConfirmationViewModel reportConfirmation { get; set; }
+
+        private IndBoxReportConfirmationViewModel indBoxReportConfirmation { get; set; }
         private GeneralMachine GeneralMachine { get; set; }
         public int tbScrapCountL2 { get; set; }
         public int tbReworkedCountL2 { get; set; }
@@ -65,12 +67,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 .SetUser(GeneralMachine.WhoIsLogged);
                 GeneralMachine.Request.Raise(new Notification() { Content = reportConfirmation });
             }
-            //else
-            //{
-            //    reportConfirmation = new IndBoxReportConfirmationViewModel()
-            //}
+            else
+            {
 
-            
+                indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
+                GeneralMachine.Request.Raise(new Notification() { Content = indBoxReportConfirmation });
+            }
+
+
 
             return reportConfirmation.Result;
         }

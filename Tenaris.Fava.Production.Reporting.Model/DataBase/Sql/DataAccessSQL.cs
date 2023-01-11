@@ -76,9 +76,19 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
             {
                 //Greana1, enderezado, CND,   
                 cm = SelectedCommand(StoredProcedures.GetProductionGeneralTest, Configurations.Instance.ConnectionString);
-                using (var dr = cm.ExecuteReader(listParams.ToReadOnlyDictionary()))
+
+
+
+                Dictionary<String, object> parameters = new Dictionary<string, object>();
+                parameters["@Orden"] = listParams["@Orden"];
+                parameters["@Colada"] = listParams["@Colada"];
+                parameters["@Atado"] = listParams["@Atado"];
+                parameters["@Machine"] = listParams["@Machine"];
+
+
+                using (var dr = cm.ExecuteReader(parameters.ToReadOnlyDictionary()))
                 {
-                    Trace.Message("listParams: {0},{1},{2}", listParams["@Orden"], listParams["@Colada"], listParams["@Atado"]);
+                    Trace.Message("parameters: {0},{1},{2}", parameters["@Orden"], parameters["@Colada"], parameters["@Atado"]);
                     GeneralPiece row;
                     while (dr.Read())
                     {
