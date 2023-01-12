@@ -17,6 +17,9 @@ using Tenaris.Fava.Production.Reporting.Model.Support;
 using Infrastructure.InteractionRequests;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Configuration;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
+using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.Enums;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 {
@@ -483,10 +486,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             Extremo1 = false;
             Destination = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
             DestinationSelected = Destination.FirstOrDefault();
+            
 
         }
 
-        public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) : this()
+        public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) :this()
         {
             
             this.currentGeneralPiece = generalPieceDto;
@@ -516,7 +520,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
             ITServiceAdapter itAdapter = new ITServiceAdapter();
 
-            IndBoxReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
+
 
             try
             {
@@ -577,8 +581,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             Total = Buenas;
             ScrapCountForRejection = currentGeneralPiece.ScrapCount;
 
-            int total1 = IndBoxReportConfirmationSupport.GetPreviousTotal("Extremo 1", currentGeneralPiece);
-            int total2 = IndBoxReportConfirmationSupport.GetPreviousTotal("Extremo 2", currentGeneralPiece);
+            int total1 = GetPreviousTotal("Extremo 1", currentGeneralPiece);
+            int total2 = GetPreviousTotal("Extremo 2", currentGeneralPiece);
             int total = total1 - total2;
 
             if (total < 0)
@@ -591,6 +595,53 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
             TotalActualAtado = total;
         }
+
+
+
+
+        public static int GetPreviousTotal(string extremo, GeneralPiece currentGeneralPiece)
+        {
+            var description = "";
+            int total = 0;
+
+            if (currentGeneralPiece.Description.Contains("Forjadora"))
+                description = "Forjado";
+            else if (currentGeneralPiece.Description.Contains("Roscadora"))
+                description = "Mecanizado";
+            else
+                description = Configurations.Instance.Operacion;
+
+            int machineSequence = currentGeneralPiece.Extremo.Contains("1")?9:10;
+
+
+            IList reportItems=ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
+                new Dictionary<string, object>
+            {
+                                { "@Order", currentGeneralPiece.OrderNumber },
+                                { "@GroupItemNumber", currentGeneralPiece.GroupItemNumber },
+                                { "@HeatNumber", currentGeneralPiece.HeatNumber },
+                                { "@idHistory", 0 },
+                                { "@SendStatus", 0 },
+                                { "@MachineSequence", machineSequence }
+            });
+
+
+            foreach (ReportProductionHistory rph in reportItems)
+            {
+                if (extremo == "Extremo 1")
+                {
+                    total += rph.GoodCount;//Solo se toman en cuenta las buenas del extremo 1, ya que las malas no se pueden reportar en la segunda estacion (extremo 2)
+                }
+                else if (extremo == "Extremo 2")
+                {
+                    total += (rph.GoodCount + rph.ScrapCount);
+                }
+            }
+
+            return total;
+        }
+
+
 
 
         public IndBoxReportConfirmationViewModel GetOpSpecification()
@@ -613,12 +664,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             try
             {
 
-                IList rejectioncode = new RejectionCodeFacade().GetRejectionCodeByMachineDescription(currentGeneralPiece.Description);
-                RejectionCode = new ObservableCollection<RejectionCode>();
-                foreach (var item in rejectioncode)
-                {
-                    RejectionCode.Add((RejectionCode)item);
-                }
+                RejectionCode = new ObservableCollection<RejectionCode>(DataAccessSQL.
+                    Instance.GetRejectionCodeByMachineDescriptionTestV5(new Dictionary<string, object>
+                {{
+                    "@MachineDescription",this.currentGeneralPiece.Description
+                } }));
 
                 SelectedRejectionCode = RejectionCode.FirstOrDefault();
             }
@@ -737,13 +787,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
 
             }
-            IndBoxReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
+            
 
         }
         public void addCommandExecute()
         {
             bool refresh;
-            DgRejectionReportDetails = IndBoxReportConfirmationSupport.btnAddRejectionDetail_Click(SelectedRejectionCode, Cantidad, DestinationSelected,
+            DgRejectionReportDetails = btnAddRejectionDetail_Click(SelectedRejectionCode, Cantidad, DestinationSelected,
                  Motivo, Worked, Extremo1, DgRejectionReportDetails, out refresh);
             if (refresh)
             {
@@ -789,7 +839,52 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         #region methods
 
+        public  ObservableCollection<RejectionReportDetail> btnAddRejectionDetail_Click(RejectionCode SelectedRejectionCode, int scrapCountForRejection, string selectedBundleDestiny,
+           string motivo, bool worked, bool extremo1, ObservableCollection<RejectionReportDetail> dgrejectionReportDetails, out bool refresh)
+        {
 
+            short cantidad = (short)scrapCountForRejection;
+
+            var rejectionReportDetail = new RejectionReportDetail();
+
+            var TEMrejectionReportDetail = new RejectionReportDetail
+            {
+                RejectionCode = SelectedRejectionCode,
+                ScrapCount = cantidad,
+                Active = Enumerations.AxlrBit.Si,
+                InsDateTime = DateTime.Now,
+                Destino = selectedBundleDestiny,
+                Observation = motivo,
+                Trabajado = (worked) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No,
+                Extremo = (extremo1) ? "Extremo 1" : "Extremo 2"/// Revisar
+            };
+            rejectionReportDetail = TEMrejectionReportDetail;
+
+
+            bool alreadyAdded = false;
+
+            foreach (RejectionReportDetail reportRejDet in dgrejectionReportDetails) //Posible cambio FUTURODWF (
+            {
+                if (reportRejDet.RejectionCode.Id == SelectedRejectionCode.Id && reportRejDet.Trabajado == (worked ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No) &&
+                    (reportRejDet.Extremo == (extremo1 ? "Extremo 1" : "Extremo 2")) || reportRejDet.Extremo == null)
+                {
+                    reportRejDet.ScrapCount += cantidad;
+                    alreadyAdded = true;
+                }
+            }
+
+            if (!alreadyAdded)
+            {
+                dgrejectionReportDetails.Add(rejectionReportDetail);
+                refresh = true;
+            }
+            else
+                refresh = false;
+
+            rejectionReportDetails = dgrejectionReportDetails.ToList();
+            return new ObservableCollection<RejectionReportDetail>(dgrejectionReportDetails);
+
+        }
         public bool AcceptCanExecute()
         {
             return true;

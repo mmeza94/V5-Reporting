@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
@@ -39,9 +40,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             {
                 CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
 
-                CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece);
+                CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece).Where(x => (x.SendStatus == Enumerations.ProductionReportSendStatus.Parcial) || (x.SendStatus == Enumerations.ProductionReportSendStatus.Completo)).ToList(); ;
 
-                AddValues("Search", CurrentGeneralPieces);
+                AddValues("Search", CurrentGeneralPieces.ToObservableCollection());
                 return this;
 
             }
@@ -70,7 +71,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
 
-                ValidateExtreme(ReportPRoduction, currentDGRow);
+                //ValidateExtreme(ReportPRoduction, currentDGRow);
 
 
 
@@ -152,60 +153,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return productionReportHistories;
         }
 
-        private void GeneralPieceProcessor(GeneralPiece currentDGRow)
-        {
-            var num1 = 0;
-            var num2 = 0;
-
-            ObservableCollection<ReportProductionHistory> collection = dgReporteProduccion_SelectionChanged(currentDGRow);
-
-            foreach (ReportProductionHistory productionHistory in collection)
-            {
-                if (productionHistory.MachineOperation.Contains(SelectedBundle.Extremo))
-                {
-                    num1 += productionHistory.GoodCount;
-                    num2 += productionHistory.ScrapCount;
-                }
-
-            }
-
-            currentDGRow.BuenasReportadas = num1;
-            currentDGRow.MalasReportadas = num2;
-            currentDGRow.TotalReportado = (num1 + num2);
-            currentDGRow.PendientesPorReportar = currentDGRow.LoadedCount - (num1 + num2);
-            if (currentDGRow.PendientesPorReportar != 0)
-            {
-                currentDGRow.GoodCount = currentDGRow.GoodCount - num1;
-                currentDGRow.ScrapCount = currentDGRow.ScrapCount - num2;
-                currentDGRow.LoadedCount = currentDGRow.GoodCount + currentDGRow.ScrapCount;
-            }
-            else
-            {
-                currentDGRow.GoodCount = 0;
-                currentDGRow.ScrapCount = 0;
-                currentDGRow.LoadedCount = 0;
-            }
-
-
-            currentDGRow.Cargados = currentDGRow.BuenasReportadas + currentDGRow.MalasReportadas;
-
-
-        }
-
-
-        private void GetForgeCurrentGeneralPieces()
-        {
-
-            foreach (GeneralPiece item in CurrentGeneralPieces)
-            {
-                var forgeMode = ProductionReportingBusiness.GetCurrentForgeMode(item.GroupItemNumber);
-                if (forgeMode == Enumerations.ForgeMode.OneEnd)
-                {
-                    item.Extremo = "Extremo 2";
-                }
-            }
-
-        }
+        
 
         private ReportProductionDto ValidateExtreme(ReportProductionDto rp, GeneralPiece currentDGRow)
         {

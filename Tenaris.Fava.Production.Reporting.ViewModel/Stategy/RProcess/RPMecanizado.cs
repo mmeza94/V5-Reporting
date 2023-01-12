@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
@@ -66,17 +67,21 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 .SetITLoadHelper(GeneralMachine.GetFirstPieceLoadedNumberForIT(currentDGRow))
                 .SetUser(GeneralMachine.WhoIsLogged);
                 GeneralMachine.Request.Raise(new Notification() { Content = reportConfirmation });
+
+                return reportConfirmation.Result;
             }
             else
             {
 
-                indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
-                GeneralMachine.Request.Raise(new Notification() { Content = indBoxReportConfirmation });
+                //indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
+                //ShowMessage IndBoxReportConfirmation = new ShowMessage("Titulo", "Mensaje");
+                var IndBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
+                //GeneralMachine.Request.Raise(new Notification() { Content =  IndBoxReportConfirmation });
+                GeneralMachine.IndBoxReportConfirmationRequest.Raise(new Notification() { Content = IndBoxReportConfirmation });
+                //GeneralMachine.Request.Raise(new Notification() { Content=prueba });
+               // GC.Collect();
+                return IndBoxReportConfirmation.Result;
             }
-
-
-
-            return reportConfirmation.Result;
         }
 
         private bool IsExtremo1(GeneralPiece currentDGRow)
