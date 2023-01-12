@@ -130,8 +130,9 @@
     <Compile Include="Stategy\MecanizadoStrategy.cs" />
     <Compile Include="Stategy\PintadoStrategy.cs" />
     <Compile Include="Stategy\RProcess\ReportBuilder.cs" />
+    <Compile Include="Stategy\RProcess\RPCajas.cs" />
     <Compile Include="Stategy\RProcess\RPGeneral.cs" />
-    <Compile Include="Stategy\RProcess\RPMecanizado.cs" />
+    <Compile Include="Stategy\RProcess\RPMecanizadoExtremo1.cs" />
     <Compile Include="Support\IndBoxReportConfirmationSupport.cs" />
     <Compile Include="Support\ManagerConfigurations.cs" />
     <Compile Include="Support\PaintingReportSupport.cs" />

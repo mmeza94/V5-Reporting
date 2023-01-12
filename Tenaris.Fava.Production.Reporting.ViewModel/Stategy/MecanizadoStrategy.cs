@@ -26,7 +26,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public MecanizadoStrategy()
         {
-            reportingProcess = new RPMecanizado(this);
+            //reportingProcess = new RPMecanizadoExtremo1(this);
             Filters = Filter;
             OutPuts = OutPut;
             formatterPiece = new ProcessorPieces.ProcessorByForjas();
@@ -59,6 +59,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             try
             {
                 GeneralPiece currentDGRow = (GeneralPiece)Filters["Selected_Bundle"];
+
+                reportingProcess = SelectReportingProcess(currentDGRow);
 
 
                 var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
@@ -94,6 +96,23 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             }
             return this;
+        }
+
+        private IReportingProcess SelectReportingProcess(GeneralPiece currentPiece)
+        {
+            IReportingProcess SelectedReportingProcess = null;
+
+            if (currentPiece.Extremo.Contains("1"))
+            {
+                SelectedReportingProcess = new RPMecanizadoExtremo1(this);
+            }
+            else
+            {
+                SelectedReportingProcess = new RPCajas(this);
+
+            }
+
+            return SelectedReportingProcess;
         }
 
 

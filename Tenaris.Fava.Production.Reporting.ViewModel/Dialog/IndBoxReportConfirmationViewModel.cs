@@ -881,7 +881,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             else
                 refresh = false;
 
-            rejectionReportDetails = dgrejectionReportDetails.ToList();
+           var rejectionReportDetails = dgrejectionReportDetails.ToList();
             return new ObservableCollection<RejectionReportDetail>(dgrejectionReportDetails);
 
         }

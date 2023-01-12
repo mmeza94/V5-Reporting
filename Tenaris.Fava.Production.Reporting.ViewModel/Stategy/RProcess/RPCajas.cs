@@ -11,9 +11,9 @@ using Tenaris.Fava.Production.Reporting.ViewModel.Support;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 {
-    public class RPMecanizado : IReportingProcess
+    public class RPCajas: IReportingProcess
     {
-        #region Properties
+
         private int lbITLoadHelper, tbTotalLoaded, tbPreviousLoaded;
         private string SelectedSendType, _User;
         public ObservableCollection<RejectionReportDetail> dgRejectionReportDetails { get; set; }
@@ -27,14 +27,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         public int tbLoadedCountL2 { get; set; }
         public int tbGoodCountL2 { get; set; }
         public ShowQuestion showQuestion { get; set; }
-        #endregion
 
-        #region Constructor
-        public RPMecanizado(GeneralMachine generalMachine)
+        public RPCajas(GeneralMachine generalMachine)
         {
             this.GeneralMachine = generalMachine;
         }
-        #endregion
+
 
         public bool CanReport(GeneralPiece currentDGRow, ReportProductionDto reportProductionDto)
         {
@@ -59,29 +57,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         public bool IsReportConfirmationAccepted(GeneralPiece currentDGRow)
         {
 
-            if (IsExtremo1(currentDGRow))
-            {
-                reportConfirmation = new ReportConfirmationViewModel()
-                .SetGeneralPiece(currentDGRow)
-                .SetReportProductionDto(ReportProductionDto)
-                .SetITLoadHelper(GeneralMachine.GetFirstPieceLoadedNumberForIT(currentDGRow))
-                .SetUser(GeneralMachine.WhoIsLogged);
-                GeneralMachine.Request.Raise(new Notification() { Content = reportConfirmation });
-
-                return reportConfirmation.Result;
-            }
-            else
-            {
-
-                //indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
-                //ShowMessage IndBoxReportConfirmation = new ShowMessage("Titulo", "Mensaje");
-                var IndBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
-                //GeneralMachine.Request.Raise(new Notification() { Content =  IndBoxReportConfirmation });
-                GeneralMachine.IndBoxReportConfirmationRequest.Raise(new Notification() { Content = IndBoxReportConfirmation });
-                //GeneralMachine.Request.Raise(new Notification() { Content=prueba });
-               // GC.Collect();
-                return IndBoxReportConfirmation.Result;
-            }
+            var IndBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
+            //GeneralMachine.Request.Raise(new Notification() { Content =  IndBoxReportConfirmation });
+            GeneralMachine.IndBoxReportConfirmationRequest.Raise(new Notification() { Content = IndBoxReportConfirmation });
+            //GeneralMachine.Request.Raise(new Notification() { Content=prueba });
+            // GC.Collect();
+            return IndBoxReportConfirmation.Result;
         }
 
         private bool IsExtremo1(GeneralPiece currentDGRow)
@@ -204,6 +185,5 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 GeneralMachine.ShowMessageRequest.Raise(new Notification() { Content = showMessage });
             }
         }
-
     }
 }
