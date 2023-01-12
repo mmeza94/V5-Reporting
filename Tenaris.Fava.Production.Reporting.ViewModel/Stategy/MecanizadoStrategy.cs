@@ -25,7 +25,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
         public MecanizadoStrategy()
         {
-            reportingProcess = new RPGeneral(this);
+            reportingProcess = new RPMecanizado(this);
             Filters = Filter;
             OutPuts = OutPut;
             formatterPiece = new ProcessorPieces.ProcessorByForjas();
