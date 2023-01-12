@@ -13,7 +13,7 @@
         xmlns:local="clr-namespace:Tenaris.Fava.Production.Reporting.View"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        WindowStyle="None"
+        WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
         Title="ProductionReport" WindowState="Normal"
         Top="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Top}"

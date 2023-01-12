@@ -29,7 +29,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             reportingProcess = new RPGeneral(this);
             Filters = Filter;
             OutPuts = OutPut;
-            formatterPiece = new ProcessorPieces.ProcessorByGranalladora();
+            formatterPiece = new ProcessorPieces.ProcessorByCoples();
         }
 
         #endregion
@@ -47,12 +47,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
                 //AddValues("Search", CurrentGeneralPieces);
-                return this;
+                
             }
             catch (Exception)
             {
-                throw;
+               // throw;
             }
+            return this;
         }
 
         public IActions Report()
