@@ -20,6 +20,7 @@ using System.Configuration;
 using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.Model;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
+using System.Windows.Controls;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 {
@@ -447,11 +448,17 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         #endregion
 
+
+        #region Private InteractionRequests
+
         private InteractionRequest<Notification> reportConfirmationWindowRequest { get; set; }
         private InteractionRequest<Notification> indBoxReportConfirmationWindowRequest { get; set; }
         private InteractionRequest<Notification> showQuestionWindowRequest { get; set; }
         private InteractionRequest<Notification> showMessageWindowRequest { get; set; }
         private InteractionRequest<Notification> showErrorWindowRequest { get; set; }
+
+        #endregion
+
 
         #region public InteractionRequests<Notification>
         public InteractionRequest<Notification> ReportConfirmationWindowRequest
@@ -486,8 +493,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             Extremo1 = false;
             Destination = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
             DestinationSelected = Destination.FirstOrDefault();
-            
-
+            UnlockVisibility = Visibility.Visible;
+            LockVisibility = Visibility.Collapsed;
+            DgRejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
+            ExtremeDiscardVisibility = ConfigurationManager.AppSettings["VisibleExtremeRadioButton"] == "1" ? Visibility.Visible : Visibility.Collapsed;
+            DgBoxes = new ObservableCollection<ProductionBox>();
         }
 
         public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) :this()
@@ -496,85 +506,20 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             this.currentGeneralPiece = generalPieceDto;
             this.currentProductionReport = productionReportDto;
             this.user = user;
-            DgRejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
+ 
             PopulateRejectionCodeByMachineDescription();
-
-            UnlockVisibility = Visibility.Visible;
-            LockVisibility = Visibility.Collapsed;
-
-
-            //Llenando textboxes
-            Orden = this.currentGeneralPiece.OrderNumber;
-            Colada = this.currentGeneralPiece.HeatNumber;
-            Atado = this.currentGeneralPiece.GroupItemNumber;
-
-            OPChildrens opHijaespecificacion = null;
+            FillMainInformation();
+            FillBoxesDataGridIT();
+            FillOPSpecification();
+            CalculateQuantitiesForReporting();
 
 
-            List<ProductionBox> listBoxes = new List<ProductionBox>();
-            //string machineId = ConfigurationManager.AppSettings["Opcion"];
-            //string operationId = ConfigurationManager.AppSettings["Operacion"];
-
-            ExtremeDiscardVisibility = ConfigurationManager.AppSettings["VisibleExtremeRadioButton"] == "1" ? Visibility.Visible : Visibility.Collapsed;
-
-
-            ITServiceAdapter itAdapter = new ITServiceAdapter();
+        }
 
 
 
-            try
-            {
-                string errorMessage;
-
-                listBoxes = itAdapter.GetProductionBoxes(
-                    this.currentGeneralPiece.OrderNumber, 
-                    currentProductionReport.Opcion, 
-                    currentProductionReport.Operacion, 
-                    out errorMessage);
-            }
-            catch (Exception ex)
-            {
-                //agregar modal
-                ShowError showError = new ShowError("Error", ex.Message);
-                showErrorWindowRequest.Raise(new Notification() { Content = showError});
-            }
-
-
-            if (listBoxes == null)
-            {
-                listBoxes = new List<ProductionBox>();
-            }
-
-            listBoxes = listBoxes.OrderBy(b => b.MissingPieces).ThenBy(b => b.Id).ToList();
-            DgBoxes = DgBoxes ?? new ObservableCollection<ProductionBox>();
-
-            foreach (ProductionBox box in listBoxes)
-            {
-                DgBoxes.Add(box);
-            }
-
-
-
-            ////Consultar OP HIJA
-            opHijaespecificacion = ProductionReportingBusiness.GetNextOpChildrenActive(this.currentGeneralPiece.OrderNumber);
-
-
-            ////identifica en el grid su pocicion para posterione mente marcar esa pieza para marcar
-            if (listBoxes.Count > 0)
-            {
-                string idBoxSelect = ProductionReportingBusiness.BoxSelect(this.currentGeneralPiece.OrderNumber);
-                int idActiveBox = ProductionReportingBusiness.GetActiveBox();
-
-                SelectedBox = DgBoxes.FirstOrDefault(x=>x.Id.Equals(idActiveBox.ToString()));
-
-
-            }
-
-            OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
-            Cabezal = opHijaespecificacion != null ? opHijaespecificacion.Cabezal : string.Empty;
-            Centralizado = opHijaespecificacion != null ? opHijaespecificacion.Centralizado : string.Empty;
-            Cople = opHijaespecificacion != null ? opHijaespecificacion.Cople : string.Empty;
-
+        private void CalculateQuantitiesForReporting()
+        {
             Buenas = currentGeneralPiece.GoodCount;
             Malas = 0;
             Reprocesos = currentGeneralPiece.ReworkedCount;
@@ -595,6 +540,86 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
             TotalActualAtado = total;
         }
+
+
+
+
+        private void FillMainInformation()
+        {
+            Orden = this.currentGeneralPiece.OrderNumber;
+            Colada = this.currentGeneralPiece.HeatNumber;
+            Atado = this.currentGeneralPiece.GroupItemNumber;
+        }
+
+
+        private void FillOPSpecification()
+        {
+            ////Consultar OP HIJA
+            OPChildrens opHijaespecificacion = null;
+            opHijaespecificacion = ProductionReportingBusiness.GetNextOpChildrenActive(this.currentGeneralPiece.OrderNumber);
+            OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
+            Cabezal = opHijaespecificacion != null ? opHijaespecificacion.Cabezal : string.Empty;
+            Centralizado = opHijaespecificacion != null ? opHijaespecificacion.Centralizado : string.Empty;
+            Cople = opHijaespecificacion != null ? opHijaespecificacion.Cople : string.Empty;
+        }
+
+
+        private void FillBoxesDataGridIT()
+        {
+            List<ProductionBox> listBoxes = new List<ProductionBox>();
+
+            listBoxes = GetProductionBoxesIT();
+
+            foreach (ProductionBox box in listBoxes)
+            {
+                DgBoxes.Add(box);
+            }
+
+            FindSelectedBoxProductionGuide(listBoxes);
+
+        }
+
+        private void FindSelectedBoxProductionGuide(List<ProductionBox> listboxes)
+        {
+            ////identifica en el grid su pocicion para posterione mente marcar esa pieza para marcar
+            if (listboxes.Count > 0)
+            {
+                string idBoxSelect = ProductionReportingBusiness.BoxSelect(this.currentGeneralPiece.OrderNumber);
+                int idActiveBox = ProductionReportingBusiness.GetActiveBox();
+
+                SelectedBox = DgBoxes.FirstOrDefault(x => x.Id.Equals(idActiveBox.ToString()));
+            }
+        }
+
+
+
+        private List<ProductionBox> GetProductionBoxesIT()
+        {
+            ITServiceAdapter itAdapter = new ITServiceAdapter();
+            List<ProductionBox> listBoxes = new List<ProductionBox>();
+            try
+            {
+                string errorMessage;
+
+                listBoxes = itAdapter.GetProductionBoxes(
+                             this.currentGeneralPiece.OrderNumber,
+                             currentProductionReport.Opcion,
+                             currentProductionReport.Operacion,
+                             out errorMessage);
+
+                listBoxes = (listBoxes == null) ? new List<ProductionBox>(): listBoxes.OrderBy(b => b.MissingPieces).ThenBy(b => b.Id).ToList();
+                
+            }
+            catch (Exception ex)
+            {
+                //agregar modal
+                ShowError showError = new ShowError("Error", ex.Message);
+                showErrorWindowRequest.Raise(new Notification() { Content = showError });
+            }
+
+            return listBoxes;
+        }
+
 
 
 
