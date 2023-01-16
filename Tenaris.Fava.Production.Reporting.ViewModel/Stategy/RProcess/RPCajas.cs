@@ -1,7 +1,11 @@
-﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+﻿using LinFu.DynamicProxy;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Linq;
+using Tenaris.Fava.Production.Reporting.Model.Business;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Model;
@@ -20,7 +24,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         private ReportProductionDto ReportProductionDto { get; set; }
         private ReportConfirmationViewModel reportConfirmation { get; set; }
 
-        private IndBoxReportConfirmationViewModel indBoxReportConfirmation { get; set; }
+        public IndBoxReportConfirmationViewModel indBoxReportConfirmation { get; set; }
+
+        public ProductionBox SelectedBox { get; set; }
         private GeneralMachine GeneralMachine { get; set; }
         public int tbScrapCountL2 { get; set; }
         public int tbReworkedCountL2 { get; set; }
@@ -57,35 +63,36 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         public bool IsReportConfirmationAccepted(GeneralPiece currentDGRow)
         {
 
-            var IndBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
+            indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
+            SelectedBox = indBoxReportConfirmation.SelectedBox;
+
             //GeneralMachine.Request.Raise(new Notification() { Content =  IndBoxReportConfirmation });
-            GeneralMachine.IndBoxReportConfirmationRequest.Raise(new Notification() { Content = IndBoxReportConfirmation });
+            GeneralMachine.IndBoxReportConfirmationRequest.Raise(new Notification() { Content = indBoxReportConfirmation });
             //GeneralMachine.Request.Raise(new Notification() { Content=prueba });
             // GC.Collect();
-            return IndBoxReportConfirmation.Result;
+            return indBoxReportConfirmation.Result;
         }
 
-        private bool IsExtremo1(GeneralPiece currentDGRow)
-        {
-            return currentDGRow.Extremo.Contains("1");
-        }
+
+
+
+        
+
+
 
 
         public IReportingProcess BuildReport()
         {
-            ReportProductionDto = reportConfirmation.CurrentReportProduction;
-            ReportProductionDto.IdUDT = reportConfirmation.Atado;
-            ReportProductionDto.Orden = reportConfirmation.Orden;
-            ReportProductionDto.Colada = reportConfirmation.Colada;
-            dgRejectionReportDetails = reportConfirmation.RejectionReportDetails;
-            tbScrapCountL2 = reportConfirmation.MalasActual;
-            tbReworkedCountL2 = reportConfirmation.ReprocesosActual;
-            tbLoadedCountL2 = reportConfirmation.CargadasActual;
-            tbGoodCountL2 = reportConfirmation.BuenasActual;
-            lbITLoadHelper = reportConfirmation.ITLoadHelper;
-            tbTotalLoaded = reportConfirmation.CargadasTotal;
-            tbPreviousLoaded = reportConfirmation.CargadasAnterior;
-            SelectedSendType = reportConfirmation.SelectedSendType;
+            ReportProductionDto = indBoxReportConfirmation.currentGeneralPiece.BuildReportProductionDTO();//Contruyo mi reporte a partir de mi current general piece(selected bundle)
+            dgRejectionReportDetails = indBoxReportConfirmation.DgRejectionReportDetails;
+            tbScrapCountL2 = indBoxReportConfirmation.Malas;
+            tbReworkedCountL2 = indBoxReportConfirmation.Reprocesos;
+            tbLoadedCountL2 = indBoxReportConfirmation.Total;
+            tbGoodCountL2 = indBoxReportConfirmation.Buenas;
+            //lbITLoadHelper = indBoxReportConfirmation.ITLoadHelper;
+            //tbTotalLoaded = indBoxReportConfirmation.CargadasTotal;
+            //tbPreviousLoaded = indBoxReportConfirmation.CargadasAnterior;
+            //SelectedSendType = indBoxReportConfirmation.SelectedSendType;
             _User = GeneralMachine.WhoIsLogged;
 
             return this;
@@ -93,34 +100,150 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
         public IReportingProcess ValidateReportStructure()
         {
-            if (!ValidationRules.ValidateRejectionReasons(tbScrapCountL2, dgRejectionReportDetails))
-            {
-                ShowError showError = new ShowError("Error", "La cantidad de Detalles de Rechazos no coincide con la cantidad de Piezas Malas");
-                GeneralMachine.ShowErrorMessageRequest.Raise(new Notification() { Content = showError });
+            if (!ValidateBox())
                 return null;
-            }
-
-
+            
             var confirmMessage = string.Format("Resumen de lo Reportado: \n\n Buenas:{0} \n" +
                         " Malas:{1} \n Reprocesos:{2} \n Total:{3} \n \n ¿Desea reportar estas cantidades?", tbGoodCountL2,
                         tbScrapCountL2, tbReworkedCountL2, tbLoadedCountL2);
 
             showQuestion = new ShowQuestion("Confirmar reporte", confirmMessage);
             GeneralMachine.ShowQuestionRequests.Raise(new Notification() { Content = showQuestion });
+
             return this;
+
         }
+
+
+        public void ReportProductionIT()
+        {
+            string errorMessage = string.Empty;
+            GeneralMachine.Adapter.LoadProductionBox(ReportProductionDto,SelectedBox,out errorMessage);
+            //GeneralMachine.Adapter.ReportProductionBox();
+        }
+
+
+
+
+        private bool ValidateBox()
+        {
+            if (IsSelectedBoxNull())
+                return false;
+            if (ValidateWorkedPieces())
+                return false;
+            if (ValidateGoodPieces())
+                return false;
+            if (!IsBoxSelectedProductionGuide())
+                return false;
+            if (ValidatePendingBoxes())
+                return false;
+            return true;
+        }
+
+
+
+
+        private bool ValidatePendingBoxes()
+        {
+            List<ProductionBox> listUsed = indBoxReportConfirmation.DgBoxes.Where(l => l.LoadedPieces > 0).ToList();
+
+            //LE INFORMA AL OPERADOR QUE HA DEJADO CAJAS PENDIENTES
+            if (listUsed.Count > 0 && !listUsed.Contains(SelectedBox))
+            {
+                string confirmBox = string.Format("Ha seleccionado una caja diferente a las cajas que estan pendientes de llenar.\nEsta seguro que quiere seleccionar esta caja?\nCaja: {0}",
+                    SelectedBox.Id);
+                ShowQuestion showQuestion = new ShowQuestion("Confirmar caja", confirmBox);
+                GeneralMachine.ShowQuestionRequests.Raise(new Notification() { Content = showQuestion });
+                //if (MessageBox.Show(confirmBox, "Confirmar Caja", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                if (!showQuestion.Result)
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+
+
+        private bool IsBoxSelectedProductionGuide()
+        {
+
+            bool result = (ProductionReportingBusiness.IsBoxSelect(indBoxReportConfirmation.currentGeneralPiece.OrderNumber, SelectedBox.Id)) == 1 ? true : false;
+            if (!result)
+            {
+                string confirmBox2 = string.Format("La caja {0} no corresponde a la selecionada en Guia de Produccion, o no se ha marcado ninguna en la Guia de Produccion.\nSeleccione la caja Correspondiente\n \n¿Desea continuar aun asi?\n", SelectedBox.Id);
+                ShowQuestion showQuestion = new ShowQuestion("Confirmar caja", confirmBox2);
+                GeneralMachine.ShowQuestionRequests.Raise(new Notification() { Content = showQuestion });
+                if (!showQuestion.Result)
+                {
+                    return false;
+                }
+
+            }
+            return true;
+        }
+
+
+
+        private bool ValidateGoodPieces()
+        {
+            if (indBoxReportConfirmation.Buenas <= SelectedBox.MissingPieces)
+            {
+                ShowError message = new ShowError("Reporte de Producción", string.Format("El Total de Piezas Buenas ({0}) debe ser menor o igual al número de Piezas Disponibles en la Caja Seleccionada ({1})",
+                            indBoxReportConfirmation.Buenas, SelectedBox.MissingPieces));
+                GeneralMachine.ShowErrorMessageRequest.Raise(new Notification() { Content = message });
+                return true;
+            }
+            return false;
+        }
+
+
+
+        private bool IsSelectedBoxNull()
+        {
+            if(SelectedBox is null)
+            {
+                ShowError message = new ShowError("Reporte de Producción", "No ha seleccionado una Caja");
+                GeneralMachine.ShowErrorMessageRequest.Raise(new Notification() { Content = message });
+                return true;
+            }
+            return false;
+        }
+
+        private bool ValidateWorkedPieces()
+        {
+            if (indBoxReportConfirmation.Total > indBoxReportConfirmation.TotalActualAtado)
+            {
+                ShowError message = new ShowError("Reporte de Producción", string.Format("El Total de Piezas Procesadas ({0}) debe ser menor o igual al número de Piezas Disponibles en el Atado ({1})",
+                            indBoxReportConfirmation.Total, indBoxReportConfirmation.TotalActualAtado));
+                GeneralMachine.ShowErrorMessageRequest.Raise(new Notification() { Content = message });
+                return true;
+            }
+            return false;
+        }
+
+
 
         public ReportProductionDto PrepareDtoForProductionReport()
         {
             if (!showQuestion.Result)
                 return null;
-            //IsCND();
-            ReportProductionDto.CantidadMalas = tbScrapCountL2;
-            ReportProductionDto.CantidadBuenas = tbGoodCountL2;
-            ReportProductionDto.CantidadReprocesadas = tbReworkedCountL2;
-            ReportProductionDto.IdUser = GeneralMachine.WhoIsLogged;
 
-            GetSendStatus();
+            ReportProductionDto.CantidadBuenas = tbGoodCountL2;
+            ReportProductionDto.CantidadMalas = tbScrapCountL2;
+            ReportProductionDto.CantidadReprocesadas = tbReworkedCountL2;
+            ReportProductionDto.CantidadTotal = indBoxReportConfirmation.currentGeneralPiece.LoadedCount;
+            ReportProductionDto.Orden = SelectedBox.ParentOrderNumber;
+            ReportProductionDto.IdUser = GeneralMachine.WhoIsLogged;
+            ReportProductionDto.Operacion = SelectedBox.OperationId;
+            ReportProductionDto.Opcion = SelectedBox.MachineId;
+            ReportProductionDto.Observaciones = indBoxReportConfirmation.ChangeReason;
+
+
+
+
+
 
             return ReportProductionDto;
 

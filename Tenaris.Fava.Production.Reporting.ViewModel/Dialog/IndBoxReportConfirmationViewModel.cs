@@ -500,6 +500,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             DgBoxes = new ObservableCollection<ProductionBox>();
         }
 
+
         public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) :this()
         {
             
@@ -515,7 +516,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
 
         }
-
 
 
         private void CalculateQuantitiesForReporting()
@@ -540,8 +540,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
             TotalActualAtado = total;
         }
-
-
 
 
         private void FillMainInformation()
@@ -579,6 +577,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         }
 
+
         private void FindSelectedBoxProductionGuide(List<ProductionBox> listboxes)
         {
             ////identifica en el grid su pocicion para posterione mente marcar esa pieza para marcar
@@ -590,7 +589,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
                 SelectedBox = DgBoxes.FirstOrDefault(x => x.Id.Equals(idActiveBox.ToString()));
             }
         }
-
 
 
         private List<ProductionBox> GetProductionBoxesIT()
@@ -667,23 +665,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         }
 
 
-
-
-        public IndBoxReportConfirmationViewModel GetOpSpecification()
-        {
-            OPChildrens opHijaespecificacion = null;
-            opHijaespecificacion = ProductionReportingBusiness.GetNextOpChildrenActive(this.currentGeneralPiece.OrderNumber);
-
-            OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
-            Cabezal = opHijaespecificacion != null ? opHijaespecificacion.Cabezal : string.Empty;
-            Centralizado = opHijaespecificacion != null ? opHijaespecificacion.Centralizado : string.Empty;
-            Cople = opHijaespecificacion != null ? opHijaespecificacion.Cople : string.Empty;
-
-
-            return this;
-
-        }
-
         private void PopulateRejectionCodeByMachineDescription()
         {
             try
@@ -718,6 +699,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         private ICommand acceptCommand;
         private ICommand cancelCommand;
         #endregion
+
 
         #region Comandos publicos
         public ICommand AddCommand
@@ -802,6 +784,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         #endregion
 
+
         #region Commands Execute
         private void removeCommandExecute()
         {
@@ -810,11 +793,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
                 DgRejectionReportDetails.Clear();
                 DgRejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
 
-
             }
             
 
         }
+
         public void addCommandExecute()
         {
             bool refresh;
@@ -829,6 +812,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
                 Worked = false;
             }
         }
+
         private void UnlockCommandExecute()
         {
             UnlockVisibility = Visibility.Collapsed;
@@ -837,6 +821,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             IsEnableContador = true;
 
         }
+
         private void LockCommandExecute()
         {
             UnlockVisibility = Visibility.Visible;
@@ -861,6 +846,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         }
 
         #endregion
+
 
         #region methods
 

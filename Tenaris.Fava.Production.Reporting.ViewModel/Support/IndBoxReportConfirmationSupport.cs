@@ -40,28 +40,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
         //    }
         //}
 
-        public static List<RejectionCode> PopulateRejectionCodeByMachineDescription(string machineDescription)
-        {
-            try
-            {
-
-
-                var rejectionCode = new RejectionCodeFacade().
-                        GetRejectionCodeByMachineDescription(machineDescription);
-
-
-
-                return (List<RejectionCode>)rejectionCode;
-
-            }
-            catch (Exception ex)
-            {
-
-                Trace.Exception(ex);
-                return null;
-            }
-
-        }
+   
 
         public static bool BoxReportConfirmation(int buenas, int reprocesos, int total, int totalActualAtado, int malas,
             ProductionBox selectedBox, GeneralPiece currentGeneralPiece, ReportProductionDto currentProductionReport, int opHija, string changeReason,
@@ -146,13 +125,11 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Support
                             //if (selectedBox.IdN2 == 0)
                             //{
                             //resultLoad = report.LoadProductionBox(out idN2, selectedBox.Id, selectedBox.ParentOrderNumber, selectedBox.OrderNumber, selectedBox.MachineId, selectedBox.OperationId,
-                            //    selectedBox.Type, currentProductionReportDto.Secuencia, selectedBox.MaxPieces, selectedBox.LoadedPieces, selectedBox.MissingPieces, out errorMessage);
-                            resultLoad = iTServiceAdapter.LoadProductionBox(out idN2, selectedBox.Id, selectedBox.ParentOrderNumber, selectedBox.OrderNumber, selectedBox.MachineId, selectedBox.OperationId,
-                                selectedBox.Type, currentProductionReport.Secuencia, selectedBox.MissingPieces, currentProductionReport.TipoUDT, currentProductionReport.IdUDT.ToString(),
-                                currentProductionReport.Colada, currentProductionReport.Lote, goodPieces, reworkedPieces, discardPieces, currentGeneralPiece.LoadedCount, changeReason,
-                                user, currentProductionReport.DescripcionMaquina, currentProductionReport.Almacen, currentProductionReport.IdHistory, out errorMessage, 4);
+                            ////    selectedBox.Type, currentProductionReportDto.Secuencia, selectedBox.MaxPieces, selectedBox.LoadedPieces, selectedBox.MissingPieces, out errorMessage);
+                            //resultLoad = iTServiceAdapter.LoadProductionBox(selectedBox, currentProductionReport, currentGeneralPiece,
+                            //    goodPieces, reworkedPieces, discardPieces, changeReason, user, out errorMessage);
 
-                            //    selectedBox.IdN2 = idN2;
+                            ////    selectedBox.IdN2 = idN2;
                             //}
                             //else
                             //{

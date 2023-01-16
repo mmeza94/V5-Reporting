@@ -58,9 +58,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
         public bool IsReportConfirmationAccepted(GeneralPiece currentDGRow)
         {
-
-            if (IsExtremo1(currentDGRow))
-            {
+  
                 reportConfirmation = new ReportConfirmationViewModel()
                 .SetGeneralPiece(currentDGRow)
                 .SetReportProductionDto(ReportProductionDto)
@@ -69,19 +67,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
                 GeneralMachine.Request.Raise(new Notification() { Content = reportConfirmation });
 
                 return reportConfirmation.Result;
-            }
-            else
-            {
-
-                //indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
-                //ShowMessage IndBoxReportConfirmation = new ShowMessage("Titulo", "Mensaje");
-                var IndBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
-                //GeneralMachine.Request.Raise(new Notification() { Content =  IndBoxReportConfirmation });
-                GeneralMachine.IndBoxReportConfirmationRequest.Raise(new Notification() { Content = IndBoxReportConfirmation });
-                //GeneralMachine.Request.Raise(new Notification() { Content=prueba });
-               // GC.Collect();
-                return IndBoxReportConfirmation.Result;
-            }
+           
         }
 
         private bool IsExtremo1(GeneralPiece currentDGRow)

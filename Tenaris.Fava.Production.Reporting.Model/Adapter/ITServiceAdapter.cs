@@ -191,41 +191,19 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
 
 
-        public bool LoadProductionBox(out int idN2, string boxId, int parentOrderNumber, int orderNumber, string machineId, string operationId, string workUnit, int sequenceProcess, //usado en IndBoxReportConfirmation
-            int missingPieces, string workUnitSource, string workUnitSourceId, int heatNumber, int idLot, decimal goodPieces, decimal reworkedPieces, decimal discardPieces,
-            decimal totalPieces, string comments, string idUser, string machineDescription, string store, int idHistory, out string errorMessage, int version)
+        public bool LoadProductionBox(ReportProductionDto reportProductionDto, DTO.ProductionBox selectedBox, out string errorMessage)
         {
             Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errors; //PRUEBADWF
 
             //----- Carga de Tarjeta de Linea -----//
-            ProductionReport report = new ProductionReport();
+ 
 
-            ReportProductionDto reportProductionDto = new ReportProductionDto
-            {
-                CantidadBuenas = Convert.ToInt32(goodPieces),
-                IdUDT = Int32.Parse(workUnitSourceId),
-                TipoUDT = workUnitSource,
-                Colada = heatNumber,
-                IdHistory = idHistory,
-                DescripcionMaquina = machineDescription,
-                Orden = parentOrderNumber,
-                IdUser = idUser,
-                CantidadTotal = Convert.ToInt32(totalPieces),
-                Lote = idLot,
-                CantidadReprocesadas = Convert.ToInt32(reworkedPieces),
-                CantidadMalas = Convert.ToInt32(discardPieces),
-                Secuencia = sequenceProcess,
-                Operacion = operationId,
-                Opcion = machineId,
-                Observaciones = comments,
-                Almacen = store
-            };
 
-            bool loaded = TPSLoadMaterial(reportProductionDto, version);
+            bool loaded = TPSLoadMaterial(reportProductionDto);
 
             //----- Carga de Caja -----//
 
-            bool result = IT.LoadProductionBoxIT(boxId, machineId, operationId, missingPieces, sequenceProcess, workUnit, out errors);
+            bool result = IT.LoadProductionBoxIT(selectedBox.Id, selectedBox.MachineId, selectedBox.OperationId, selectedBox.MissingPieces, reportProductionDto.Secuencia, selectedBox.Type, out errors);
 
             if (result)
             {
@@ -237,7 +215,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             }
 
 
-            idN2 = 0;
+         
             return result;
         }
 
@@ -307,7 +285,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                     LotNumberHtr = idLot,
                     ReworkedCount = Convert.ToInt32(reworkedPieces),
                     ScrapCount = discards.Sum(d => d.ScrapCount),
-                    SendStatus = sendStatus,
+                    SendStatus = Enumerations.ProductionReportSendStatus.Completo,
                     MachineSequence = sequenceProcess,
                     MachineOperation = operationId,
                     MachineOption = machineId,
@@ -331,6 +309,79 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                 {
                     new ReportProductionHistoryRepository().Save(reportProductionHistory);
                 }
+
+                errorMessage = string.Empty;
+            }
+            else
+            {
+                errorMessage = this.GetErrorMessage(errors);
+            }
+
+            return result;
+        }
+
+
+
+        public bool ReportProductionBox(string user,ReportProductionDto currentReportProductionDto,DTO.ProductionBox SelectedBox   //usado en IndBoxReportConfirmation
+            , int childOrder, string comments, RejectionReportDetail[] discards, out string errorMessage)
+        {
+            Trace.Message("----------------------ITServiceAdapter----------------------");
+            Trace.Message($"USER recived in Adapter: {user}");
+            ErrorCollection errors = null;
+            Descarte[] tpsDiscards = new Descarte[discards.Length];
+
+            int i = 0;
+
+            foreach (RejectionReportDetail discard in discards)
+            {
+                Descarte tpsDiscard = new Descarte();
+                tpsDiscard.Cantidad = discard.ScrapCount.ToString();
+                tpsDiscard.Destino = discard.Destino;
+                tpsDiscard.Motivo = discard.RejectionCode.Code;
+                tpsDiscard.Tipo = (discard.Trabajado == Enumerations.AxlrBit.Si) ? "1" : "0"; ;
+
+                tpsDiscards[i++] = tpsDiscard;
+            }
+
+            Enumerations.ProductionReportSendStatus sendStatus = Enumerations.ProductionReportSendStatus.Completo;
+
+
+            bool result = IT.ReportProductionBoxIT(out errors, user, currentReportProductionDto.TipoUDT, currentReportProductionDto.IdUDT.ToString()
+                                                , currentReportProductionDto.Colada, currentReportProductionDto.Lote, currentReportProductionDto.Secuencia, SelectedBox.OperationId, SelectedBox.MachineId,
+                                                    currentReportProductionDto.CantidadBuenas, currentReportProductionDto.CantidadProcesadas,
+                                                    currentReportProductionDto.CantidadReprocesadas,currentReportProductionDto.CantidadTotal
+                                                    , currentReportProductionDto.ColadaSalida, SelectedBox.Id, currentReportProductionDto.LoteSalida, comments, SelectedBox.Type, tpsDiscards);
+
+            if (result)
+            {
+                //----- Inserción de registro histórico de envío de producción -----//
+                ProductionReport report = new ProductionReport();
+
+                var reportProductionHistory = new ReportProductionHistory
+                {
+                    GoodCount = currentReportProductionDto.CantidadBuenas,
+                    GroupItemNumber = currentReportProductionDto.IdUDT,
+                    HeatNumber = currentReportProductionDto.Colada,
+                    IdHistory = currentReportProductionDto.IdHistory,
+                    IdOrder = currentReportProductionDto.Orden,
+                    InsDateTime = DateTime.Now,
+                    InsertedBy = user,
+                    TotalQuantity = currentReportProductionDto.CantidadProcesadas,
+                    LotNumberHtr = currentReportProductionDto.Lote,
+                    ReworkedCount = currentReportProductionDto.CantidadReprocesadas,
+                    ScrapCount = discards.Sum(d => d.ScrapCount),
+                    SendStatus = Enumerations.ProductionReportSendStatus.Completo,
+                    MachineSequence = currentReportProductionDto.Secuencia,
+                    MachineOperation = SelectedBox.OperationId,
+                    MachineOption = SelectedBox.MachineId,
+                    Observation = comments,
+                    GroupItemType = currentReportProductionDto.TipoUDT,
+                    ChildOrder = childOrder,
+                    ChildGroupItemNumber = Convert.ToInt32(SelectedBox.Id),
+                    ChildGroupItemType = SelectedBox.Type
+                };
+
+                //new ReportProductionHistoryFacade().SaveReportProductionHistory(reportProductionHistory, sendStatus, discards); ReportPorTrabajar
 
                 errorMessage = string.Empty;
             }
@@ -1083,5 +1134,9 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             }
             return respuesta;
         }
+
+
+
+
     }
 }
