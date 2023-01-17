@@ -238,6 +238,31 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
             return result;
         }
 
+
+
+        public bool UnloadProductionBox(DTO.ProductionBox SelectedBox, int sequenceProcess, out string errorMessage) //usado en IndBoxReportConfirmation
+        {
+            Tenaris.Fava.Production.Reporting.ITConnection.ITService.ErrorCollection errors; //PRUEBADWF
+
+
+            bool result = IT.UnLoadProductionBoxIT(SelectedBox.Id, SelectedBox.MachineId, SelectedBox.OperationId
+                                                   ,SelectedBox.MissingPieces, sequenceProcess, SelectedBox.Type, out errors);
+
+            if (result)
+            {
+                errorMessage = string.Empty;
+            }
+            else
+            {
+                errorMessage = this.GetErrorMessage(errors);
+            }
+
+            return result;
+        }
+
+
+
+
         public bool ReportProductionBox(string user, int idN2, string workUnitSource, string workUnitSourceId, int order, int heat, int idLot, int sequenceProcess, string operationId, string machineId, //usado en IndBoxReportConfirmation
             decimal goodPieces, decimal workedPieces, decimal reworkedPieces, decimal totalPieces, int endHeat, int childOrder, string boxId, int endIdLot,
             string comments, string boxType, string idUser, string machineDescription, string store, int idHistory, RejectionReportDetail[] discards, out string errorMessage)
@@ -343,14 +368,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                 tpsDiscards[i++] = tpsDiscard;
             }
 
-            Enumerations.ProductionReportSendStatus sendStatus = Enumerations.ProductionReportSendStatus.Completo;
 
 
             bool result = IT.ReportProductionBoxIT(out errors, user, currentReportProductionDto.TipoUDT, currentReportProductionDto.IdUDT.ToString()
-                                                , currentReportProductionDto.Colada, currentReportProductionDto.Lote, currentReportProductionDto.Secuencia, SelectedBox.OperationId, SelectedBox.MachineId,
+                                                  , currentReportProductionDto.Colada, currentReportProductionDto.Lote, currentReportProductionDto.Secuencia, SelectedBox.OperationId, SelectedBox.MachineId,
                                                     currentReportProductionDto.CantidadBuenas, currentReportProductionDto.CantidadProcesadas,
                                                     currentReportProductionDto.CantidadReprocesadas,currentReportProductionDto.CantidadTotal
-                                                    , currentReportProductionDto.ColadaSalida, SelectedBox.Id, currentReportProductionDto.LoteSalida, comments, SelectedBox.Type, tpsDiscards);
+                                                   ,currentReportProductionDto.ColadaSalida, SelectedBox.Id, currentReportProductionDto.LoteSalida, comments, SelectedBox.Type, tpsDiscards);
 
             if (result)
             {

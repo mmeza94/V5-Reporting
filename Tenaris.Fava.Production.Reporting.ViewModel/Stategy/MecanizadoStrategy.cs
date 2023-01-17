@@ -127,9 +127,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 string errorMessage = string.Empty;
                 //RPCajas caja = (RPCajas)reportingProcess;
                 Adapter.LoadProductionBox(currentReportProductionDTO,((RPCajas)reportingProcess).SelectedBox, out errorMessage);
+
                 bool result = Adapter.ReportProductionBox(WhoIsLogged, currentReportProductionDTO, ((RPCajas)reportingProcess).SelectedBox
-                    , Convert.ToInt32(((RPCajas)reportingProcess).indBoxReportConfirmation.OpHija), ((RPCajas)reportingProcess).indBoxReportConfirmation.ChangeReason,
-                     ((RPCajas)reportingProcess).indBoxReportConfirmation.DgRejectionReportDetails.ToArray(),out errorMessage);
+                            , Convert.ToInt32(((RPCajas)reportingProcess).indBoxReportConfirmation.OpHija), ((RPCajas)reportingProcess).indBoxReportConfirmation.ChangeReason,
+                             ((RPCajas)reportingProcess).indBoxReportConfirmation.DgRejectionReportDetails.ToArray(),out errorMessage);
 
                 if (result)
                 {
@@ -138,7 +139,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 }
                 else
                 {
-                    //Adapter.UnloadProductionBox();
+                    Adapter.UnloadProductionBox(((RPCajas)reportingProcess).SelectedBox, currentReportProductionDTO.Secuencia, out errorMessage);
                     response = $"No se pudo realizar el Reporte de Producción: {errorMessage}";
 
                 }

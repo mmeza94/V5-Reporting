@@ -532,7 +532,17 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
             if (total < 0)
             {
-                total = 0;
+                ITServiceAdapter adapter = new ITServiceAdapter();
+                string itresponse = "";
+                DataTable res = adapter.GetAvailableStock(currentGeneralPiece.OrderNumber.ToString(), currentGeneralPiece.Description, Configurations.Instance.Opcion, null, null, ref itresponse);
+                var items = from c in res.AsEnumerable()
+                            select new
+                            {
+                                GroupItemNumber = c.Field<string>("IdUdt"),
+                                totalAtado = c.Field<string>("Cantidad")
+                            };
+
+                total = items.Count() == 0 ? currentGeneralPiece.LoadedCount - total2 : Convert.ToInt32(items.FirstOrDefault()?.totalAtado);
             }
 
             currentGeneralPiece.LoadedCount = total;
