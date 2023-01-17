@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
@@ -10,7 +11,7 @@ using Tenaris.Fava.Production.Reporting.ViewModel.Support;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 {
-    public class RPMecanizado : IReportingProcess
+    public class RPMecanizadoExtremo1 : IReportingProcess
     {
         #region Properties
         private int lbITLoadHelper, tbTotalLoaded, tbPreviousLoaded;
@@ -29,7 +30,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
         #endregion
 
         #region Constructor
-        public RPMecanizado(GeneralMachine generalMachine)
+        public RPMecanizadoExtremo1(GeneralMachine generalMachine)
         {
             this.GeneralMachine = generalMachine;
         }
@@ -57,26 +58,16 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess
 
         public bool IsReportConfirmationAccepted(GeneralPiece currentDGRow)
         {
-
-            if (IsExtremo1(currentDGRow))
-            {
+  
                 reportConfirmation = new ReportConfirmationViewModel()
                 .SetGeneralPiece(currentDGRow)
                 .SetReportProductionDto(ReportProductionDto)
                 .SetITLoadHelper(GeneralMachine.GetFirstPieceLoadedNumberForIT(currentDGRow))
                 .SetUser(GeneralMachine.WhoIsLogged);
                 GeneralMachine.Request.Raise(new Notification() { Content = reportConfirmation });
-            }
-            else
-            {
 
-                indBoxReportConfirmation = new IndBoxReportConfirmationViewModel(currentDGRow, ReportProductionDto, GeneralMachine.WhoIsLogged);
-                GeneralMachine.Request.Raise(new Notification() { Content = indBoxReportConfirmation });
-            }
-
-
-
-            return reportConfirmation.Result;
+                return reportConfirmation.Result;
+           
         }
 
         private bool IsExtremo1(GeneralPiece currentDGRow)

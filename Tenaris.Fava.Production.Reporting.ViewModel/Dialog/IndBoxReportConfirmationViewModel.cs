@@ -17,6 +17,10 @@ using Tenaris.Fava.Production.Reporting.Model.Support;
 using Infrastructure.InteractionRequests;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.Configuration;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
+using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.Enums;
+using System.Windows.Controls;
 
 namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 {
@@ -444,11 +448,17 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         #endregion
 
+
+        #region Private InteractionRequests
+
         private InteractionRequest<Notification> reportConfirmationWindowRequest { get; set; }
         private InteractionRequest<Notification> indBoxReportConfirmationWindowRequest { get; set; }
         private InteractionRequest<Notification> showQuestionWindowRequest { get; set; }
         private InteractionRequest<Notification> showMessageWindowRequest { get; set; }
         private InteractionRequest<Notification> showErrorWindowRequest { get; set; }
+
+        #endregion
+
 
         #region public InteractionRequests<Notification>
         public InteractionRequest<Notification> ReportConfirmationWindowRequest
@@ -483,107 +493,56 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             Extremo1 = false;
             Destination = new List<string>() { "Chatarra", "Decisión de Ingeniería" };
             DestinationSelected = Destination.FirstOrDefault();
-
+            UnlockVisibility = Visibility.Visible;
+            LockVisibility = Visibility.Collapsed;
+            DgRejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
+            ExtremeDiscardVisibility = ConfigurationManager.AppSettings["VisibleExtremeRadioButton"] == "1" ? Visibility.Visible : Visibility.Collapsed;
+            DgBoxes = new ObservableCollection<ProductionBox>();
         }
 
-        public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) : this()
+
+        public IndBoxReportConfirmationViewModel(GeneralPiece generalPieceDto, ReportProductionDto productionReportDto, string user) :this()
         {
             
             this.currentGeneralPiece = generalPieceDto;
             this.currentProductionReport = productionReportDto;
             this.user = user;
-            DgRejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
+ 
             PopulateRejectionCodeByMachineDescription();
-
-            UnlockVisibility = Visibility.Visible;
-            LockVisibility = Visibility.Collapsed;
-
-
-            //Llenando textboxes
-            Orden = this.currentGeneralPiece.OrderNumber;
-            Colada = this.currentGeneralPiece.HeatNumber;
-            Atado = this.currentGeneralPiece.GroupItemNumber;
-
-            OPChildrens opHijaespecificacion = null;
+            FillMainInformation();
+            FillBoxesDataGridIT();
+            FillOPSpecification();
+            CalculateQuantitiesForReporting();
 
 
-            List<ProductionBox> listBoxes = new List<ProductionBox>();
-            //string machineId = ConfigurationManager.AppSettings["Opcion"];
-            //string operationId = ConfigurationManager.AppSettings["Operacion"];
-
-            ExtremeDiscardVisibility = ConfigurationManager.AppSettings["VisibleExtremeRadioButton"] == "1" ? Visibility.Visible : Visibility.Collapsed;
+        }
 
 
-            ITServiceAdapter itAdapter = new ITServiceAdapter();
-
-            IndBoxReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
-
-            try
-            {
-                string errorMessage;
-
-                listBoxes = itAdapter.GetProductionBoxes(
-                    this.currentGeneralPiece.OrderNumber, 
-                    currentProductionReport.Opcion, 
-                    currentProductionReport.Operacion, 
-                    out errorMessage);
-            }
-            catch (Exception ex)
-            {
-                //agregar modal
-                ShowError showError = new ShowError("Error", ex.Message);
-                showErrorWindowRequest.Raise(new Notification() { Content = showError});
-            }
-
-
-            if (listBoxes == null)
-            {
-                listBoxes = new List<ProductionBox>();
-            }
-
-            listBoxes = listBoxes.OrderBy(b => b.MissingPieces).ThenBy(b => b.Id).ToList();
-            DgBoxes = DgBoxes ?? new ObservableCollection<ProductionBox>();
-
-            foreach (ProductionBox box in listBoxes)
-            {
-                DgBoxes.Add(box);
-            }
-
-
-
-            ////Consultar OP HIJA
-            opHijaespecificacion = ProductionReportingBusiness.GetNextOpChildrenActive(this.currentGeneralPiece.OrderNumber);
-
-
-            ////identifica en el grid su pocicion para posterione mente marcar esa pieza para marcar
-            if (listBoxes.Count > 0)
-            {
-                string idBoxSelect = ProductionReportingBusiness.BoxSelect(this.currentGeneralPiece.OrderNumber);
-                int idActiveBox = ProductionReportingBusiness.GetActiveBox();
-
-                SelectedBox = DgBoxes.FirstOrDefault(x=>x.Id.Equals(idActiveBox.ToString()));
-
-
-            }
-
-            OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
-            Cabezal = opHijaespecificacion != null ? opHijaespecificacion.Cabezal : string.Empty;
-            Centralizado = opHijaespecificacion != null ? opHijaespecificacion.Centralizado : string.Empty;
-            Cople = opHijaespecificacion != null ? opHijaespecificacion.Cople : string.Empty;
-
+        private void CalculateQuantitiesForReporting()
+        {
             Buenas = currentGeneralPiece.GoodCount;
             Malas = 0;
             Reprocesos = currentGeneralPiece.ReworkedCount;
             Total = Buenas;
             ScrapCountForRejection = currentGeneralPiece.ScrapCount;
 
-            int total1 = IndBoxReportConfirmationSupport.GetPreviousTotal("Extremo 1", currentGeneralPiece);
-            int total2 = IndBoxReportConfirmationSupport.GetPreviousTotal("Extremo 2", currentGeneralPiece);
+            int total1 = GetPreviousTotal("Extremo 1", currentGeneralPiece);
+            int total2 = GetPreviousTotal("Extremo 2", currentGeneralPiece);
             int total = total1 - total2;
 
             if (total < 0)
             {
-                total = 0;
+                ITServiceAdapter adapter = new ITServiceAdapter();
+                string itresponse = "";
+                DataTable res = adapter.GetAvailableStock(currentGeneralPiece.OrderNumber.ToString(), currentGeneralPiece.Description, Configurations.Instance.Opcion, null, null, ref itresponse);
+                var items = from c in res.AsEnumerable()
+                            select new
+                            {
+                                GroupItemNumber = c.Field<string>("IdUdt"),
+                                totalAtado = c.Field<string>("Cantidad")
+                            };
+
+                total = items.Count() == 0 ? currentGeneralPiece.LoadedCount - total2 : Convert.ToInt32(items.FirstOrDefault()?.totalAtado);
             }
 
             currentGeneralPiece.LoadedCount = total;
@@ -593,32 +552,139 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         }
 
 
-        public IndBoxReportConfirmationViewModel GetOpSpecification()
+        private void FillMainInformation()
         {
+            Orden = this.currentGeneralPiece.OrderNumber;
+            Colada = this.currentGeneralPiece.HeatNumber;
+            Atado = this.currentGeneralPiece.GroupItemNumber;
+        }
+
+
+        private void FillOPSpecification()
+        {
+            ////Consultar OP HIJA
             OPChildrens opHijaespecificacion = null;
             opHijaespecificacion = ProductionReportingBusiness.GetNextOpChildrenActive(this.currentGeneralPiece.OrderNumber);
-
             OpHija = opHijaespecificacion != null ? opHijaespecificacion.NumeroOrder.ToString() : string.Empty;
             Cabezal = opHijaespecificacion != null ? opHijaespecificacion.Cabezal : string.Empty;
             Centralizado = opHijaespecificacion != null ? opHijaespecificacion.Centralizado : string.Empty;
             Cople = opHijaespecificacion != null ? opHijaespecificacion.Cople : string.Empty;
+        }
 
 
-            return this;
+        private void FillBoxesDataGridIT()
+        {
+            List<ProductionBox> listBoxes = new List<ProductionBox>();
+
+            listBoxes = GetProductionBoxesIT();
+
+            foreach (ProductionBox box in listBoxes)
+            {
+                DgBoxes.Add(box);
+            }
+
+            FindSelectedBoxProductionGuide(listBoxes);
 
         }
+
+
+        private void FindSelectedBoxProductionGuide(List<ProductionBox> listboxes)
+        {
+            ////identifica en el grid su pocicion para posterione mente marcar esa pieza para marcar
+            if (listboxes.Count > 0)
+            {
+                string idBoxSelect = ProductionReportingBusiness.BoxSelect(this.currentGeneralPiece.OrderNumber);
+                int idActiveBox = ProductionReportingBusiness.GetActiveBox();
+
+                SelectedBox = DgBoxes.FirstOrDefault(x => x.Id.Equals(idActiveBox.ToString()));
+            }
+        }
+
+
+        private List<ProductionBox> GetProductionBoxesIT()
+        {
+            ITServiceAdapter itAdapter = new ITServiceAdapter();
+            List<ProductionBox> listBoxes = new List<ProductionBox>();
+            try
+            {
+                string errorMessage;
+
+                listBoxes = itAdapter.GetProductionBoxes(
+                             this.currentGeneralPiece.OrderNumber,
+                             currentProductionReport.Opcion,
+                             currentProductionReport.Operacion,
+                             out errorMessage);
+
+                listBoxes = (listBoxes == null) ? new List<ProductionBox>(): listBoxes.OrderBy(b => b.MissingPieces).ThenBy(b => b.Id).ToList();
+                
+            }
+            catch (Exception ex)
+            {
+                //agregar modal
+                ShowError showError = new ShowError("Error", ex.Message);
+                showErrorWindowRequest.Raise(new Notification() { Content = showError });
+            }
+
+            return listBoxes;
+        }
+
+
+
+
+
+        public static int GetPreviousTotal(string extremo, GeneralPiece currentGeneralPiece)
+        {
+            var description = "";
+            int total = 0;
+
+            if (currentGeneralPiece.Description.Contains("Forjadora"))
+                description = "Forjado";
+            else if (currentGeneralPiece.Description.Contains("Roscadora"))
+                description = "Mecanizado";
+            else
+                description = Configurations.Instance.Operacion;
+
+            int machineSequence = currentGeneralPiece.Extremo.Contains("1")?9:10;
+
+
+            IList reportItems=ProductionReportingBusiness.GetReportProductionHistoryByParamsTest(
+                new Dictionary<string, object>
+            {
+                                { "@Order", currentGeneralPiece.OrderNumber },
+                                { "@GroupItemNumber", currentGeneralPiece.GroupItemNumber },
+                                { "@HeatNumber", currentGeneralPiece.HeatNumber },
+                                { "@idHistory", 0 },
+                                { "@SendStatus", 0 },
+                                { "@MachineSequence", machineSequence }
+            });
+
+
+            foreach (ReportProductionHistory rph in reportItems)
+            {
+                if (extremo == "Extremo 1")
+                {
+                    total += rph.GoodCount;//Solo se toman en cuenta las buenas del extremo 1, ya que las malas no se pueden reportar en la segunda estacion (extremo 2)
+                }
+                else if (extremo == "Extremo 2")
+                {
+                    total += (rph.GoodCount + rph.ScrapCount);
+                }
+            }
+
+            return total;
+        }
+
 
         private void PopulateRejectionCodeByMachineDescription()
         {
             try
             {
 
-                IList rejectioncode = new RejectionCodeFacade().GetRejectionCodeByMachineDescription(currentGeneralPiece.Description);
-                RejectionCode = new ObservableCollection<RejectionCode>();
-                foreach (var item in rejectioncode)
-                {
-                    RejectionCode.Add((RejectionCode)item);
-                }
+                RejectionCode = new ObservableCollection<RejectionCode>(DataAccessSQL.
+                    Instance.GetRejectionCodeByMachineDescriptionTestV5(new Dictionary<string, object>
+                {{
+                    "@MachineDescription",this.currentGeneralPiece.Description
+                } }));
 
                 SelectedRejectionCode = RejectionCode.FirstOrDefault();
             }
@@ -643,6 +709,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         private ICommand acceptCommand;
         private ICommand cancelCommand;
         #endregion
+
 
         #region Comandos publicos
         public ICommand AddCommand
@@ -727,6 +794,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         #endregion
 
+
         #region Commands Execute
         private void removeCommandExecute()
         {
@@ -735,15 +803,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
                 DgRejectionReportDetails.Clear();
                 DgRejectionReportDetails = new ObservableCollection<RejectionReportDetail>();
 
-
             }
-            IndBoxReportConfirmationSupport.rejectionReportDetails = new List<RejectionReportDetail>();
+            
 
         }
+
         public void addCommandExecute()
         {
             bool refresh;
-            DgRejectionReportDetails = IndBoxReportConfirmationSupport.btnAddRejectionDetail_Click(SelectedRejectionCode, Cantidad, DestinationSelected,
+            DgRejectionReportDetails = btnAddRejectionDetail_Click(SelectedRejectionCode, Cantidad, DestinationSelected,
                  Motivo, Worked, Extremo1, DgRejectionReportDetails, out refresh);
             if (refresh)
             {
@@ -754,6 +822,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
                 Worked = false;
             }
         }
+
         private void UnlockCommandExecute()
         {
             UnlockVisibility = Visibility.Collapsed;
@@ -762,6 +831,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
             IsEnableContador = true;
 
         }
+
         private void LockCommandExecute()
         {
             UnlockVisibility = Visibility.Visible;
@@ -787,9 +857,55 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
 
         #endregion
 
+
         #region methods
 
+        public  ObservableCollection<RejectionReportDetail> btnAddRejectionDetail_Click(RejectionCode SelectedRejectionCode, int scrapCountForRejection, string selectedBundleDestiny,
+           string motivo, bool worked, bool extremo1, ObservableCollection<RejectionReportDetail> dgrejectionReportDetails, out bool refresh)
+        {
 
+            short cantidad = (short)scrapCountForRejection;
+
+            var rejectionReportDetail = new RejectionReportDetail();
+
+            var TEMrejectionReportDetail = new RejectionReportDetail
+            {
+                RejectionCode = SelectedRejectionCode,
+                ScrapCount = cantidad,
+                Active = Enumerations.AxlrBit.Si,
+                InsDateTime = DateTime.Now,
+                Destino = selectedBundleDestiny,
+                Observation = motivo,
+                Trabajado = (worked) ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No,
+                Extremo = (extremo1) ? "Extremo 1" : "Extremo 2"/// Revisar
+            };
+            rejectionReportDetail = TEMrejectionReportDetail;
+
+
+            bool alreadyAdded = false;
+
+            foreach (RejectionReportDetail reportRejDet in dgrejectionReportDetails) //Posible cambio FUTURODWF (
+            {
+                if (reportRejDet.RejectionCode.Id == SelectedRejectionCode.Id && reportRejDet.Trabajado == (worked ? Enumerations.AxlrBit.Si : Enumerations.AxlrBit.No) &&
+                    (reportRejDet.Extremo == (extremo1 ? "Extremo 1" : "Extremo 2")) || reportRejDet.Extremo == null)
+                {
+                    reportRejDet.ScrapCount += cantidad;
+                    alreadyAdded = true;
+                }
+            }
+
+            if (!alreadyAdded)
+            {
+                dgrejectionReportDetails.Add(rejectionReportDetail);
+                refresh = true;
+            }
+            else
+                refresh = false;
+
+           var rejectionReportDetails = dgrejectionReportDetails.ToList();
+            return new ObservableCollection<RejectionReportDetail>(dgrejectionReportDetails);
+
+        }
         public bool AcceptCanExecute()
         {
             return true;

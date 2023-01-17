@@ -2,11 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Tenaris.Fava.Production.Reporting.Model.Adapter;
 using Tenaris.Fava.Production.Reporting.Model.Business;
+using Tenaris.Fava.Production.Reporting.Model.Data_Access;
 using Tenaris.Fava.Production.Reporting.Model.DTO;
 using Tenaris.Fava.Production.Reporting.Model.Enums;
 using Tenaris.Fava.Production.Reporting.Model.Interfaces;
 using Tenaris.Fava.Production.Reporting.Model.Model;
+using Tenaris.Fava.Production.Reporting.Model.NhAccess.Reporitories;
 using Tenaris.Fava.Production.Reporting.Model.Support;
 using Tenaris.Fava.Production.Reporting.ViewModel.Interfaces;
 using Tenaris.Fava.Production.Reporting.ViewModel.Stategy.RProcess;
@@ -23,14 +27,19 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
         public Dictionary<string, object> Filters { get; set; }
         public Dictionary<string, object> OutPuts { get; set; }
 
+        public int MachineId { get; set; }
+
         public MecanizadoStrategy()
         {
-            reportingProcess = new RPMecanizado(this);
+            //reportingProcess = new RPMecanizadoExtremo1(this);
             Filters = Filter;
             OutPuts = OutPut;
             formatterPiece = new ProcessorPieces.ProcessorByForjas();
+            
 
         }
+
+
 
 
         public IActions Search()
@@ -39,9 +48,9 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             {
                 CurrentGeneralPieces = ProductionReportingBusiness.GetProductionGeneral(Filters);
 
-                CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece);
+                CurrentGeneralPieces = CurrentGeneralPieces.FormatterPieces(formatterPiece).Where(x => (x.SendStatus == Enumerations.ProductionReportSendStatus.Parcial) || (x.SendStatus == Enumerations.ProductionReportSendStatus.Completo)).ToList(); ;
 
-                AddValues("Search", CurrentGeneralPieces);
+                AddValues("Search", CurrentGeneralPieces.ToObservableCollection());
                 return this;
 
             }
@@ -60,7 +69,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 GeneralPiece currentDGRow = (GeneralPiece)Filters["Selected_Bundle"];
 
 
+                reportingProcess = SelectReportingProcess(currentDGRow);
+
+
                 var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
+
+                var a = new CommonMachineRepository().GetMachineByDescription(ReportPRoduction.DescripcionMaquina).Id;
 
                 if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
                     return this;
@@ -70,16 +84,14 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
 
-                ValidateExtreme(ReportPRoduction, currentDGRow);
-
-
 
                 ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
                                                                                  .ValidateReportStructure()
                                                                                  .PrepareDtoForProductionReport();
 
-                var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
-                    true, reportingProcess.dgRejectionReportDetails);
+              
+
+                string response = SelectReportAdapter(currentDGRow, currentReportProductionDTO);
 
 
                 reportingProcess.ShowITMessage(response);
@@ -93,6 +105,68 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
             }
             return this;
+        }
+
+         
+
+
+
+
+        private string SelectReportAdapter(GeneralPiece currentPiece,ReportProductionDto currentReportProductionDTO)
+        {
+            string response;
+
+            if (currentPiece.Extremo.Contains("1"))
+            {
+                response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
+                   true, reportingProcess.dgRejectionReportDetails);
+            }
+            else
+            {
+
+                string errorMessage = string.Empty;
+                //RPCajas caja = (RPCajas)reportingProcess;
+                Adapter.LoadProductionBox(currentReportProductionDTO,((RPCajas)reportingProcess).SelectedBox, out errorMessage);
+
+                bool result = Adapter.ReportProductionBox(WhoIsLogged, currentReportProductionDTO, ((RPCajas)reportingProcess).SelectedBox
+                            , Convert.ToInt32(((RPCajas)reportingProcess).indBoxReportConfirmation.OpHija), ((RPCajas)reportingProcess).indBoxReportConfirmation.ChangeReason,
+                             ((RPCajas)reportingProcess).indBoxReportConfirmation.DgRejectionReportDetails.ToArray(),out errorMessage);
+
+                if (result)
+                {
+                    response = "Reporte de Producción en Caja realizado correctamente!";
+                   
+                }
+                else
+                {
+                    Adapter.UnloadProductionBox(((RPCajas)reportingProcess).SelectedBox, currentReportProductionDTO.Secuencia, out errorMessage);
+                    response = $"No se pudo realizar el Reporte de Producción: {errorMessage}";
+
+                }
+                
+
+            }
+
+            return response;
+        }
+
+
+
+        private IReportingProcess SelectReportingProcess(GeneralPiece currentPiece)
+        {
+            IReportingProcess SelectedReportingProcess = null;
+
+            if (currentPiece.Extremo.Contains("1"))
+            {
+                SelectedReportingProcess = new RPMecanizadoExtremo1(this);
+            }
+            else
+            {
+                SelectedReportingProcess = new RPCajas(this);
+
+            }
+
+            return SelectedReportingProcess;
         }
 
 
@@ -152,60 +226,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             return productionReportHistories;
         }
 
-        private void GeneralPieceProcessor(GeneralPiece currentDGRow)
-        {
-            var num1 = 0;
-            var num2 = 0;
-
-            ObservableCollection<ReportProductionHistory> collection = dgReporteProduccion_SelectionChanged(currentDGRow);
-
-            foreach (ReportProductionHistory productionHistory in collection)
-            {
-                if (productionHistory.MachineOperation.Contains(SelectedBundle.Extremo))
-                {
-                    num1 += productionHistory.GoodCount;
-                    num2 += productionHistory.ScrapCount;
-                }
-
-            }
-
-            currentDGRow.BuenasReportadas = num1;
-            currentDGRow.MalasReportadas = num2;
-            currentDGRow.TotalReportado = (num1 + num2);
-            currentDGRow.PendientesPorReportar = currentDGRow.LoadedCount - (num1 + num2);
-            if (currentDGRow.PendientesPorReportar != 0)
-            {
-                currentDGRow.GoodCount = currentDGRow.GoodCount - num1;
-                currentDGRow.ScrapCount = currentDGRow.ScrapCount - num2;
-                currentDGRow.LoadedCount = currentDGRow.GoodCount + currentDGRow.ScrapCount;
-            }
-            else
-            {
-                currentDGRow.GoodCount = 0;
-                currentDGRow.ScrapCount = 0;
-                currentDGRow.LoadedCount = 0;
-            }
-
-
-            currentDGRow.Cargados = currentDGRow.BuenasReportadas + currentDGRow.MalasReportadas;
-
-
-        }
-
-
-        private void GetForgeCurrentGeneralPieces()
-        {
-
-            foreach (GeneralPiece item in CurrentGeneralPieces)
-            {
-                var forgeMode = ProductionReportingBusiness.GetCurrentForgeMode(item.GroupItemNumber);
-                if (forgeMode == Enumerations.ForgeMode.OneEnd)
-                {
-                    item.Extremo = "Extremo 2";
-                }
-            }
-
-        }
+        
 
         private ReportProductionDto ValidateExtreme(ReportProductionDto rp, GeneralPiece currentDGRow)
         {
