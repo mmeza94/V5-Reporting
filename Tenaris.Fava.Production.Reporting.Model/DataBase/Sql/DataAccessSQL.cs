@@ -85,7 +85,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                 parameters["@Atado"] = listParams["@Atado"];
                 parameters["@Machine"] = listParams["@Machine"];
 
-
+                cm.Timeout = 600;
                 using (var dr = cm.ExecuteReader(parameters.ToReadOnlyDictionary()))
                 {
                     Trace.Message("parameters: {0},{1},{2}", parameters["@Orden"], parameters["@Colada"], parameters["@Atado"]);
@@ -99,7 +99,8 @@ namespace Tenaris.Fava.Production.Reporting.Model.Data_Access
                             HeatNumber = dr.GetSchemaTable().Select("ColumnName='HeatNumber'").Count() == 1 ? Convert.ToInt32(dr["HeatNumber"]) : 0,
                             Customer = dr["Customer"].ToString(),
                             GroupItemNumber = dr.GetSchemaTable().Select("ColumnName='GroupItemNumber'").Count() == 1 ? Convert.ToInt32(dr["GroupItemNumber"]) : 0,
-                            LotNumberHTR = dr.GetSchemaTable().Select("ColumnName='LotNumberHTR'").Count() == 1 ? Convert.ToInt32(dr["LotNumberHTR"]) : 0,
+                            //LotNumberHTR = dr.GetSchemaTable().Select("ColumnName='LotNumberHTR'").Count() == 1 ? Convert.ToInt32(dr["LotNumberHTR"]) : 0,
+                            LotNumberHTR =  Convert.ToInt32(dr["LotNumberHTR"]),
 
 
                             LoadedCount = dr.GetSchemaTable().Select("ColumnName='LoadedCount'").Count() == 1 ? Convert.ToInt32(dr["LoadedCount"]) : 0,

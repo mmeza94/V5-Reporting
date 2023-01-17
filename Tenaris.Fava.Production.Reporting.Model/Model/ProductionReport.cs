@@ -504,7 +504,93 @@ namespace Tenaris.Fava.Production.Reporting.Model.Support
             }
         }
 
+        public class ProcessorByCoples
+        : IFormatterPiece
+        {
+            public IList<GeneralPiece> FormatterPiece(int order,
+                int heat,
+                int groupItem,
+                IList<GeneralPiece> generalPieces,
+                string description,
+                string extremo)
+            {
+                var somePieces = generalPieces
+                .Where(x => (x.OrderNumber == order)
+            && (x.HeatNumber == heat) && (x.GroupItemNumber == groupItem)
+            && (x.Description == description) && (x.Extremo == extremo))
+                .OrderBy(x => x.InsDateTime)
+                .ToList();
 
+
+
+                //GeneralPiece Firstitem = somePieces.FirstOrDefault(),
+                //             LastItem = somePieces.LastOrDefault();
+
+
+
+                if (somePieces.Count > 1)
+                {
+                    //somePieces[somePieces.Count - 1].SendStatus =
+                    //        (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount)
+                    //        ? Enumerations.ProductionReportSendStatus.Final
+                    //        : Enumerations.ProductionReportSendStatus.Parcial;
+
+
+                    //somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+                    //for (int i = 0; i < somePieces.Count - 1; i++)
+                    //{
+                    //    somePieces[i].ScrapCount = 0;
+                    //    somePieces[i].ReportSequence = (short)(i + 1);
+                    //    somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+                    //    if (i > 0)
+                    //        somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+                    //}
+
+                     for (int i = 0; i < somePieces.Count; i++)
+                        {
+                            somePieces[i].ScrapCount = 0;
+                            somePieces[i].ReportSequence = (short)(i + 1);
+                            somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+                            if (i > 0)
+                                somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+                        }
+
+                        somePieces[somePieces.Count - 1].SendStatus =
+                                                (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ?
+                                                Enumerations.ProductionReportSendStatus.Final : Enumerations.ProductionReportSendStatus.Parcial;
+                        somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+                    }
+                //    else
+                //    {
+                //        //somePieces[somePieces.Count - 1].SendStatus = Enumerations.ProductionReportSendStatus.Final;
+                //        somePieces[somePieces.Count - 1].SendStatus =
+                //            (somePieces[somePieces.Count - 1].GoodCount + somePieces[somePieces.Count - 1].ScrapCount >= somePieces[somePieces.Count - 1].LoadedCount) ? 
+                //            Enumerations.ProductionReportSendStatus.Final : Enumerations.ProductionReportSendStatus.Parcial;
+                        
+                //        somePieces[somePieces.Count - 1].ReportSequence = (short)somePieces.Count;
+
+                //        for (int i = 0; i < somePieces.Count - 1; i++)
+                //        {
+                //            somePieces[i].ScrapCount = 0;
+                //            somePieces[i].ReportSequence = (short)(i + 1);
+                //            somePieces[i].SendStatus = Enumerations.ProductionReportSendStatus.Parcial;
+                //            if (i > 0)
+                //                somePieces[i].LoadedCount = somePieces[i - 1].LoadedCount - (somePieces[i - 1].GoodCount + somePieces[i - 1].ScrapCount);
+                //        }
+                //}
+                else
+                {
+                    somePieces[0].SendStatus = (somePieces[0].GoodCount + somePieces[0].ScrapCount >= somePieces[0].LoadedCount)
+                        ? Enumerations.ProductionReportSendStatus.Completo
+                      : Enumerations.ProductionReportSendStatus.Parcial;
+                }
+
+
+
+
+                return somePieces;
+            }
+        }
     }
 
 }

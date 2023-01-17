@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32630.192
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tenaris.Fava.Production.Reporting.Model", "Tenaris.Fava.Production.Reporting.Model\Tenaris.Fava.Production.Reporting.Model.csproj", "{30E8A3D4-452B-4496-858C-5424A2EA0718}"
 	ProjectSection(ProjectDependencies) = postProject

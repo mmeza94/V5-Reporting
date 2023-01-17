@@ -29,8 +29,10 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             reportingProcess = new RPGeneral(this);
             Filters = Filter;
             OutPuts = OutPut;
-            formatterPiece = new ProcessorPieces.ProcessorByGranalladora();
+            formatterPiece = new ProcessorPieces.ProcessorByCoples();
+            
         }
+      
 
         #endregion
 
@@ -47,12 +49,13 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
                 //AddValues("Search", CurrentGeneralPieces);
-                return this;
+                
             }
             catch (Exception)
             {
-                throw;
+               // throw;
             }
+            return this;
         }
 
         public IActions Report()
@@ -66,9 +69,15 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
             if (!reportingProcess.IsReportConfirmationAccepted(currentDGRow))
                 return this;
 
+            try
+                {
+               
+           
+
             ReportProductionDto currentReportProductionDTO = reportingProcess.BuildReport()
                                                                              .ValidateReportStructure()
                                                                              .PrepareDtoForProductionReport();
+            
 
             var response = Adapter.ReportProduction(WhoIsLogged, currentReportProductionDTO, currentReportProductionDTO.SelectedSendType,
                 true, reportingProcess.dgRejectionReportDetails);
@@ -79,6 +88,12 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
 
             reportingProcess.CheckReportProductionForNextOperation(response);
+
+            }
+            catch (NullReferenceException)
+            {
+               // TODO: REPLICAR TRY-CATCH eN LAS DEMAS STRATEGIES
+            }
 
             return this;
         }
