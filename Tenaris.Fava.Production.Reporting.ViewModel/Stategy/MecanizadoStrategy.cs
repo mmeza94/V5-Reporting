@@ -74,7 +74,6 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
 
                 var ReportPRoduction = GetCurrentGroupItemToReport(currentDGRow);
 
-                var a = new CommonMachineRepository().GetMachineByDescription(ReportPRoduction.DescripcionMaquina).Id;
 
                 if (!reportingProcess.CanReport(currentDGRow, ReportPRoduction))
                     return this;
@@ -128,9 +127,19 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Stategy
                 //RPCajas caja = (RPCajas)reportingProcess;
                 Adapter.LoadProductionBox(currentReportProductionDTO,((RPCajas)reportingProcess).SelectedBox, out errorMessage);
 
-                bool result = Adapter.ReportProductionBox(WhoIsLogged, currentReportProductionDTO, ((RPCajas)reportingProcess).SelectedBox
-                            , Convert.ToInt32(((RPCajas)reportingProcess).indBoxReportConfirmation.OpHija), ((RPCajas)reportingProcess).indBoxReportConfirmation.ChangeReason,
-                             ((RPCajas)reportingProcess).indBoxReportConfirmation.DgRejectionReportDetails.ToArray(),out errorMessage);
+                int.TryParse( ((RPCajas)reportingProcess).indBoxReportConfirmation.OpHija, out int childOrder) ;
+
+                
+
+                bool result = Adapter.ReportProductionBox(
+                              WhoIsLogged
+                            , currentReportProductionDTO
+                            , ((RPCajas)reportingProcess).SelectedBox
+                            , childOrder
+                            , ((RPCajas)reportingProcess).indBoxReportConfirmation.ChangeReason
+                            , ((RPCajas)reportingProcess).indBoxReportConfirmation.DgRejectionReportDetails.ToArray()
+                            ,out errorMessage
+                            );
 
                 if (result)
                 {

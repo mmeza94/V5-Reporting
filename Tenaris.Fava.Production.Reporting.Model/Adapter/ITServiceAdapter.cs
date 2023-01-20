@@ -347,8 +347,13 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
 
 
-        public bool ReportProductionBox(string user,ReportProductionDto currentReportProductionDto,DTO.ProductionBox SelectedBox   //usado en IndBoxReportConfirmation
-            , int childOrder, string comments, RejectionReportDetail[] discards, out string errorMessage)
+        public bool ReportProductionBox(string user
+                                        ,ReportProductionDto currentReportProductionDto
+                                        ,DTO.ProductionBox SelectedBox   //usado en IndBoxReportConfirmation
+                                        , int childOrder
+                                        , string comments
+                                        , RejectionReportDetail[] discards
+                                        , out string errorMessage)
         {
             Trace.Message("----------------------ITServiceAdapter----------------------");
             Trace.Message($"USER recived in Adapter: {user}");
@@ -378,6 +383,10 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
 
             if (result)
             {
+
+
+                currentReportProductionDto.IdUser = user;
+
                 //----- Inserción de registro histórico de envío de producción -----//
                 ProductionReport report = new ProductionReport();
 
@@ -388,7 +397,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                     HeatNumber = currentReportProductionDto.Colada,
                     IdHistory = currentReportProductionDto.IdHistory,
                     IdOrder = currentReportProductionDto.Orden,
-                    InsDateTime = DateTime.Now,
+                    InsDateTime = DateTime.Now,//se calcula en el dataaccess
                     InsertedBy = user,
                     TotalQuantity = currentReportProductionDto.CantidadProcesadas,
                     LotNumberHtr = currentReportProductionDto.Lote,
@@ -405,7 +414,7 @@ namespace Tenaris.Fava.Production.Reporting.Model.Adapter
                     ChildGroupItemType = SelectedBox.Type
                 };
 
-                //new ReportProductionHistoryFacade().SaveReportProductionHistory(reportProductionHistory, sendStatus, discards); ReportPorTrabajar
+                new ReportProductionHistoryFacade().SaveReportProductionHistory(currentReportProductionDto, currentReportProductionDto.SelectedSendType, discards); //ReportPorTrabajar
 
                 errorMessage = string.Empty;
             }

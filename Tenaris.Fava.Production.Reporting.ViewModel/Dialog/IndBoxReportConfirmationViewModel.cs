@@ -576,7 +576,33 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         {
             List<ProductionBox> listBoxes = new List<ProductionBox>();
 
+            //Modiuficado para prueba
+            ProductionBox boxPrueba = new ProductionBox
+            {
+                Id = "123",
+                IdN2 = 1313
+                                    ,
+                LoadedPieces = 100,
+                MachineId = "prueba"
+                                    ,
+                MaxPieces = 250,
+                MissingPieces = 5
+                                    ,
+                OperationId = "pruebaoperation"
+                                    ,
+                OrderNumber = 2961
+                                    ,
+                ParentOrderNumber = 12,
+                ProcessSequence = 11
+            };
+
+            boxPrueba.Type = "pruebaType";
+            
+
+
+
             listBoxes = GetProductionBoxesIT();
+            listBoxes.Add(boxPrueba);//Modificado para prueba
 
             foreach (ProductionBox box in listBoxes)
             {
@@ -588,6 +614,7 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
         }
 
 
+
         private void FindSelectedBoxProductionGuide(List<ProductionBox> listboxes)
         {
             ////identifica en el grid su pocicion para posterione mente marcar esa pieza para marcar
@@ -597,6 +624,8 @@ namespace Tenaris.Fava.Production.Reporting.ViewModel.Dialog
                 int idActiveBox = ProductionReportingBusiness.GetActiveBox();
 
                 SelectedBox = DgBoxes.FirstOrDefault(x => x.Id.Equals(idActiveBox.ToString()));
+
+                SelectedBox=SelectedBox == null ? listboxes.FirstOrDefault() : SelectedBox;
             }
         }
 

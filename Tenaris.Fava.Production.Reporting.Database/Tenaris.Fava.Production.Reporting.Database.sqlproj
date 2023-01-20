@@ -57,8 +57,15 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="StoredProcedure" />
+    <Folder Include="StoredProcedure\GranalladoraStrategy" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedure\GetProductionGeneralTornosTestV5.sql" />
+    <None Include="StoredProcedure\GranalladoraStrategy\LoginUser.sql" />
+    <None Include="StoredProcedure\GranalladoraStrategy\GetProductionGeneral.sql" />
+    <None Include="StoredProcedure\GranalladoraStrategy\GetProductionGeneralNuevo.sql" />
+    <None Include="StoredProcedure\GranalladoraStrategy\GetRejectionCodeByMachineDescription.sql" />
+    <None Include="StoredProcedure\GranalladoraStrategy\InsRejectionReportDetail.sql" />
+    <None Include="StoredProcedure\GranalladoraStrategy\InsReportProductionHistory.sql" />
   </ItemGroup>
 </Project>
