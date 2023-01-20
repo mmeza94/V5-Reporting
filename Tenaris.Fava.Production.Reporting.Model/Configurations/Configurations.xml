@@ -280,6 +280,7 @@
 		<MaquinaInicialZonaFiltre>0</MaquinaInicialZonaFiltre>
 		<ExtremoFiltre></ExtremoFiltre>
 		<Workstation>MV-EMBALADOBAT0</Workstation>
+		<StrategyWork>PintadoStrategy</StrategyWork>
 
 
 	</configsection>
@@ -299,6 +300,8 @@
 		<ConnectionString>Data Source=10.92.35.102;Initial Catalog=L2_INYEC;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<Workstation>VM-INYECTORA</Workstation>
 		<VersionApplication>V3</VersionApplication>
+    <GetProductionGeneral>[dbo].[GetProductionGeneralTestV5Nuevo]</GetProductionGeneral>
+    <StrategyWork>CoplesStrategy</StrategyWork>
 
 	</configsection>
 
@@ -331,6 +334,8 @@
 		<MaquinaInicialZonaFiltre>1</MaquinaInicialZonaFiltre>
 		<ExtremoFiltre></ExtremoFiltre>
 		<Workstation>MV-ROS-COPLES02</Workstation>
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5Nuevo]</GetProductionGeneral>
+		<StrategyWork>CoplesStrategy</StrategyWork>
 
 	</configsection>
 
@@ -355,6 +360,9 @@
 		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_FOSFATIZADO;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<Workstation>MV-FOSFATO-ENTR</Workstation>
 		<VersionApplication>V4</VersionApplication>
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5Nuevo]</GetProductionGeneral>
+		<StrategyWork>CoplesStrategy</StrategyWork>
+
 
 
 
@@ -379,6 +387,8 @@
 		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_FOSFATIZADO;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<Workstation>MV-FOSFATO-SALI</Workstation>
 		<VersionApplication>V4</VersionApplication>
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5Nuevo]</GetProductionGeneral>
+		<StrategyWork>CoplesStrategy</StrategyWork>
 
 
 
@@ -405,6 +415,8 @@
 		<ConnectionString>Data Source=10.92.35.107;Initial Catalog=L2_MARCADO;User ID=sa;Password=Tamsa01;Persist Security Info=True;MultipleActiveResultSets=True; Asynchronous Processing=true;</ConnectionString>
 		<Workstation>MV-MARCADO</Workstation>
 		<VersionApplication>V4</VersionApplication>
+		<GetProductionGeneral>[DBO].[GetProductionGeneralTestV5Nuevo]</GetProductionGeneral>
+		<StrategyWork>CoplesStrategy</StrategyWork>
 
 
 
