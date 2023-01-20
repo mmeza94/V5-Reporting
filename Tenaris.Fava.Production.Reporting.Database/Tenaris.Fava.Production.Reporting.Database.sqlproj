@@ -58,6 +58,12 @@
     <Folder Include="Properties" />
     <Folder Include="StoredProcedure" />
     <Folder Include="StoredProcedure\GranalladoraStrategy" />
+    <Folder Include="StoredProcedure\ForjaStrategy" />
+    <Folder Include="StoredProcedure\CoplesStrategy" />
+    <Folder Include="StoredProcedure\MecanizadoStrategy" />
+    <Folder Include="StoredProcedure\MecanizadoStrategy\Inyectora" />
+    <Folder Include="StoredProcedure\CoplesStrategy\Roscado" />
+    <Folder Include="StoredProcedure\CoplesStrategy\Marcado" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedure\GetProductionGeneralTornosTestV5.sql" />
@@ -67,5 +73,18 @@
     <None Include="StoredProcedure\GranalladoraStrategy\GetRejectionCodeByMachineDescription.sql" />
     <None Include="StoredProcedure\GranalladoraStrategy\InsRejectionReportDetail.sql" />
     <None Include="StoredProcedure\GranalladoraStrategy\InsReportProductionHistory.sql" />
+    <None Include="StoredProcedure\ForjaStrategy\GetProductionGeneral.sql" />
+    <None Include="StoredProcedure\ForjaStrategy\GetProductionGeneralV2.sql" />
+    <None Include="StoredProcedure\ForjaStrategy\GetProductionGeneralTestForjasyHornosNuevo.sql" />
+    <None Include="StoredProcedure\ForjaStrategy\GetLastMachineGoodPieces.sql" />
+    <None Include="StoredProcedure\MecanizadoStrategy\Inyectora\GetProductionGeneral.sql" />
+    <None Include="StoredProcedure\MecanizadoStrategy\Inyectora\GetRejectionCodeByMachineDescription.sql" />
+    <None Include="StoredProcedure\MecanizadoStrategy\Inyectora\InsRejectionReportDetail.sql" />
+    <None Include="StoredProcedure\MecanizadoStrategy\Inyectora\InsReportProductionHistory.sql" />
+    <None Include="StoredProcedure\CoplesStrategy\Roscado\GetProductionGeneral.sql" />
+    <None Include="StoredProcedure\CoplesStrategy\Roscado\GetRejectionCodeByMachineDescription.sql" />
+    <None Include="StoredProcedure\CoplesStrategy\Roscado\InsCoplesReportProductionHistory.sql" />
+    <None Include="StoredProcedure\CoplesStrategy\Roscado\InsRejectionReportDetail.sql" />
+    <None Include="StoredProcedure\CoplesStrategy\Roscado\InsReportProductionHistory.sql" />
   </ItemGroup>
 </Project>
